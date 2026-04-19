@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Milestone Pilot favicon</title>
+  <desc id="desc">A favicon representing construction lifecycle management from proposal to execution to completion.</desc>
+  <defs>
+    <linearGradient id="bg" x1="32" y1="24" x2="224" y2="232" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="56" y1="64" x2="196" y2="196" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f59e0b"/>
+      <stop offset="1" stop-color="#22c55e"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#bg)"/>
+
+  <!-- lifecycle track -->
+  <path d="M52 180 C78 180, 84 160, 104 160 H152 C170 160, 178 146, 190 130" fill="none" stroke="#94a3b8" stroke-width="14" stroke-linecap="round" opacity="0.9"/>
+  <circle cx="52" cy="180" r="12" fill="#f59e0b"/>
+  <circle cx="104" cy="160" r="10" fill="#f8fafc" opacity="0.95"/>
+  <circle cx="152" cy="160" r="10" fill="#f8fafc" opacity="0.95"/>
+
+  <!-- proposal card -->
+  <rect x="46" y="64" width="46" height="58" rx="10" fill="#f8fafc" opacity="0.98"/>
+  <path d="M58 82 H80 M58 94 H74" stroke="#64748b" stroke-width="6" stroke-linecap="round"/>
+  <path d="M76 64 v16 h16" fill="#e2e8f0"/>
+
+  <!-- building / onsite execution -->
+  <g filter="url(#shadow)">
+    <rect x="98" y="84" width="24" height="64" rx="8" fill="url(#accent)"/>
+    <rect x="128" y="68" width="26" height="80" rx="8" fill="url(#accent)" opacity="0.95"/>
+    <rect x="160" y="52" width="28" height="96" rx="8" fill="url(#accent)" opacity="0.9"/>
+  </g>
+  <path d="M92 148 H194" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- completion badge -->
+  <circle cx="194" cy="130" r="26" fill="#22c55e"/>
+  <path d="M182 130 l8 8 16 -18" fill="none" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- subtle frame -->
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="none" stroke="#ffffff" stroke-opacity="0.08"/>
+</svg>

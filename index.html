@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/milestone-pilot-favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        var supportsOklch =
+          window.CSS && typeof window.CSS.supports === "function" && window.CSS.supports("color", "oklch(1 0 0)");
+
+        if (supportsOklch) {
+          return;
+        }
+
+        function loadLegacyStylesheet() {
+          if (document.getElementById("legacy-theme-fallback")) {
+            return;
+          }
+
+          var fallbackLink = document.createElement("link");
+          fallbackLink.id = "legacy-theme-fallback";
+          fallbackLink.rel = "stylesheet";
+          fallbackLink.href = "%BASE_URL%legacy.css";
+          document.head.appendChild(fallbackLink);
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", loadLegacyStylesheet);
+          return;
+        }
+
+        loadLegacyStylesheet();
+      })();
+    </script>
+    <title>Edu Trainer</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

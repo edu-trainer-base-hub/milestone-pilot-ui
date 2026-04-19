@@ -1,0 +1,833 @@
+{
+  "app": {
+    "tab": {
+      "title": "Milestone Pilot"
+    }
+  },
+  "lang": {
+    "code": {
+      "en": "En",
+      "uk": "Ук",
+      "ru": "Ру"
+    }
+  },
+  "menu": {
+    "home": "Home",
+    "mainMenuLabel": "Main Menu",
+    "title": "Milestone Pilot",
+    "search": "Search",
+    "searchPlaceholder": "Search games…",
+    "noResults": "No results",
+    "allGames": "All games",
+    "sidebarLabel": "Games",
+    "categories": {
+      "title": "Categories",
+      "all": "All",
+      "math": "Math Trainers",
+      "arcade": "Arcade",
+      "info": "Info",
+      "administration": "Administration"
+    },
+    "play": "Play",
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "info": "Info",
+    "about": "About",
+    "continue": "Continue playing",
+    "continueEmpty": "Your recent games will appear here.",
+    "empty": {
+      "title": "No games found",
+      "desc": "Try selecting another category or adjusting your search."
+    },
+    "futureSectionsHint": "Favorites and recent will appear here soon.",
+    "user": {
+      "upgrade": "Upgrade to Pro",
+      "subscriptions": "Subscriptions",
+      "account": "Account",
+      "settings": "Settings",
+      "billing": "Billing",
+      "notifications": "Notifications",
+      "profiles": "Profiles",
+      "logout": "Log out",
+      "login": "Log in",
+      "loginDesc": "Access your account"
+    }
+  },
+  "common": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving...",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "list": {
+      "actions": "Actions",
+      "input": {
+        "keywordSearch": {
+          "placeholder": "Search..."
+        }
+      }
+    }
+  },
+  "tenants": {
+    "title": "Tenants",
+    "create": "Create Tenant",
+    "edit": "Edit Tenant",
+    "empty": "No tenants found.",
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "createdAt": "Created At"
+    },
+    "users": {
+      "title": "Tenant Users",
+      "create": "Add User",
+      "empty": "No users found in this tenant.",
+      "columns": {
+        "email": "Email",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "role": "Role"
+      }
+    },
+    "dialog": {
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter tenant name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter tenant description",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter user email",
+      "firstNameLabel": "First Name",
+      "firstNamePlaceholder": "Enter first name",
+      "lastNameLabel": "Last Name",
+      "lastNamePlaceholder": "Enter last name",
+      "roleLabel": "Role"
+    },
+    "notifications": {
+      "createSuccess": "Tenant created successfully",
+      "createError": "Failed to create tenant",
+      "updateSuccess": "Tenant updated successfully",
+      "updateError": "Failed to update tenant",
+      "createUserSuccess": "User added successfully",
+      "createUserError": "Failed to add user"
+    }
+  },
+  "games": {
+    "multiplication2": {
+      "title": "Multiplication Trainer",
+      "desc": "Advanced practice & drills."
+    },
+    "addSub": {
+      "title": "Addition & Subtraction Trainer",
+      "desc": "Sharpen sums, differences, and missing parts."
+    },
+    "compareNumbers": {
+      "title": "Compare Numbers Trainer",
+      "desc": "Practice comparing integers, decimals, and fractions."
+    },
+    "rounding2": {
+      "title": "Rounding Trainer",
+      "desc": "More rounding challenges."
+    },
+    "rabbit": {
+      "title": "Jumping Rabbit",
+      "desc": "Arcade jumping with math twists."
+    }
+  },
+  "multiT": {
+    "menu": "Menu",
+    "title": "Multiplication Trainer",
+    "rangeAccuracy": "Range: {{min}}–{{max}} · Accuracy: {{acc}}%",
+    "showHistory": "Show history",
+    "newSession": "New session",
+    "changeRange": "Change range",
+    "aria": {
+      "backToMenu": "Back to menu",
+      "newSession": "New session",
+      "changeRange": "Change range",
+      "minRange": "Minimum value of the range",
+      "maxRange": "Maximum value of the range",
+      "mode": "Trainer mode",
+      "includeMul": "Include multiplication exercises",
+      "includeDiv": "Include division exercises",
+      "startGame": "Start the game",
+      "answerField": "Answer input field",
+      "correct": "Correct",
+      "wrong": "Incorrect",
+      "timerMinutes": "Timer minutes",
+      "maxExercises": "Maximum exercises"
+    },
+    "setup": {
+      "intro": "Choose the range of factors (min and max), e.g.",
+      "min": "Minimum",
+      "max": "Maximum",
+      "mode": "Mode",
+      "exercises": "Exercises",
+      "timer": "Timer (minutes)",
+      "maxExercises": "Max exercises (0 = unlimited)",
+      "note": "The range will be automatically ordered (min ≤ max) and limited to 2…12."
+    },
+    "mode": {
+      "input": "Keyboard input",
+      "quiz": "Quiz (4 options)"
+    },
+    "ex": {
+      "mul": "Multiplication",
+      "div": "Division"
+    },
+    "start": "Start",
+    "stats": {
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "accuracy": "Accuracy",
+      "time": "Time",
+      "timeLeft": "Time left"
+    },
+    "sr": {
+      "mul": "multiplied by",
+      "div": "divided by"
+    },
+    "input": {
+      "placeholder": "Answer",
+      "submit": "Submit",
+      "hint": "Press Enter to submit your answer."
+    },
+    "quiz": {
+      "optionAria": "Answer option {{opt}}"
+    },
+    "finished": {
+      "timeUp": "Time is up!",
+      "exLimit": "Exercises complete ({{count}})."
+    },
+    "table": {
+      "example": "Example",
+      "answer": "Answer",
+      "result": "Result",
+      "empty": "Your answer history will appear here.",
+      "correct": "Correct",
+      "incorrect": "Incorrect (correct: {{correct}})"
+    }
+  },
+  "roundT": {
+    "menu": "Menu",
+    "title": "Rounding Game",
+    "newSession": "New session",
+    "changeRange": "Change setup",
+    "aria": {
+      "backToMenu": "Back to Menu",
+      "correct": "correct",
+      "wrong": "wrong"
+    },
+    "setup": {
+      "label": "Settings",
+      "intro": "Choose what kind of numbers and places to practice.",
+      "mode": "Mode",
+      "timer": "Timer (minutes, 0 = unlimited)",
+      "maxExercises": "Max exercises (0 = unlimited)",
+      "numberTypes": "Number types",
+      "whole": "Whole numbers",
+      "decimals": "Decimals",
+      "decimalPlaces": "Decimal places",
+      "signs": "Sign filters",
+      "positives": "Positives",
+      "negatives": "Negatives",
+      "magnitude": "Magnitude",
+      "digitsMode": "Digits range",
+      "rangeMode": "Numeric range",
+      "minDigits": "Min digits",
+      "maxDigits": "Max digits",
+      "minValue": "Min value",
+      "maxValue": "Max value",
+      "targets": "Round to (multi-select)",
+      "sounds": "Enable sounds",
+      "includeTie": "Guarantee at least one tie-case (5) per session",
+      "showHint": "Show place-value hint under the prompt",
+      "note": "Tip: leave filters empty to include everything."
+    },
+    "mode": {
+      "input": "Input",
+      "quiz": "Quiz"
+    },
+    "targets": {
+      "tens": "tens (10s)",
+      "hundreds": "hundreds (100s)",
+      "thousands": "thousands (1000s)"
+    },
+    "start": "Start",
+    "rangeAccuracy": "Range: {{min}}–{{max}} · Accuracy: {{acc}}%",
+    "stats": {
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "accuracy": "Accuracy",
+      "time": "Time",
+      "timeLeft": "Time left"
+    },
+    "finished": {
+      "timeUp": "Time is up!",
+      "exLimit": "Finished! You answered {{count}} tasks."
+    },
+    "table": {
+      "example": "Exercise",
+      "answer": "Answer",
+      "result": "Result",
+      "empty": "No attempts yet.",
+      "correct": "Correct",
+      "incorrect": "{{explanation}} (correct: {{correct}})"
+    },
+    "sr": {
+      "to": "to"
+    },
+    "hint": {
+      "template": "Look at {{lower}} digit of {{num}}: {{digit}} {{arrow}}"
+    },
+    "expl": {
+      "template": "Round to {{target}}: look at {{lower}} ({{check}}) → {{direction}}",
+      "target": {
+        "tens": "tens",
+        "hundreds": "hundreds",
+        "thousands": "thousands"
+      },
+      "lower": {
+        "ones": "ones",
+        "tens": "tens",
+        "hundreds": "hundreds"
+      },
+      "dir": {
+        "up": "up",
+        "down": "down"
+      }
+    },
+    "input": {
+      "placeholder": "your answer",
+      "submit": "Submit",
+      "hint": "Press Enter to submit, Esc to clear."
+    }
+  },
+  "addSubT": {
+    "title": "Addition & Subtraction Trainer",
+    "menu": "Menu",
+    "start": "Start",
+    "setup": {
+      "title": "Setup",
+      "intro": "Choose operations, number range, and practice mode. You can also limit time or the number of exercises.",
+      "operations": "Operations",
+      "addition": "Addition",
+      "subtraction": "Subtraction",
+      "oneRequired": "Select at least one operation.",
+      "range": "Number range",
+      "min": "Minimum",
+      "max": "Maximum",
+      "answerMode": "Answer mode",
+      "mode": "Problem mode",
+      "timer": "Timer (minutes)",
+      "timerHint": "Leave empty for unlimited session time.",
+      "maxExercises": "Max exercises",
+      "maxExercisesHint": "Leave empty for unlimited number of questions.",
+      "sounds": "Sounds",
+      "soundsHint": "Voice feedback for answers"
+    },
+    "mode": {
+      "quiz": "Multiple choice",
+      "input": "Manual input",
+      "result": "Type the result",
+      "missing": "Find the missing number"
+    },
+    "actions": {
+      "newSession": "New session",
+      "changeSetup": "Change setup"
+    },
+    "stats": {
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "accuracy": "Accuracy",
+      "time": "Time",
+      "timeLeft": "Time left",
+      "streak": "Streak"
+    },
+    "play": {
+      "title": "Play",
+      "rangeAccuracy": "Range: {{min}}–{{max}} · Accuracy: {{acc}}%",
+      "timeElapsed": "Time elapsed",
+      "promptLabel": "Solve",
+      "placeholder": "Your answer",
+      "submit": "Submit",
+      "feedback": {
+        "correct": "Correct!",
+        "wrong": "Try again. Correct answer: {{correct}}"
+      },
+      "finished": {
+        "time": "Time is up!",
+        "limit": "Exercises complete ({{count}})."
+      },
+      "sr": {
+        "correct": "Correct answer",
+        "wrong": "Incorrect answer"
+      }
+    },
+    "table": {
+      "title": "History",
+      "summary": "Attempts: {{count}}",
+      "example": "Example",
+      "answer": "Your input",
+      "result": "Result",
+      "empty": "Your attempts will show here.",
+      "correct": "Correct",
+      "incorrect": "Incorrect (correct: {{correct}})"
+    },
+    "aria": {
+      "add": "Include addition",
+      "sub": "Include subtraction",
+      "mode": "Practice mode",
+      "timer": "Timer minutes",
+      "maxExercises": "Maximum exercises",
+      "sounds": "Enable sounds",
+      "answerField": "Answer input field"
+    }
+  },
+  "cmpNmbrGm": {
+    "menu": "Menu",
+    "title": "Compare Numbers Trainer",
+    "aria": {
+      "backToMenu": "Back to menu",
+      "openMenu": "Open quick menu"
+    },
+    "menuLabel": "Compare numbers menu",
+    "actions": {
+      "newSession": "New session",
+      "changeSetup": "Change setup",
+      "toMenu": "Main menu"
+    },
+    "summary": {
+      "enabledTypes": "Active types: {{types}}",
+      "equal": "Equal answers: {{ratio}}%"
+    },
+    "setup": {
+      "title": "Setup",
+      "intro": "Choose the number types, ranges, and practice settings you want to include.",
+      "start": "Start training"
+    },
+    "types": {
+      "nonNegative": {
+        "title": "Whole numbers (0 and above)",
+        "desc": "Practice with non-negative integers in your chosen range."
+      },
+      "signed": {
+        "title": "Integers with negatives",
+        "desc": "Include negative numbers together with positives."
+      },
+      "decimal": {
+        "title": "Decimals",
+        "desc": "Generate decimal numbers with configurable precision."
+      },
+      "fraction": {
+        "title": "Fractions",
+        "desc": "Compare simplified fractions in friendly ranges."
+      },
+      "messages": {
+        "unavailable": "Adjust the range to enable generation.",
+        "decimalRange": "Update the decimal range or precision to generate values.",
+        "fractionRange": "Update the fraction ranges to generate values."
+      },
+      "labels": {
+        "nonNegative": "Whole numbers",
+        "signed": "Integers",
+        "decimal": "Decimals",
+        "fraction": "Fractions",
+        "none": "None"
+      }
+    },
+    "ranges": {
+      "min": "Minimum",
+      "max": "Maximum"
+    },
+    "gap": {
+      "min": "Minimum gap",
+      "max": "Maximum gap"
+    },
+    "weights": {
+      "label": "Type weight (%)"
+    },
+    "precision": {
+      "mode": "Precision mode",
+      "exact": "Fixed number of decimal places",
+      "upTo": "Up to a maximum",
+      "exactValue": "Decimal places",
+      "maxValue": "Maximum decimal places",
+      "option_zero": "0 decimal places",
+      "option_one": "{{count}} decimal place",
+      "option_few": "{{count}} decimal places",
+      "option_many": "{{count}} decimal places",
+      "option_other": "{{count}} decimal places"
+    },
+    "fractions": {
+      "mode": "Fraction presets",
+      "preset12": "Friendly (1–12)",
+      "preset20": "Extended (1–20)",
+      "custom": "Custom range",
+      "numerator": "Numerator min",
+      "numeratorMax": "Numerator max",
+      "denominator": "Denominator min",
+      "denominatorMax": "Denominator max"
+    },
+    "equal": {
+      "label": "Equal answers ratio",
+      "hint": "Controls how often tasks use '=' (0–50%)."
+    },
+    "history": {
+      "title": "History",
+      "total": "Total: {{count}}",
+      "example": "Example",
+      "answer": "Result",
+      "empty": "Your history will appear here.",
+      "correct": "Correct: {{left}} {{relation}} {{right}}",
+      "result": {
+        "correct": "Correct ({{relation}})",
+        "user": "You chose {{relation}}",
+        "expected": "Correct was {{relation}}"
+      },
+      "order": {
+        "label": "History order",
+        "oldest": "Oldest first",
+        "newest": "Newest first",
+        "hint": "Choose whether new answers appear at the top or bottom."
+      }
+    },
+    "session": {
+      "timer": "Timer (minutes)",
+      "timerHint": "0 disables the timer.",
+      "maxExercises": "Max exercises (0 = unlimited)",
+      "maxExercisesHint": "Stop automatically after this many comparisons."
+    },
+    "feedback": {
+      "sound": "Sound feedback",
+      "soundDesc": "Play a short tone after each answer.",
+      "vibration": "Vibration feedback",
+      "vibrationDesc": "Vibrate on supported devices.",
+      "correct": "Great! That comparison is correct.",
+      "wrong": "You chose {{user}}, correct was {{correct}}."
+    },
+    "telemetry": {
+      "note": "Future telemetry could track streaks, average time per comparison, and most difficult number types."
+    },
+    "errors": {
+      "unavailable": "Enable at least one valid number type to start."
+    },
+    "stats": {
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "accuracy": "Accuracy",
+      "timeLeft": "Time left",
+      "time": "Time"
+    },
+    "play": {
+      "compare": "Which relation is true?",
+      "hotkeys": "Hotkeys: ← (<), space (=), → (>)."
+    },
+    "finished": {
+      "time": "Time is up!",
+      "exercises": "Reached {{count}} comparisons.",
+      "generator": "Unable to generate new exercises with current settings."
+    },
+    "symbols": {
+      "less": "<",
+      "greater": ">",
+      "equal": "="
+    }
+  },
+  "pages": {
+    "secondaryProfiles": {
+      "title": "Secondary Profiles",
+      "createButton": {
+        "tooltip": "Create Profile"
+      },
+      "loadError": "Failed to load profiles.",
+      "empty": "No secondary profiles found.",
+      "confirmDelete": "Are you sure you want to delete this profile?",
+      "columns": {
+        "name": "Name",
+        "username": "Username",
+        "locale": "Locale",
+        "ownership": "Ownership"
+      },
+      "row": {
+        "ownership": {
+          "secondary": "Secondary"
+        }
+      },
+      "notifications": {
+        "deleteSuccess": "Profile deleted successfully",
+        "deleteError": "Failed to delete profile"
+      }
+    },
+    "profileForm": {
+      "createTitle": "Create Profile",
+      "editTitle": "Edit Profile",
+      "username": "Username",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "locale": "Locale",
+      "password": "Password",
+      "newPassword": "New Password (Optional)",
+      "showPasswordLabel": "Show password",
+      "localePlaceholder": "Select locale",
+      "locales": {
+        "en": "English (US)",
+        "uk": "Ukrainian",
+        "ru": "Russian"
+      },
+      "validation": {
+        "invalidUsername": "Username can only contain letters, digits, '-', '_', '.'."
+      }
+    },
+    "createProfile": {
+      "success": "Profile created successfully",
+      "error": "Failed to create profile"
+    },
+    "editProfile": {
+      "success": "Profile updated successfully",
+      "error": "Failed to update profile",
+      "notFound": "Profile not found"
+    },
+    "settings": {
+      "title": "Settings",
+      "telegramLanguage": {
+        "label": "Telegram Bot Language"
+      },
+      "webLanguage": {
+        "label": "Website Language"
+      },
+      "themeMode": {
+        "label": "Theme Mode"
+      },
+      "notifications": {
+        "updateFail": "Failed to update settings.",
+        "fetchFail": "Failed to fetch settings from server.",
+        "saveSuccess": "Settings saved successfully."
+      }
+    },
+    "loginPage": {
+      "titlePrompt": "Sign in to your account",
+      "identifier": {
+        "label": "Email or Username",
+        "placeholder": "Enter your email or username"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "forgotPasswordLinkText": "Forgot password?",
+        "showPasswordLabel": "Show password"
+      },
+      "submitButton": "Sign in",
+      "submitButtonLoading": "Signing in...",
+      "registrationPrompt": "Don't have an account?",
+      "registrationLinkText": "Sign up",
+      "notifications": {
+        "submitError": "We can't find that email, username, or password. Try again."
+      }
+    },
+    "registrationPage": {
+      "titlePrompt": "Create your account",
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+      },
+      "confirmationCode": {
+        "label": "Confirmation Code",
+        "placeholder": "Enter the confirmation code",
+        "sendCodeButton": "Send confirmation code",
+        "sendCodeButtonRe": "Resend in {{secondsLeft}} s",
+        "sendCodeButtonLoading": "Sending code..."
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "showPasswordLabel": "Show password"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your password"
+      },
+      "submitButton": "Sign up",
+      "submitButtonLoading": "Creating account...",
+      "loginPrompt": "Already have an account?",
+      "loginLinkText": "Sign in",
+      "validation": {
+        "invalidEmail": "Invalid email address",
+        "passwordsMismatch": "Passwords do not match"
+      },
+      "notifications": {
+        "submitSuccess": "New account created successfully.",
+        "submitError": "Registration failed. Please try again.",
+        "codeSentSuccess": "Code sent to your email.",
+        "codeSentError": "Failed to send code."
+      }
+    },
+    "resetPasswordPage": {
+      "titlePrompt": "Reset your password",
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+      },
+      "confirmationCode": {
+        "label": "Confirmation Code",
+        "placeholder": "Enter the reset code",
+        "sendCodeButton": "Send reset code",
+        "sendCodeButtonLoading": "Sending code..."
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "showPasswordLabel": "Show password"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your password"
+      },
+      "submitButton": "Reset Password",
+      "submitButtonLoading": "Resetting...",
+      "loginPrompt": "Remembered your password?",
+      "loginLinkText": "Sign in",
+      "notifications": {
+        "submitSuccess": "Password reset successfully.",
+        "submitError": "Reset password failed. Please try again.",
+        "codeSentSuccess": "Code sent to your email.",
+        "codeSentError": "Failed to send code."
+      }
+    },
+    "subscriptionPage": {
+      "title": "Subscription",
+      "plan": {
+        "names": {
+          "FREE_TIER": "Free",
+          "BETA_TEST_TIER": "Beta Test",
+          "TIER_1": "Plus"
+        }
+      },
+      "info": {
+        "loading": "Loading subscription…",
+        "currentPlan": "Current plan",
+        "activeUntilLocal": "Active until",
+        "activeUntilUTC": "Active until (UTC)",
+        "inactiveHint": "You don’t have an active Beta Access. Use a promo code to activate.",
+        "none": "None",
+        "noDate": "—"
+      },
+      "inputs": {
+        "promoCode": {
+          "label": "Promo code",
+          "placeholder": "Enter Promo Code from email"
+        }
+      },
+      "buttons": {
+        "generate": {
+          "default": "Request Promo Code",
+          "loading": "Requesting…"
+        },
+        "redeem": {
+          "default": "Redeem",
+          "loading": "Redeeming…"
+        }
+      },
+      "notifications": {
+        "generate": {
+          "success": "Promo code requested.",
+          "infoEmail": "Check your email for the promo code.",
+          "error": "Could not request a promo code."
+        },
+        "redeem": {
+          "success": "Promo code applied. Your access is active until {{until}}.",
+          "activated": "Beta Access activated.",
+          "error": "Promo code invalid or expired."
+        }
+      }
+    },
+    "menu": {
+      "loadError": "Failed to load menu items. Please try again later."
+    }
+  },
+  "errors": {
+    "codes": {
+      "TECHNICAL_ERROR": "A technical error occurred. Please try again.",
+      "UNKNOWN": "Oops, something went wrong. Please try again.",
+      "INTERNAL_SERVER_ERROR": "Oops, something went wrong. Please try again.",
+      "INVALID_CREDENTIALS": "We can't find that email or password. Try again.",
+      "INVALID_VERIFICATION_CODE": "Invalid verification code. Please try again.",
+      "PROFILE_NOT_FOUND": "We can't find that profile.",
+      "EMAIL_ALREADY_EXISTS": "Email already exists.",
+      "USERNAME_ALREADY_EXISTS": "Username already exists.",
+      "MAX_SECONDARY_PROFILES_REACHED": "Limit of secondary profiles reached.",
+      "PROFILE_OWNERSHIP_VIOLATION": "Profile ownership violation.",
+      "RATE_LIMIT_EXCEEDED": "Too many attempts. Try again later.",
+      "USER_BLOCKED": "User blocked.",
+      "AUTHENTICATION_FAILED": "Authentication failed.",
+      "TOKEN_NOT_VALID": "Token not valid.",
+      "MISSING_COOKIE": "Invalid or absent cookie.",
+      "INVALID_PROMO_CODE": "Invalid or expired promo code.",
+      "NOT_ACTIVE_PROLONGATION_WINDOW": "Not active prolongation window.",
+      "ENGLISH_COACH_SESSIONS_LIMIT_REACHED": "You reached the maximum number of English Coach sessions. Delete an existing session to continue."
+    }
+  },
+  "englishCoach": {
+    "pageTitle": "English Coach",
+    "emptyChat": "Start a conversation to practice your English!",
+    "session": {
+      "usage": "Session Usage",
+      "tokens": "{{total}} / {{limit}} tokens used"
+    },
+    "retry": "Retry",
+    "voice": {
+      "startRecording": "Start recording",
+      "stopRecording": "Stop recording",
+      "stopAndSend": "Stop and Send"
+    },
+    "audio": {
+      "play": "Play audio",
+      "pause": "Pause audio",
+      "retry": "Retry audio",
+      "retryVoice": "Retry voice",
+      "playVoice": "Play audio",
+      "loading": "Loading...",
+      "autoplay": "Autoplay speech"
+    },
+    "composer": {
+      "placeholder": "Type your message…",
+      "send": "Send message"
+    },
+    "message": {
+      "you": "You",
+      "coach": "Coach"
+    },
+    "feedback": {
+      "title": "Feedback",
+      "grammar": "Grammar",
+      "fluency": "Fluency",
+      "vocabulary": "Vocabulary"
+    },
+    "practice": {
+      "title": "Next Practice",
+      "addToChat": "Add to chat"
+    },
+    "status": {
+      "transcribing": "Transcribing…",
+      "thinking": "Coach is thinking…",
+      "speaking": "Generating speech…"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "new": "New session",
+      "empty": "No sessions yet. Start a new one!",
+      "messages": "msgs",
+      "rename": "Rename",
+      "delete": "Delete",
+      "restore": "Restore",
+      "confirmDelete": "Are you sure you want to delete this session?",
+      "confirmRestore": "Are you sure you want to restore this session?",
+      "limitReached": "You reached the maximum number of English Coach sessions. Delete an existing session to continue."
+    },
+    "errors": {
+      "microphoneUnsupported": "Your browser does not support microphone access.",
+      "microphoneDenied": "Microphone access was denied. Please allow it in your browser settings.",
+      "recordingFailed": "Recording failed. Please try again."
+    }
+  }
+}
