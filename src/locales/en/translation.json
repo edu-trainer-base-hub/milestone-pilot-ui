@@ -15,31 +15,11 @@
     "home": "Home",
     "mainMenuLabel": "Main Menu",
     "title": "Milestone Pilot",
-    "search": "Search",
-    "searchPlaceholder": "Search games…",
-    "noResults": "No results",
-    "allGames": "All games",
     "sidebarLabel": "Games",
     "categories": {
       "title": "Categories",
-      "all": "All",
-      "math": "Math Trainers",
-      "arcade": "Arcade",
-      "info": "Info",
       "administration": "Administration"
     },
-    "play": "Play",
-    "favorite": "Add to favorites",
-    "unfavorite": "Remove from favorites",
-    "info": "Info",
-    "about": "About",
-    "continue": "Continue playing",
-    "continueEmpty": "Your recent games will appear here.",
-    "empty": {
-      "title": "No games found",
-      "desc": "Try selecting another category or adjusting your search."
-    },
-    "futureSectionsHint": "Favorites and recent will appear here soon.",
     "user": {
       "upgrade": "Upgrade to Pro",
       "subscriptions": "Subscriptions",
@@ -740,9 +720,6 @@
           "error": "Promo code invalid or expired."
         }
       }
-    },
-    "menu": {
-      "loadError": "Failed to load menu items. Please try again later."
     }
   },
   "errors": {

@@ -14,7 +14,6 @@ import WebLayout from "./layout/WebLayout.tsx";
 import { Navigate } from "react-router-dom";
 import SettingsPage from "@/pages/SettingsPage.tsx";
 import SubscriptionPage from "@/pages/subscriptions/SubscriptionPage.tsx";
-import MenuPage from "@/pages/MenuPage.tsx";
 import AuthorityRoute from "@/components/AuthorityRoute.tsx";
 import { Authority } from "@/contexts/AuthContext.tsx";
 import SecondaryProfilesPage from "@/pages/profiles/SecondaryProfilesPage.tsx";
@@ -68,7 +67,10 @@ export default function App() {
           </WebLayout>
         }
       >
-        <Route path="/" element={<MenuPage />} />
+        <Route
+          path="/"
+          element={<div className="p-8 text-2xl font-bold">Вітаємо у Milestone Pilot!</div>}
+        />
 
         <Route element={<PrivateRoute />}>
           <Route element={<AuthorityRoute authority={Authority.MANAGE_SUBSCRIPTIONS} />}>

@@ -23,5 +23,5 @@ it("shows Home link", () => {
       </MemoryRouter>
     </QueryClientProvider>
   );
-  expect(screen.getByText("menu.categories.all")).toBeInTheDocument();
+  expect(screen.getByText("Вітаємо у Milestone Pilot!")).toBeInTheDocument();
 });
