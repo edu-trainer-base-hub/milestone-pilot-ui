@@ -30,20 +30,26 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({
   const { t } = useTranslation();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
 
   useEffect(() => {
     if (tenant) {
       setName(tenant.name);
       setDescription(tenant.description || "");
+      setEmail(tenant.email || "");
+      setAddress(tenant.address || "");
     } else {
       setName("");
       setDescription("");
+      setEmail("");
+      setAddress("");
     }
   }, [tenant, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ name, description });
+    await onSubmit({ name, description, email, address });
   };
 
   return (
@@ -62,6 +68,27 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={t("tenants.dialog.namePlaceholder")}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">{t("tenants.dialog.emailLabel")}</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t("tenants.dialog.emailPlaceholder")}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="address">{t("tenants.dialog.addressLabel")}</Label>
+            <Input
+              id="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder={t("tenants.dialog.addressPlaceholder")}
               required
             />
           </div>

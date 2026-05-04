@@ -1,19 +1,32 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import GenericRegistrationForm from "@/pages/login/GenericRegistrationForm.tsx";
 import { FormMode } from "@/hooks/use-registration-form.ts";
 
+console.log("ResetPasswordPage rendered");
 const ResetPasswordPage: React.FC = () => {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+
+  const email = searchParams.get("email") || "";
+  const code = searchParams.get("code") || "";
+  const mode = searchParams.get("mode");
+  const isAccountSetup = mode === "tenant-account-setup";
 
   return (
     <GenericRegistrationForm
       formMode={FormMode.PASSWORD_RESET}
-      title={t("pages.resetPasswordPage.titlePrompt")}
+      initialEmail={email}
+      initialCode={code}
+      emailReadOnly={isAccountSetup}
+      hideSendCode={isAccountSetup}
+      submitSuccessMessage={isAccountSetup ? t("pages.accountSetup.notifications.submitSuccess") : undefined}
+      title={isAccountSetup ? t("pages.accountSetup.titlePrompt") : t("pages.resetPasswordPage.titlePrompt")}
       sendCodeLabel={t("pages.resetPasswordPage.confirmationCode.sendCodeButton")}
-      submitLoadingLabel={t("pages.resetPasswordPage.submitButtonLoading")}
-      submitLabel={t("pages.resetPasswordPage.submitButton")}
-      secondaryText={t("pages.resetPasswordPage.loginPrompt")}
+      submitLoadingLabel={isAccountSetup ? t("pages.accountSetup.submitButtonLoading") : t("pages.resetPasswordPage.submitButtonLoading")}
+      submitLabel={isAccountSetup ? t("pages.accountSetup.submitButton") : t("pages.resetPasswordPage.submitButton")}
+      secondaryText={isAccountSetup ? t("pages.accountSetup.loginPrompt") : t("pages.resetPasswordPage.loginPrompt")}
       secondaryLinkText={t("pages.resetPasswordPage.loginLinkText")}
       secondaryLinkTo="/login"
     />

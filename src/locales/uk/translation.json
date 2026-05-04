@@ -16,8 +16,10 @@
     "mainMenuLabel": "Головне меню",
     "title": "Milestone Pilot",
     "sidebarLabel": "Ігри",
+    "userManagement": "Керування користувачами",
     "categories": {
-      "title": "Категорії"
+      "title": "Категорії",
+      "administration": "Адміністрування"
     },
     "user": {
       "upgrade": "Покращити до Pro",
@@ -30,6 +32,51 @@
       "logout": "Вийти",
       "login": "Увійти",
       "loginDesc": "Доступ до вашого облікового запису"
+    }
+  },
+  "tenants": {
+    "title": "Орендарі",
+    "create": "Створити орендаря",
+    "edit": "Редагувати орендаря",
+    "empty": "Орендарів не знайдено.",
+    "columns": {
+      "name": "Назва",
+      "description": "Опис",
+      "createdAt": "Створено"
+    },
+    "users": {
+      "title": "Користувачі орендаря",
+      "create": "Додати користувача",
+      "empty": "Користувачів не знайдено.",
+      "columns": {
+        "email": "Email",
+        "firstName": "Ім'я",
+        "lastName": "Прізвище",
+        "role": "Роль"
+      }
+    },
+    "dialog": {
+      "nameLabel": "Назва",
+      "namePlaceholder": "Введіть назву",
+      "descriptionLabel": "Опис",
+      "descriptionPlaceholder": "Введіть опис",
+      "emailLabel": "Email для запрошення",
+      "emailPlaceholder": "Введіть email",
+      "addressLabel": "Адреса",
+      "addressPlaceholder": "Введіть адресу",
+      "firstNameLabel": "Ім'я",
+      "firstNamePlaceholder": "Введіть ім'я",
+      "lastNameLabel": "Прізвище",
+      "lastNamePlaceholder": "Введіть прізвище",
+      "roleLabel": "Роль"
+    },
+    "notifications": {
+      "createSuccess": "Орендаря успішно створено",
+      "createError": "Не вдалося створити орендаря",
+      "updateSuccess": "Орендаря успішно оновлено",
+      "updateError": "Не вдалося оновити орендаря",
+      "createUserSuccess": "Користувача успішно додано",
+      "createUserError": "Не вдалося додати користувача"
     }
   },
   "common": {
@@ -596,6 +643,15 @@
         "submitError": "Не вдалося зареєструватися. Будь ласка, спробуйте ще раз.",
         "codeSentSuccess": "Код надіслано на вашу електронну пошту.",
         "codeSentError": "Не вдалося надіслати код."
+      }
+    },
+    "accountSetup": {
+      "titlePrompt": "Встановіть пароль",
+      "loginPrompt": "Вже маєте аккаунт?",
+      "submitButton": "Встановити пароль",
+      "submitButtonLoading": "Встановлення паролю...",
+      "notifications": {
+        "submitSuccess": "Пароль успішно встановлено."
       }
     },
     "resetPasswordPage": {

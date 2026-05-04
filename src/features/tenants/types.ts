@@ -1,12 +1,16 @@
 export interface TenantRequest {
   name: string;
   description?: string;
+  email: string;
+  address: string;
 }
 
 export interface TenantResponse {
   id: string;
   name: string;
   description?: string;
+  email: string;
+  address: string;
   createdAt?: string;
   updatedAt?: string;
 }

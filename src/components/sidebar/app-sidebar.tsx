@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Command, LifeBuoy, Send, SquareTerminal, LogIn, Building2 } from "lucide-react";
+import { Command, LifeBuoy, Send, SquareTerminal, LogIn, Building2, UserCog } from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user.tsx";
 import {
   Sidebar,
@@ -76,6 +76,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
+        {/* User Management (Visible to everyone) */}
+        {principal && (
+          <SidebarGroup>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={t("menu.userManagement")}>
+                  <Link to="/settings/profiles">
+                    <UserCog />
+                    <span>{t("menu.userManagement")}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+        )}
+
         {/* Administration Section */}
         {principal?.authorities?.some((a) =>
           [Authority.ROLE_PLATFORM_ADMIN, Authority.ROLE_PLATFORM_MANAGER].includes(a)

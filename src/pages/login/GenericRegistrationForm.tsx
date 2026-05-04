@@ -13,6 +13,11 @@ import LanguageSelector, { LanguageSelectorMode } from "@/components/lang/Langua
 
 export interface VerificationFormProps {
   formMode: FormMode;
+  initialEmail?: string;
+  initialCode?: string;
+  emailReadOnly?: boolean;
+  hideSendCode?: boolean;
+  submitSuccessMessage?: string;
   title: string;
   sendCodeLabel: string;
   submitLoadingLabel: string;
@@ -24,6 +29,11 @@ export interface VerificationFormProps {
 
 const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
   formMode,
+  initialEmail,
+  initialCode,
+  emailReadOnly,
+  hideSendCode,
+  submitSuccessMessage,
   title,
   sendCodeLabel,
   submitLoadingLabel,
@@ -53,7 +63,12 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
     handlePasswordChange,
     handleConfirmChange,
     handleSubmit,
-  } = useRegistrationForm({ mode: formMode });
+  } = useRegistrationForm({
+    mode: formMode,
+    initialEmail,
+    initialCode,
+    submitSuccessMessage,
+  });
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -90,7 +105,8 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
                 onChange={handleEmailChange}
                 onBlur={handleEmailBlur}
                 disabled={sendCodeLoading || submitLoading}
-                autoFocus
+                readOnly={emailReadOnly}
+                autoFocus={!emailReadOnly}
               />
               {emailError && (
                 <Alert variant="destructive" className="mt-2" role="alert" aria-live="assertive">
@@ -100,25 +116,27 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
             </div>
 
             {/* Send Confirmation Code */}
-            <Button
-              type="button"
-              className="w-full flex items-center justify-center"
-              onClick={handleSendCode}
-              disabled={sendCodeLoading || submitLoading || !!emailError || !email || secondsLeft > 0}
-            >
-              {sendCodeLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("pages.registrationPage.confirmationCode.sendCodeButtonLoading")}
-                </>
-              ) : secondsLeft > 0 ? (
-                t("pages.registrationPage.confirmationCode.sendCodeButtonRe", {
-                  secondsLeft,
-                })
-              ) : (
-                sendCodeLabel
-              )}
-            </Button>
+            {!hideSendCode && (
+              <Button
+                type="button"
+                className="w-full flex items-center justify-center"
+                onClick={handleSendCode}
+                disabled={sendCodeLoading || submitLoading || !!emailError || !email || secondsLeft > 0}
+              >
+                {sendCodeLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t("pages.registrationPage.confirmationCode.sendCodeButtonLoading")}
+                  </>
+                ) : secondsLeft > 0 ? (
+                  t("pages.registrationPage.confirmationCode.sendCodeButtonRe", {
+                    secondsLeft,
+                  })
+                ) : (
+                  sendCodeLabel
+                )}
+              </Button>
+            )}
 
             {/* Confirmation Code */}
             {codeSent && (
@@ -151,6 +169,7 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
                 value={password}
                 onChange={handlePasswordChange}
                 disabled={submitLoading}
+                autoFocus={emailReadOnly}
               />
               {passwordErrors.length > 0 && (
                 <Alert variant="destructive" className="mt-2" role="alert" aria-live="assertive">

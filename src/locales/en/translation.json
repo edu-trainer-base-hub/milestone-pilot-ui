@@ -16,6 +16,7 @@
     "mainMenuLabel": "Main Menu",
     "title": "Milestone Pilot",
     "sidebarLabel": "Games",
+    "userManagement": "User Management",
     "categories": {
       "title": "Categories",
       "administration": "Administration"
@@ -75,8 +76,10 @@
       "namePlaceholder": "Enter tenant name",
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Enter tenant description",
-      "emailLabel": "Email",
-      "emailPlaceholder": "Enter user email",
+      "emailLabel": "Invitation Email",
+      "emailPlaceholder": "Enter invitation email",
+      "addressLabel": "Address",
+      "addressPlaceholder": "Enter address",
       "firstNameLabel": "First Name",
       "firstNamePlaceholder": "Enter first name",
       "lastNameLabel": "Last Name",
@@ -640,6 +643,15 @@
         "submitError": "Registration failed. Please try again.",
         "codeSentSuccess": "Code sent to your email.",
         "codeSentError": "Failed to send code."
+      }
+    },
+    "accountSetup": {
+      "titlePrompt": "Set your password",
+      "loginPrompt": "Already have an account?",
+      "submitButton": "Set Password",
+      "submitButtonLoading": "Setting password...",
+      "notifications": {
+        "submitSuccess": "Password set successfully."
       }
     },
     "resetPasswordPage": {

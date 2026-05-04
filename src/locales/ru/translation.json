@@ -598,6 +598,15 @@
         "codeSentError": "Не удалось отправить код."
       }
     },
+    "accountSetup": {
+      "titlePrompt": "Установите пароль",
+      "loginPrompt": "Уже есть аккаунт?",
+      "submitButton": "Установить пароль",
+      "submitButtonLoading": "Установка пароля...",
+      "notifications": {
+        "submitSuccess": "Пароль успешно установлен."
+      }
+    },
     "resetPasswordPage": {
       "titlePrompt": "Сбросьте пароль",
       "email": {

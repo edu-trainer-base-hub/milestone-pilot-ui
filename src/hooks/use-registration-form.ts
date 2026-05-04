@@ -10,6 +10,9 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface UseRegistrationFormProps {
   mode: FormMode;
+  initialEmail?: string;
+  initialCode?: string;
+  submitSuccessMessage?: string;
 }
 
 export const FormMode = {
@@ -42,14 +45,19 @@ interface UseVerificationFormReturn {
   handleSubmit: (e: FormEvent) => Promise<void>;
 }
 
-export function useRegistrationForm({ mode }: UseRegistrationFormProps): UseVerificationFormReturn {
+export function useRegistrationForm({
+  mode,
+  initialEmail,
+  initialCode,
+  submitSuccessMessage,
+}: UseRegistrationFormProps): UseVerificationFormReturn {
   const { t } = useTranslation();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail || "");
   const [emailError, setEmailError] = useState<string | null>(null);
 
-  const [codeSent, setCodeSent] = useState(false);
-  const [confirmationCode, setConfirmationCode] = useState("");
+  const [codeSent, setCodeSent] = useState(!!initialCode);
+  const [confirmationCode, setConfirmationCode] = useState(initialCode || "");
   const [codeError, setCodeError] = useState<string | null>(null);
 
   const [password, setPassword] = useState("");
@@ -172,11 +180,11 @@ export function useRegistrationForm({ mode }: UseRegistrationFormProps): UseVeri
     try {
       if (FormMode.PASSWORD_RESET === mode) {
         await doResetPassword(trimmedEmail, password, confirmPassword, confirmationCode);
-        notifier.success(t("pages.resetPasswordPage.notifications.submitSuccess"));
+        notifier.success(submitSuccessMessage || t("pages.resetPasswordPage.notifications.submitSuccess"));
         navigate("/login", { replace: true });
       } else {
         await doRegister(trimmedEmail, password, confirmPassword, confirmationCode);
-        notifier.success(t("pages.registrationPage.notifications.submitSuccess"));
+        notifier.success(submitSuccessMessage || t("pages.registrationPage.notifications.submitSuccess"));
         navigate("/", { replace: true });
       }
     } catch (error: unknown) {
