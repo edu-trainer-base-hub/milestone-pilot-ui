@@ -3,6 +3,9 @@ export interface TenantRequest {
   description?: string;
   email: string;
   address: string;
+  timezone: string;
+  locale?: string;
+  status?: string;
 }
 
 export interface TenantResponse {
@@ -11,6 +14,9 @@ export interface TenantResponse {
   description?: string;
   email: string;
   address: string;
+  timezone: string;
+  locale?: string;
+  status?: string;
   createdAt?: string;
   updatedAt?: string;
 }

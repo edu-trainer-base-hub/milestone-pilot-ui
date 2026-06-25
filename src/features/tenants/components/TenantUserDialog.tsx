@@ -17,7 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TenantRole, TenantUserRequest } from "../types";
+import { TenantRole } from "../types";
+import type { TenantUserRequest } from "../types";
 
 interface TenantUserDialogProps {
   open: boolean;

@@ -1,5 +1,5 @@
 import { get, post, put } from "@/services/ApiService";
-import {
+import type {
   TenantRequest,
   TenantResponse,
   TenantUserRequest,

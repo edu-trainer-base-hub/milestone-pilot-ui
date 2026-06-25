@@ -94,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         {/* Administration Section */}
         {principal?.authorities?.some((a) =>
-          [Authority.ROLE_PLATFORM_ADMIN, Authority.ROLE_PLATFORM_MANAGER].includes(a)
+          ([Authority.ROLE_PLATFORM_ADMIN, Authority.ROLE_PLATFORM_MANAGER] as Authority[]).includes(a)
         ) && (
           <SidebarGroup>
             <SidebarGroupLabel>{t("menu.categories.administration", "Administration")}</SidebarGroupLabel>

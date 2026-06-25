@@ -14,7 +14,7 @@ import {
 import { Loader2, Pencil, Plus, Users } from "lucide-react";
 import { notifier } from "@/services/NotificationService";
 import { getAllTenants, createTenant, updateTenant } from "../api";
-import { TenantRequest, TenantResponse } from "../types";
+import type { TenantRequest, TenantResponse } from "../types";
 import { TenantDialog } from "../components/TenantDialog";
 
 export const TenantsPage: React.FC = () => {
@@ -92,6 +92,8 @@ export const TenantsPage: React.FC = () => {
               <TableRow>
                 <TableHead>{t("tenants.columns.name")}</TableHead>
                 <TableHead>{t("tenants.columns.description")}</TableHead>
+                <TableHead>{t("tenants.columns.timezone")}</TableHead>
+                <TableHead>{t("tenants.columns.status")}</TableHead>
                 <TableHead className="text-right">
                   {t("common.list.actions")}
                 </TableHead>
@@ -100,7 +102,7 @@ export const TenantsPage: React.FC = () => {
             <TableBody>
               {tenants.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center py-10">
+                  <TableCell colSpan={5} className="text-center py-10">
                     {t("tenants.empty")}
                   </TableCell>
                 </TableRow>
@@ -109,6 +111,8 @@ export const TenantsPage: React.FC = () => {
                   <TableRow key={tenant.id}>
                     <TableCell className="font-medium">{tenant.name}</TableCell>
                     <TableCell>{tenant.description}</TableCell>
+                    <TableCell>{tenant.timezone}</TableCell>
+                    <TableCell>{tenant.status}</TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button
                         variant="ghost"
@@ -136,7 +140,9 @@ export const TenantsPage: React.FC = () => {
       <TenantDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        onSubmit={(data) => mutation.mutateAsync(data)}
+        onSubmit={async (data) => {
+          await mutation.mutateAsync(data);
+        }}
         tenant={selectedTenant}
         loading={mutation.isPending}
       />

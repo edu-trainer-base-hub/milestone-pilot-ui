@@ -55,11 +55,13 @@
     "create": "Create Tenant",
     "edit": "Edit Tenant",
     "empty": "No tenants found.",
-    "columns": {
-      "name": "Name",
-      "description": "Description",
-      "createdAt": "Created At"
-    },
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "timezone": "Timezone",
+        "status": "Status",
+        "createdAt": "Created At"
+      },
     "users": {
       "title": "Tenant Users",
       "create": "Add User",
@@ -80,6 +82,12 @@
       "emailPlaceholder": "Enter invitation email",
       "addressLabel": "Address",
       "addressPlaceholder": "Enter address",
+      "timezoneLabel": "Timezone",
+      "timezonePlaceholder": "Enter timezone (e.g. UTC, Europe/Kiev)",
+      "localeLabel": "Locale",
+      "localePlaceholder": "Enter locale (e.g. en, uk)",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Enter status",
       "firstNameLabel": "First Name",
       "firstNamePlaceholder": "Enter first name",
       "lastNameLabel": "Last Name",

@@ -42,6 +42,8 @@
     "columns": {
       "name": "Назва",
       "description": "Опис",
+      "timezone": "Часовий пояс",
+      "status": "Статус",
       "createdAt": "Створено"
     },
     "users": {
@@ -64,6 +66,12 @@
       "emailPlaceholder": "Введіть email",
       "addressLabel": "Адреса",
       "addressPlaceholder": "Введіть адресу",
+      "timezoneLabel": "Часовий пояс",
+      "timezonePlaceholder": "Введіть часовий пояс (напр. UTC, Europe/Kyiv)",
+      "localeLabel": "Локаль",
+      "localePlaceholder": "Введіть локаль (напр. en, uk)",
+      "statusLabel": "Статус",
+      "statusPlaceholder": "Введіть статус",
       "firstNameLabel": "Ім'я",
       "firstNamePlaceholder": "Введіть ім'я",
       "lastNameLabel": "Прізвище",

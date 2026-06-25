@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TenantRequest, TenantResponse } from "../types";
+import type { TenantRequest, TenantResponse } from "../types";
 
 interface TenantDialogProps {
   open: boolean;
@@ -32,6 +32,9 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [timezone, setTimezone] = useState("UTC");
+  const [locale, setLocale] = useState("en");
+  const [status, setStatus] = useState("ACTIVE");
 
   useEffect(() => {
     if (tenant) {
@@ -39,17 +42,23 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({
       setDescription(tenant.description || "");
       setEmail(tenant.email || "");
       setAddress(tenant.address || "");
+      setTimezone(tenant.timezone || "UTC");
+      setLocale(tenant.locale || "en");
+      setStatus(tenant.status || "ACTIVE");
     } else {
       setName("");
       setDescription("");
       setEmail("");
       setAddress("");
+      setTimezone("UTC");
+      setLocale("en");
+      setStatus("ACTIVE");
     }
   }, [tenant, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ name, description, email, address });
+    await onSubmit({ name, description, email, address, timezone, locale, status });
   };
 
   return (
@@ -90,6 +99,34 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({
               onChange={(e) => setAddress(e.target.value)}
               placeholder={t("tenants.dialog.addressPlaceholder")}
               required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="timezone">{t("tenants.dialog.timezoneLabel")}</Label>
+            <Input
+              id="timezone"
+              value={timezone}
+              onChange={(e) => setTimezone(e.target.value)}
+              placeholder={t("tenants.dialog.timezonePlaceholder")}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="locale">{t("tenants.dialog.localeLabel")}</Label>
+            <Input
+              id="locale"
+              value={locale}
+              onChange={(e) => setLocale(e.target.value)}
+              placeholder={t("tenants.dialog.localePlaceholder")}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="status">{t("tenants.dialog.statusLabel")}</Label>
+            <Input
+              id="status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              placeholder={t("tenants.dialog.statusPlaceholder")}
             />
           </div>
           <div className="space-y-2">

@@ -14,7 +14,7 @@ import {
 import { ArrowLeft, Loader2, Plus } from "lucide-react";
 import { notifier } from "@/services/NotificationService";
 import { getUsersByTenant, createUserInTenant } from "../api";
-import { TenantUserRequest } from "../types";
+import type { TenantUserRequest } from "../types";
 import { TenantUserDialog } from "../components/TenantUserDialog";
 
 export const TenantUsersPage: React.FC = () => {
@@ -106,7 +106,9 @@ export const TenantUsersPage: React.FC = () => {
       <TenantUserDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        onSubmit={(data) => mutation.mutateAsync(data)}
+        onSubmit={async (data) => {
+          await mutation.mutateAsync(data);
+        }}
         loading={mutation.isPending}
       />
     </div>

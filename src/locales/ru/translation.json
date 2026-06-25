@@ -32,6 +32,59 @@
       "loginDesc": "Доступ к вашему аккаунту"
     }
   },
+  "tenants": {
+    "title": "Арендаторы",
+    "create": "Создать арендатора",
+    "edit": "Редактировать арендатора",
+    "empty": "Арендаторов не найдено.",
+    "columns": {
+      "name": "Название",
+      "description": "Описание",
+      "timezone": "Часовой пояс",
+      "status": "Статус",
+      "createdAt": "Создан"
+    },
+    "users": {
+      "title": "Пользователи арендатора",
+      "create": "Добавить пользователя",
+      "empty": "Пользователей не найдено.",
+      "columns": {
+        "email": "Email",
+        "firstName": "Имя",
+        "lastName": "Фамилия",
+        "role": "Роль"
+      }
+    },
+    "dialog": {
+      "nameLabel": "Название",
+      "namePlaceholder": "Введите название",
+      "descriptionLabel": "Описание",
+      "descriptionPlaceholder": "Введите описание",
+      "emailLabel": "Email для приглашения",
+      "emailPlaceholder": "Введите email",
+      "addressLabel": "Адрес",
+      "addressPlaceholder": "Введите адрес",
+      "timezoneLabel": "Часовой пояс",
+      "timezonePlaceholder": "Введите часовой пояс (напр. UTC, Europe/Kyiv)",
+      "localeLabel": "Локаль",
+      "localePlaceholder": "Введите локаль (напр. en, uk, ru)",
+      "statusLabel": "Статус",
+      "statusPlaceholder": "Введите статус",
+      "firstNameLabel": "Имя",
+      "firstNamePlaceholder": "Введите имя",
+      "lastNameLabel": "Фамилия",
+      "lastNamePlaceholder": "Введите фамилию",
+      "roleLabel": "Роль"
+    },
+    "notifications": {
+      "createSuccess": "Арендатор успешно создан",
+      "createError": "Не удалось создать арендатора",
+      "updateSuccess": "Арендатор успешно обновлен",
+      "updateError": "Не удалось обновить арендатора",
+      "createUserSuccess": "Пользователь успешно добавлен",
+      "createUserError": "Не удалось добавить пользователя"
+    }
+  },
   "common": {
     "edit": "Редактировать",
     "delete": "Удалить",
