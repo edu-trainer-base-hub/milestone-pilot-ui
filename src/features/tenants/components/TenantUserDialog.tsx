@@ -1,22 +1,10 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TenantRole } from "../types";
 import type { TenantUserRequest } from "../types";
 
@@ -27,12 +15,7 @@ interface TenantUserDialogProps {
   loading?: boolean;
 }
 
-export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({
-  open,
-  onOpenChange,
-  onSubmit,
-  loading,
-}) => {
+export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({ open, onOpenChange, onSubmit, loading }) => {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -64,9 +47,7 @@ export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="firstName">
-              {t("tenants.dialog.firstNameLabel")}
-            </Label>
+            <Label htmlFor="firstName">{t("tenants.dialog.firstNameLabel")}</Label>
             <Input
               id="firstName"
               value={firstName}
@@ -101,11 +82,7 @@ export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({
             </Select>
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={loading}>
