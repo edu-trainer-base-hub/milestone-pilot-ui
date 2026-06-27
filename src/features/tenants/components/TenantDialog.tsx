@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { TenantRequest, TenantResponse } from "../types";
+import { TimezoneSelector } from "./TimezoneSelector";
 
 interface TenantDialogProps {
   open: boolean;
@@ -14,13 +15,22 @@ interface TenantDialogProps {
   loading?: boolean;
 }
 
+const getDefaultTimezone = () => {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+  } catch {
+    return "UTC";
+  }
+};
+
 export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, onSubmit, tenant, loading }) => {
   const { t } = useTranslation();
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
-  const [timezone, setTimezone] = useState("UTC");
+  const [timezone, setTimezone] = useState(getDefaultTimezone);
   const [locale, setLocale] = useState("en");
   const [status, setStatus] = useState("ACTIVE");
 
@@ -38,7 +48,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       setDescription("");
       setEmail("");
       setAddress("");
-      setTimezone("UTC");
+      setTimezone(getDefaultTimezone());
       setLocale("en");
       setStatus("ACTIVE");
     }
@@ -46,7 +56,16 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ name, description, email, address, timezone, locale, status });
+
+    await onSubmit({
+      name,
+      description,
+      email,
+      address,
+      timezone,
+      locale,
+      status,
+    });
   };
 
   return (
@@ -55,6 +74,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
         <DialogHeader>
           <DialogTitle>{tenant ? t("tenants.edit") : t("tenants.create")}</DialogTitle>
         </DialogHeader>
+
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="name">{t("tenants.dialog.nameLabel")}</Label>
@@ -66,6 +86,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
               required
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="email">{t("tenants.dialog.emailLabel")}</Label>
             <Input
@@ -77,6 +98,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
               required
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="address">{t("tenants.dialog.addressLabel")}</Label>
             <Input
@@ -87,16 +109,17 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
               required
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="timezone">{t("tenants.dialog.timezoneLabel")}</Label>
-            <Input
+            <TimezoneSelector
               id="timezone"
               value={timezone}
-              onChange={(e) => setTimezone(e.target.value)}
+              onChange={setTimezone}
               placeholder={t("tenants.dialog.timezonePlaceholder")}
-              required
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="locale">{t("tenants.dialog.localeLabel")}</Label>
             <Input
@@ -106,6 +129,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
               placeholder={t("tenants.dialog.localePlaceholder")}
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="status">{t("tenants.dialog.statusLabel")}</Label>
             <Input
@@ -115,6 +139,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
               placeholder={t("tenants.dialog.statusPlaceholder")}
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="description">{t("tenants.dialog.descriptionLabel")}</Label>
             <Input
@@ -124,10 +149,12 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
               placeholder={t("tenants.dialog.descriptionPlaceholder")}
             />
           </div>
+
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}
             </Button>
+
             <Button type="submit" disabled={loading}>
               {loading ? t("common.saving") : t("common.save")}
             </Button>
