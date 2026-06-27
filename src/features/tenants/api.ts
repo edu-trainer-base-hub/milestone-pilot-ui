@@ -1,18 +1,12 @@
 import { get, post, put } from "@/services/ApiService";
-import type {
-  TenantRequest,
-  TenantResponse,
-  TenantUserRequest,
-  TenantUserResponse,
-} from "./types";
+import type { TenantRequest, TenantResponse, TenantUserRequest, TenantUserResponse } from "./types";
 
 const BASE_URL = "/api/v1/tenants";
 
 export const createTenant = (request: TenantRequest): Promise<TenantResponse> =>
   post<TenantResponse>(BASE_URL, request);
 
-export const getAllTenants = (): Promise<TenantResponse[]> =>
-  get<TenantResponse[]>(BASE_URL);
+export const getAllTenants = (): Promise<TenantResponse[]> => get<TenantResponse[]>(BASE_URL);
 
 export const updateTenant = (id: string, request: TenantRequest): Promise<TenantResponse> =>
   put<TenantResponse>(`${BASE_URL}/${id}`, request);

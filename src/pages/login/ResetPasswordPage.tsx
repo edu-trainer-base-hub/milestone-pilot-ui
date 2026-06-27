@@ -24,7 +24,9 @@ const ResetPasswordPage: React.FC = () => {
       submitSuccessMessage={isAccountSetup ? t("pages.accountSetup.notifications.submitSuccess") : undefined}
       title={isAccountSetup ? t("pages.accountSetup.titlePrompt") : t("pages.resetPasswordPage.titlePrompt")}
       sendCodeLabel={t("pages.resetPasswordPage.confirmationCode.sendCodeButton")}
-      submitLoadingLabel={isAccountSetup ? t("pages.accountSetup.submitButtonLoading") : t("pages.resetPasswordPage.submitButtonLoading")}
+      submitLoadingLabel={
+        isAccountSetup ? t("pages.accountSetup.submitButtonLoading") : t("pages.resetPasswordPage.submitButtonLoading")
+      }
       submitLabel={isAccountSetup ? t("pages.accountSetup.submitButton") : t("pages.resetPasswordPage.submitButton")}
       secondaryText={isAccountSetup ? t("pages.accountSetup.loginPrompt") : t("pages.resetPasswordPage.loginPrompt")}
       secondaryLinkText={t("pages.resetPasswordPage.loginLinkText")}

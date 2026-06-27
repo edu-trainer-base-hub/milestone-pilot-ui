@@ -3,14 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2, Pencil, Plus, Users } from "lucide-react";
 import { notifier } from "@/services/NotificationService";
 import { getAllTenants, createTenant, updateTenant } from "../api";
@@ -22,9 +15,7 @@ export const TenantsPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedTenant, setSelectedTenant] = useState<TenantResponse | null>(
-    null
-  );
+  const [selectedTenant, setSelectedTenant] = useState<TenantResponse | null>(null);
 
   const {
     data: tenants = [],
@@ -36,25 +27,16 @@ export const TenantsPage: React.FC = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: TenantRequest) =>
-      selectedTenant
-        ? updateTenant(selectedTenant.id, data)
-        : createTenant(data),
+    mutationFn: (data: TenantRequest) => (selectedTenant ? updateTenant(selectedTenant.id, data) : createTenant(data)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
       setDialogOpen(false);
       notifier.success(
-        selectedTenant
-          ? t("tenants.notifications.updateSuccess")
-          : t("tenants.notifications.createSuccess")
+        selectedTenant ? t("tenants.notifications.updateSuccess") : t("tenants.notifications.createSuccess")
       );
     },
     onError: () => {
-      notifier.error(
-        selectedTenant
-          ? t("tenants.notifications.updateError")
-          : t("tenants.notifications.createError")
-      );
+      notifier.error(selectedTenant ? t("tenants.notifications.updateError") : t("tenants.notifications.createError"));
     },
   });
 
@@ -82,9 +64,7 @@ export const TenantsPage: React.FC = () => {
           <Loader2 className="h-10 w-10 animate-spin" />
         </div>
       ) : isError ? (
-        <div className="text-center text-destructive py-10">
-          Failed to load tenants.
-        </div>
+        <div className="text-center text-destructive py-10">Failed to load tenants.</div>
       ) : (
         <div className="border rounded-md">
           <Table>
@@ -94,9 +74,7 @@ export const TenantsPage: React.FC = () => {
                 <TableHead>{t("tenants.columns.description")}</TableHead>
                 <TableHead>{t("tenants.columns.timezone")}</TableHead>
                 <TableHead>{t("tenants.columns.status")}</TableHead>
-                <TableHead className="text-right">
-                  {t("common.list.actions")}
-                </TableHead>
+                <TableHead className="text-right">{t("common.list.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -114,18 +92,10 @@ export const TenantsPage: React.FC = () => {
                     <TableCell>{tenant.timezone}</TableCell>
                     <TableCell>{tenant.status}</TableCell>
                     <TableCell className="text-right space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => navigate(`${tenant.id}/users`)}
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => navigate(`${tenant.id}/users`)}>
                         <Users className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEdit(tenant)}
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(tenant)}>
                         <Pencil className="h-4 w-4" />
                       </Button>
                     </TableCell>

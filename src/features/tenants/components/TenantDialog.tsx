@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,13 +14,7 @@ interface TenantDialogProps {
   loading?: boolean;
 }
 
-export const TenantDialog: React.FC<TenantDialogProps> = ({
-  open,
-  onOpenChange,
-  onSubmit,
-  tenant,
-  loading,
-}) => {
+export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, onSubmit, tenant, loading }) => {
   const { t } = useTranslation();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -65,9 +53,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {tenant ? t("tenants.edit") : t("tenants.create")}
-          </DialogTitle>
+          <DialogTitle>{tenant ? t("tenants.edit") : t("tenants.create")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="space-y-2">
@@ -130,9 +116,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">
-              {t("tenants.dialog.descriptionLabel")}
-            </Label>
+            <Label htmlFor="description">{t("tenants.dialog.descriptionLabel")}</Label>
             <Input
               id="description"
               value={description}
@@ -141,11 +125,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({
             />
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={loading}>

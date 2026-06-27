@@ -27,6 +27,9 @@ replay_pid*
 .idea/
 .output.txt
 node_modules/
+dist
+dist-ssr
+*.local
 tmp/
 temp/
 ai/

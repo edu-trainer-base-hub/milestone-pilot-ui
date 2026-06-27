@@ -3,14 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowLeft, Loader2, Plus } from "lucide-react";
 import { notifier } from "@/services/NotificationService";
 import { getUsersByTenant, createUserInTenant } from "../api";
@@ -35,8 +28,7 @@ export const TenantUsersPage: React.FC = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: TenantUserRequest) =>
-      createUserInTenant(tenantId!, data),
+    mutationFn: (data: TenantUserRequest) => createUserInTenant(tenantId!, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenantUsers", tenantId] });
       setDialogOpen(false);
@@ -65,9 +57,7 @@ export const TenantUsersPage: React.FC = () => {
           <Loader2 className="h-10 w-10 animate-spin" />
         </div>
       ) : isError ? (
-        <div className="text-center text-destructive py-10">
-          Failed to load tenant users.
-        </div>
+        <div className="text-center text-destructive py-10">Failed to load tenant users.</div>
       ) : (
         <div className="border rounded-md">
           <Table>
@@ -92,9 +82,7 @@ export const TenantUsersPage: React.FC = () => {
                     <TableCell>{user.firstName}</TableCell>
                     <TableCell>{user.lastName}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      {user.role.replace("ROLE_", "").replace("_", " ")}
-                    </TableCell>
+                    <TableCell>{user.role.replace("ROLE_", "").replace("_", " ")}</TableCell>
                   </TableRow>
                 ))
               )}
