@@ -92,10 +92,20 @@ export const TenantsPage: React.FC = () => {
                     <TableCell>{tenant.timezone}</TableCell>
                     <TableCell>{tenant.status}</TableCell>
                     <TableCell className="text-right space-x-2">
-                      <Button variant="ghost" size="icon" onClick={() => navigate(`${tenant.id}/users`)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={t("tenants.users.title")}
+                        onClick={() => navigate(`/platform/tenants/${tenant.id}/users`)}
+                      >
                         <Users className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleEdit(tenant)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={t("common.edit")}
+                        onClick={() => handleEdit(tenant)}
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
                     </TableCell>

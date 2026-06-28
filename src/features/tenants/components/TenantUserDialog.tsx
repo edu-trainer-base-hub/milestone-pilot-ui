@@ -1,86 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TenantRole } from "../types";
-import type { TenantUserRequest } from "../types";
+import { TenantRole, type TenantUserRequest, type TenantUserResponse, type UserRoleOption, formatRoleLabel } from "../types";
+import { UserFormFields, type UserFormValues } from "./UserFormFields";
 
 interface TenantUserDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: TenantUserRequest) => Promise<void>;
+  user?: TenantUserResponse | null;
   loading?: boolean;
 }
 
-export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({ open, onOpenChange, onSubmit, loading }) => {
+const tenantRoleOptions: readonly UserRoleOption[] = Object.values(TenantRole).map((role) => ({
+  value: role,
+  label: formatRoleLabel(role),
+}));
+
+const emptyValues: UserFormValues = {
+  email: "",
+  firstName: "",
+  lastName: "",
+  role: TenantRole.ROLE_TENANT_MANAGER,
+};
+
+export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({ open, onOpenChange, onSubmit, user, loading }) => {
   const { t } = useTranslation();
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState<string>(TenantRole.ROLE_TENANT_MANAGER);
+  const [values, setValues] = useState<UserFormValues>(emptyValues);
+
+  const defaultValues = useMemo<UserFormValues>(
+    () =>
+      user
+        ? {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+          }
+        : emptyValues,
+    [user]
+  );
+
+  useEffect(() => {
+    if (open) {
+      setValues(defaultValues);
+    }
+  }, [defaultValues, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ email, firstName, lastName, role });
-    // Reset form after successful submit if needed, or handle in parent
+    await onSubmit({
+      email: values.email,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      role: values.role,
+    });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("tenants.users.create")}</DialogTitle>
+          <DialogTitle>{user ? t("tenants.users.edit") : t("tenants.users.create")}</DialogTitle>
+          <DialogDescription>{t("tenants.dialog.roleLabel")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("tenants.dialog.emailLabel")}</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("tenants.dialog.emailPlaceholder")}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="firstName">{t("tenants.dialog.firstNameLabel")}</Label>
-            <Input
-              id="firstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder={t("tenants.dialog.firstNamePlaceholder")}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lastName">{t("tenants.dialog.lastNameLabel")}</Label>
-            <Input
-              id="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder={t("tenants.dialog.lastNamePlaceholder")}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="role">{t("tenants.dialog.roleLabel")}</Label>
-            <Select value={role} onValueChange={setRole}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(TenantRole).map((r) => (
-                  <SelectItem key={r} value={r}>
-                    {r.replace("ROLE_", "").replace("_", " ")}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <UserFormFields values={values} onChange={setValues} roleOptions={tenantRoleOptions} />
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}

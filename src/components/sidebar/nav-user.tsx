@@ -43,6 +43,7 @@ export function NavUser({
 
   const canManageProfiles = user.authorities?.includes(Authority.MANAGE_PROFILES);
   const canManageSubscriptions = user.authorities?.includes(Authority.MANAGE_SUBSCRIPTIONS);
+  const canViewPlatformUsers = user.authorities?.includes(Authority.UI_PLATFORM_USERS_VIEW);
 
   return (
     <SidebarMenu>
@@ -115,10 +116,10 @@ export function NavUser({
                 <Bell />
                 {t("menu.user.notifications", "Notifications")}
               </DropdownMenuItem>*/}
-              {canManageProfiles && (
-                <DropdownMenuItem onClick={() => navigate("/settings/profiles")}>
+              {canViewPlatformUsers && (
+                <DropdownMenuItem onClick={() => navigate("/platform/users")}>
                   <Users />
-                  {t("menu.user.profiles", "Profiles")}
+                  {t("platformUsers.title")}
                 </DropdownMenuItem>
               )}
             </DropdownMenuGroup>

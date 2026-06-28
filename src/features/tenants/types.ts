@@ -21,6 +21,23 @@ export interface TenantResponse {
   updatedAt?: string;
 }
 
+export interface PlatformUserRequest {
+  email: string;
+  firstName: string;
+  lastName: string;
+  platformRole: string;
+}
+
+export interface PlatformUserResponse {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  platformRole: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface TenantUserRequest {
   email: string;
   firstName: string;
@@ -39,11 +56,23 @@ export interface TenantUserResponse {
   updatedAt?: string;
 }
 
-export const TenantRole = {
+export const PlatformRole = {
   ROLE_PLATFORM_ADMIN: "ROLE_PLATFORM_ADMIN",
   ROLE_PLATFORM_MANAGER: "ROLE_PLATFORM_MANAGER",
+} as const;
+
+export type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
+
+export const TenantRole = {
   ROLE_TENANT_ADMIN: "ROLE_TENANT_ADMIN",
   ROLE_TENANT_MANAGER: "ROLE_TENANT_MANAGER",
 } as const;
 
 export type TenantRole = (typeof TenantRole)[keyof typeof TenantRole];
+
+export interface UserRoleOption {
+  value: string;
+  label: string;
+}
+
+export const formatRoleLabel = (role: string): string => role.replace("ROLE_", "").replaceAll("_", " ");

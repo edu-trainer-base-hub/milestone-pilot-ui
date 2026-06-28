@@ -4,10 +4,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Loader2, Plus } from "lucide-react";
+import { ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
 import { notifier } from "@/services/NotificationService";
-import { getUsersByTenant, createUserInTenant } from "../api";
-import type { TenantUserRequest } from "../types";
+import { createUserInTenant, getUsersByTenant, updateUserInTenant } from "../api";
+import type { TenantUserRequest, TenantUserResponse } from "../types";
+import { formatRoleLabel } from "../types";
 import { TenantUserDialog } from "../components/TenantUserDialog";
 
 export const TenantUsersPage: React.FC = () => {
@@ -16,6 +17,7 @@ export const TenantUsersPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<TenantUserResponse | null>(null);
 
   const {
     data: users = [],
@@ -28,26 +30,40 @@ export const TenantUsersPage: React.FC = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: TenantUserRequest) => createUserInTenant(tenantId!, data),
+    mutationFn: (data: TenantUserRequest) =>
+      selectedUser ? updateUserInTenant(tenantId!, selectedUser.id, data) : createUserInTenant(tenantId!, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenantUsers", tenantId] });
       setDialogOpen(false);
-      notifier.success(t("tenants.notifications.createUserSuccess"));
+      setSelectedUser(null);
+      notifier.success(
+        selectedUser ? t("tenants.notifications.updateUserSuccess") : t("tenants.notifications.createUserSuccess")
+      );
     },
     onError: () => {
-      notifier.error(t("tenants.notifications.createUserError"));
+      notifier.error(selectedUser ? t("tenants.notifications.updateUserError") : t("tenants.notifications.createUserError"));
     },
   });
+
+  const handleCreate = () => {
+    setSelectedUser(null);
+    setDialogOpen(true);
+  };
+
+  const handleEdit = (user: TenantUserResponse) => {
+    setSelectedUser(user);
+    setDialogOpen(true);
+  };
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/tenants")}>
+        <Button variant="ghost" size="icon" onClick={() => navigate("/platform/tenants")}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <h1 className="text-3xl font-bold">{t("tenants.users.title")}</h1>
         <div className="flex-1" />
-        <Button onClick={() => setDialogOpen(true)}>
+        <Button onClick={handleCreate}>
           <Plus className="mr-2 h-4 w-4" /> {t("tenants.users.create")}
         </Button>
       </div>
@@ -67,12 +83,13 @@ export const TenantUsersPage: React.FC = () => {
                 <TableHead>{t("tenants.users.columns.lastName")}</TableHead>
                 <TableHead>{t("tenants.users.columns.email")}</TableHead>
                 <TableHead>{t("tenants.users.columns.role")}</TableHead>
+                <TableHead className="text-right">{t("common.list.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {users.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-10">
+                  <TableCell colSpan={5} className="text-center py-10">
                     {t("tenants.users.empty")}
                   </TableCell>
                 </TableRow>
@@ -82,7 +99,17 @@ export const TenantUsersPage: React.FC = () => {
                     <TableCell>{user.firstName}</TableCell>
                     <TableCell>{user.lastName}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.role.replace("ROLE_", "").replace("_", " ")}</TableCell>
+                    <TableCell>{formatRoleLabel(user.role)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={t("common.edit")}
+                        onClick={() => handleEdit(user)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))
               )}
@@ -97,6 +124,7 @@ export const TenantUsersPage: React.FC = () => {
         onSubmit={async (data) => {
           await mutation.mutateAsync(data);
         }}
+        user={selectedUser}
         loading={mutation.isPending}
       />
     </div>

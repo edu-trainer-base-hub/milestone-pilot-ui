@@ -35,6 +35,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation();
   const { principal } = useAuth();
   const { sidebarContent } = useSidebarContext();
+  const canViewPlatformUsers = principal?.authorities?.includes(Authority.UI_PLATFORM_USERS_VIEW);
+  const canViewPlatformTenants = principal?.authorities?.includes(Authority.UI_PLATFORM_TENANTS_VIEW);
 
   const user = React.useMemo(() => {
     if (!principal) return null;
@@ -77,14 +79,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* User Management (Visible to everyone) */}
-        {principal && (
+        {canViewPlatformUsers && (
           <SidebarGroup>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip={t("menu.userManagement")}>
-                  <Link to="/settings/profiles">
+                <SidebarMenuButton asChild tooltip={t("platformUsers.title")}>
+                  <Link to="/platform/users">
                     <UserCog />
-                    <span>{t("menu.userManagement")}</span>
+                    <span>{t("platformUsers.title")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -93,15 +95,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         )}
 
         {/* Administration Section */}
-        {principal?.authorities?.some((a) =>
-          ([Authority.ROLE_PLATFORM_ADMIN, Authority.ROLE_PLATFORM_MANAGER] as Authority[]).includes(a)
-        ) && (
+        {canViewPlatformTenants && (
           <SidebarGroup>
             <SidebarGroupLabel>{t("menu.categories.administration", "Administration")}</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip={t("tenants.title")}>
-                  <Link to="/tenants">
+                  <Link to="/platform/tenants">
                     <Building2 />
                     <span>{t("tenants.title")}</span>
                   </Link>

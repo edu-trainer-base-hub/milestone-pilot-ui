@@ -12,10 +12,7 @@ import SettingsPage from "@/pages/SettingsPage.tsx";
 import SubscriptionPage from "@/pages/subscriptions/SubscriptionPage.tsx";
 import AuthorityRoute from "@/components/AuthorityRoute.tsx";
 import { Authority } from "@/contexts/AuthContext.tsx";
-import SecondaryProfilesPage from "@/pages/profiles/SecondaryProfilesPage.tsx";
-import CreateSecondaryProfilePage from "@/pages/profiles/CreateSecondaryProfilePage.tsx";
-import EditSecondaryProfilePage from "@/pages/profiles/EditSecondaryProfilePage.tsx";
-import { TenantsPage, TenantUsersPage } from "@/features/tenants/pages";
+import { PlatformUserUpsertPage, PlatformUsersPage, TenantsPage, TenantUsersPage } from "@/features/tenants/pages";
 
 import { usePageTitle } from "@/hooks/usePageTitle.ts";
 
@@ -71,30 +68,20 @@ export default function App() {
 
           <Route element={<AuthorityRoute authority={Authority.MANAGE_PROFILES} />}>
             <Route path="settings" element={<SettingsPage />} />
-            <Route path="settings/profiles" element={<SecondaryProfilesPage />} />
-            <Route path="settings/profiles/create" element={<CreateSecondaryProfilePage />} />
-            <Route path="settings/profiles/:id/edit" element={<EditSecondaryProfilePage />} />
           </Route>
 
-          <Route
-            element={<AuthorityRoute authority={[Authority.ROLE_PLATFORM_ADMIN, Authority.ROLE_PLATFORM_MANAGER]} />}
-          >
-            <Route path="tenants" element={<TenantsPage />} />
+          <Route element={<AuthorityRoute authority={Authority.UI_PLATFORM_TENANTS_VIEW} />}>
+            <Route path="platform/tenants" element={<TenantsPage />} />
           </Route>
 
-          <Route
-            element={
-              <AuthorityRoute
-                authority={[
-                  Authority.ROLE_PLATFORM_ADMIN,
-                  Authority.ROLE_PLATFORM_MANAGER,
-                  Authority.ROLE_TENANT_ADMIN,
-                  Authority.ROLE_TENANT_MANAGER,
-                ]}
-              />
-            }
-          >
-            <Route path="tenants/:tenantId/users" element={<TenantUsersPage />} />
+          <Route element={<AuthorityRoute authority={Authority.UI_PLATFORM_USERS_VIEW} />}>
+            <Route path="platform/users" element={<PlatformUsersPage />} />
+            <Route path="platform/users/new" element={<PlatformUserUpsertPage />} />
+            <Route path="platform/users/:userId/edit" element={<PlatformUserUpsertPage />} />
+          </Route>
+
+          <Route element={<AuthorityRoute authority={Authority.UI_TENANT_USERS_VIEW} />}>
+            <Route path="platform/tenants/:tenantId/users" element={<TenantUsersPage />} />
           </Route>
         </Route>
       </Route>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -73,6 +73,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{tenant ? t("tenants.edit") : t("tenants.create")}</DialogTitle>
+          <DialogDescription>{t("tenants.dialog.descriptionPlaceholder")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
