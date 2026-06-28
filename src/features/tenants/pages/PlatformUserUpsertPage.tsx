@@ -5,7 +5,13 @@ import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 import { notifier } from "@/services/NotificationService";
 import { createPlatformUser, getPlatformUsers, updatePlatformUser } from "../api";
-import { PlatformRole, formatRoleLabel, type PlatformUserRequest, type UserRoleOption } from "../types";
+import {
+  PlatformRole,
+  formatRoleLabel,
+  getPlatformUserId,
+  type PlatformUserRequest,
+  type UserRoleOption,
+} from "../types";
 import { PlatformUserForm } from "../components/PlatformUserForm";
 import type { UserFormValues } from "../components/UserFormFields";
 
@@ -33,7 +39,7 @@ export const PlatformUserUpsertPage: React.FC = () => {
     queryFn: getPlatformUsers,
   });
 
-  const selectedUser = useMemo(() => users.find((user) => user.id === userId) ?? null, [userId, users]);
+  const selectedUser = useMemo(() => users.find((user) => getPlatformUserId(user) === userId) ?? null, [userId, users]);
 
   const mutation = useMutation({
     mutationFn: async (values: UserFormValues) => {
@@ -58,7 +64,9 @@ export const PlatformUserUpsertPage: React.FC = () => {
       navigate("/platform/users");
     },
     onError: () => {
-      notifier.error(isEdit ? t("platformUsers.notifications.updateError") : t("platformUsers.notifications.createError"));
+      notifier.error(
+        isEdit ? t("platformUsers.notifications.updateError") : t("platformUsers.notifications.createError")
+      );
     },
   });
 

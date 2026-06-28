@@ -8,6 +8,7 @@ const authMock = vi.hoisted(() => ({
     UI_PLATFORM_TENANTS_VIEW: "UI_PLATFORM_TENANTS_VIEW",
     UI_PLATFORM_USERS_VIEW: "UI_PLATFORM_USERS_VIEW",
     UI_TENANT_USERS_VIEW: "UI_TENANT_USERS_VIEW",
+    UI_TENANT_SETTINGS_VIEW: "UI_TENANT_SETTINGS_VIEW",
   } as const,
   state: {
     principal: null as { authorities: string[] } | null,
@@ -82,6 +83,17 @@ describe("authority-gated routes", () => {
   it("renders the tenant users route only with UI_TENANT_USERS_VIEW", async () => {
     renderProtectedRoute(
       "/platform/tenants/tenant-1/users",
+      authMock.Authority.UI_TENANT_USERS_VIEW,
+      [authMock.Authority.UI_TENANT_USERS_VIEW],
+      "Tenant Users Page"
+    );
+
+    expect(await screen.findByText("Tenant Users Page")).toBeInTheDocument();
+  });
+
+  it("renders the active-tenant users route only with UI_TENANT_USERS_VIEW", async () => {
+    renderProtectedRoute(
+      "/tenant/users",
       authMock.Authority.UI_TENANT_USERS_VIEW,
       [authMock.Authority.UI_TENANT_USERS_VIEW],
       "Tenant Users Page"

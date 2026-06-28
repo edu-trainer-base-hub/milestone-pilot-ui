@@ -26,6 +26,7 @@
       "subscriptions": "Підписки",
       "account": "Обліковий запис",
       "settings": "Налаштування",
+      "tenants": "Змінити тенант",
       "billing": "Оплата",
       "notifications": "Сповіщення",
       "profiles": "Профілі",
@@ -203,6 +204,36 @@
         "updateFail": "Не вдалося оновити налаштування.",
         "fetchFail": "Не вдалося завантажити налаштування.",
         "saveSuccess": "Налаштування збережено."
+      }
+    },
+    "tenantMemberships": {
+      "title": "Ваші тенанти",
+      "description": "Оберіть тенант, який буде активним для поточної сесії.",
+      "settingsLabel": "Активний тенант",
+      "settingsDescription": "Змініть поточний тенант без виходу з облікового запису.",
+      "currentTenantLabel": "Поточний тенант:",
+      "noActiveTenant": "Немає активного тенанта",
+      "activeRoleLabel": "Роль: {{role}}",
+      "loadError": "Не вдалося завантажити членства в тенантах.",
+      "empty": "Членства в тенантах не знайдено.",
+      "columns": {
+        "tenant": "Тенант",
+        "role": "Роль",
+        "status": "Статус"
+      },
+      "badges": {
+        "active": "Активний",
+        "default": "Типовий"
+      },
+      "actions": {
+        "open": "Керувати тенантами",
+        "switch": "Перемкнути",
+        "active": "Активний",
+        "backToSettings": "Назад до налаштувань"
+      },
+      "notifications": {
+        "switchSuccess": "Тенант успішно змінено.",
+        "switchError": "Не вдалося змінити тенант."
       }
     },
     "loginPage": {

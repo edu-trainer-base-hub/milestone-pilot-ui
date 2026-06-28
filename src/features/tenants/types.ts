@@ -10,6 +10,7 @@ export interface TenantRequest {
 
 export interface TenantResponse {
   id: string;
+  uuid?: string;
   name: string;
   description?: string;
   email: string;
@@ -29,7 +30,8 @@ export interface PlatformUserRequest {
 }
 
 export interface PlatformUserResponse {
-  id: string;
+  id?: string;
+  uuid?: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -56,6 +58,21 @@ export interface TenantUserResponse {
   updatedAt?: string;
 }
 
+export interface TenantMembership {
+  tenantId?: string | null;
+  tenantUuid?: string | null;
+  tenantName?: string | null;
+  name?: string | null;
+  role: string;
+  isDefault?: boolean;
+  defaultTenant?: boolean;
+  isActive?: boolean;
+}
+
+export interface TenantMembershipListResponse {
+  items: TenantMembership[];
+}
+
 export const PlatformRole = {
   ROLE_PLATFORM_ADMIN: "ROLE_PLATFORM_ADMIN",
   ROLE_PLATFORM_MANAGER: "ROLE_PLATFORM_MANAGER",
@@ -76,3 +93,15 @@ export interface UserRoleOption {
 }
 
 export const formatRoleLabel = (role: string): string => role.replace("ROLE_", "").replaceAll("_", " ");
+
+export const getPlatformUserId = (user: Pick<PlatformUserResponse, "id" | "uuid">): string =>
+  user.id ?? user.uuid ?? "";
+
+export const getTenantMembershipId = (membership: Pick<TenantMembership, "tenantId" | "tenantUuid">): string | null =>
+  membership.tenantId ?? membership.tenantUuid ?? null;
+
+export const getTenantMembershipName = (membership: Pick<TenantMembership, "tenantName" | "name">): string =>
+  membership.tenantName ?? membership.name ?? "";
+
+export const isDefaultTenantMembership = (membership: Pick<TenantMembership, "isDefault" | "defaultTenant">): boolean =>
+  Boolean(membership.isDefault ?? membership.defaultTenant);

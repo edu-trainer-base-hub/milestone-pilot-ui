@@ -1,8 +1,21 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { TenantRole, type TenantUserRequest, type TenantUserResponse, type UserRoleOption, formatRoleLabel } from "../types";
+import {
+  TenantRole,
+  type TenantUserRequest,
+  type TenantUserResponse,
+  type UserRoleOption,
+  formatRoleLabel,
+} from "../types";
 import { UserFormFields, type UserFormValues } from "./UserFormFields";
 
 interface TenantUserDialogProps {

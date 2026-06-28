@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2, Pencil, Plus } from "lucide-react";
 import { getPlatformUsers } from "../api";
-import { formatRoleLabel } from "../types";
+import { formatRoleLabel, getPlatformUserId } from "../types";
 
 export const PlatformUsersPage: React.FC = () => {
   const { t } = useTranslation();
@@ -57,7 +57,7 @@ export const PlatformUsersPage: React.FC = () => {
                 </TableRow>
               ) : (
                 users.map((user) => (
-                  <TableRow key={user.id}>
+                  <TableRow key={getPlatformUserId(user)}>
                     <TableCell>{user.firstName}</TableCell>
                     <TableCell>{user.lastName}</TableCell>
                     <TableCell>{user.email}</TableCell>
@@ -67,7 +67,7 @@ export const PlatformUsersPage: React.FC = () => {
                         variant="ghost"
                         size="icon"
                         aria-label={t("common.edit")}
-                        onClick={() => navigate(`/platform/users/${user.id}/edit`)}
+                        onClick={() => navigate(`/platform/users/${getPlatformUserId(user)}/edit`)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>

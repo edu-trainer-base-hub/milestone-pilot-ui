@@ -26,6 +26,7 @@
       "subscriptions": "Subscriptions",
       "account": "Account",
       "settings": "Settings",
+      "tenants": "Switch tenant",
       "billing": "Billing",
       "notifications": "Notifications",
       "profiles": "Profiles",
@@ -203,6 +204,36 @@
         "updateFail": "Failed to update settings.",
         "fetchFail": "Failed to fetch settings from server.",
         "saveSuccess": "Settings saved successfully."
+      }
+    },
+    "tenantMemberships": {
+      "title": "Your tenants",
+      "description": "Choose which tenant is active for the current session.",
+      "settingsLabel": "Active tenant",
+      "settingsDescription": "Switch your current tenant without leaving your signed-in session.",
+      "currentTenantLabel": "Current tenant:",
+      "noActiveTenant": "No active tenant",
+      "activeRoleLabel": "Role: {{role}}",
+      "loadError": "Failed to load tenant memberships.",
+      "empty": "No tenant memberships found.",
+      "columns": {
+        "tenant": "Tenant",
+        "role": "Role",
+        "status": "Status"
+      },
+      "badges": {
+        "active": "Active",
+        "default": "Default"
+      },
+      "actions": {
+        "open": "Manage tenants",
+        "switch": "Switch",
+        "active": "Active",
+        "backToSettings": "Back to settings"
+      },
+      "notifications": {
+        "switchSuccess": "Tenant switched successfully.",
+        "switchError": "Failed to switch tenant."
       }
     },
     "loginPage": {

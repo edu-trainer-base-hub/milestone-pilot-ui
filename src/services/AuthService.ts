@@ -1,7 +1,13 @@
+import type { TenantMembership } from "@/features/tenants/types";
 import { post } from "./ApiService";
 
 export interface LoginResponse {
   accessToken: string;
+  activeTenantId?: string | null;
+  activeTenantUuid?: string | null;
+  activeTenantName?: string | null;
+  activeTenantRole?: string | null;
+  tenants?: TenantMembership[] | null;
 }
 
 export interface LoginRequest {

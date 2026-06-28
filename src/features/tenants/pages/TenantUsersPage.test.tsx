@@ -28,6 +28,15 @@ vi.mock("@/services/NotificationService", () => ({
   },
 }));
 
+vi.mock("@/contexts/AuthContext", () => ({
+  useAuth: () => ({
+    principal: {
+      activeTenantId: "tenant-1",
+      activeTenantUuid: "tenant-1",
+    },
+  }),
+}));
+
 const renderPage = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -125,5 +134,39 @@ describe("TenantUsersPage", () => {
       })
     );
     expect(notifierMock.success).toHaveBeenCalled();
+  });
+
+  it("uses the active tenant when opened from the tenant route", async () => {
+    apiMock.getUsersByTenant.mockResolvedValue([
+      {
+        id: "user-1",
+        tenantId: "tenant-1",
+        email: "tenant-admin@example.com",
+        firstName: "Tenant",
+        lastName: "Admin",
+        role: "ROLE_TENANT_ADMIN",
+      },
+    ]);
+
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={["/tenant/users"]}>
+          <Routes>
+            <Route path="/tenant/users" element={<TenantUsersPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText("tenant-admin@example.com")).toBeInTheDocument();
+    expect(apiMock.getUsersByTenant).toHaveBeenCalledWith("tenant-1");
   });
 });

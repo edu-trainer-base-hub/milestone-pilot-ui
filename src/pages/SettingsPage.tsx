@@ -4,13 +4,16 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { Loader2 } from "lucide-react";
+import { Building2, Loader2 } from "lucide-react";
 import SettingsApiClient, { type Locale5, type UpdateSettingsResponse } from "@/services/SettingsApiClient.ts";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { notifier } from "@/services/NotificationService.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 import { extractErrorCode } from "@/services/ApiService.ts";
 import LanguageSelector from "@/components/lang/LanguageSelector.tsx";
+import { useAuth } from "@/contexts/AuthContext.tsx";
+import { Link } from "react-router-dom";
+import { formatRoleLabel } from "@/features/tenants/types";
 
 const LOCALES: readonly { value: Locale5; label: string }[] = [
   { value: "en-US", label: "English (en-US)" },
@@ -20,6 +23,7 @@ const LOCALES: readonly { value: Locale5; label: string }[] = [
 
 const SettingsPage: React.FC = () => {
   const { t } = useTranslation();
+  const { principal } = useAuth();
   const [currentSettings, setCurrentSettings] = useState<UpdateSettingsResponse | null>(null);
   const [locale, setLocale] = useState<Locale5 | "">("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,7 +54,7 @@ const SettingsPage: React.FC = () => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [t]);
 
   const onSave = async () => {
     if (!locale) return;
@@ -103,6 +107,32 @@ const SettingsPage: React.FC = () => {
               </div>
             </div>
           </div>
+          <Separator />
+          <div className="space-y-3">
+            <div>
+              <Label>{t("pages.tenantMemberships.settingsLabel")}</Label>
+              <p className="text-sm text-muted-foreground">{t("pages.tenantMemberships.settingsDescription")}</p>
+            </div>
+            <div className="flex flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 font-medium">
+                  <Building2 className="h-4 w-4" />
+                  {principal?.activeTenantName ?? t("pages.tenantMemberships.noActiveTenant")}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {principal?.activeTenantRole
+                    ? t("pages.tenantMemberships.activeRoleLabel", {
+                        role: formatRoleLabel(principal.activeTenantRole),
+                      })
+                    : t("pages.tenantMemberships.description")}
+                </p>
+              </div>
+              <Button asChild variant="outline">
+                <Link to="/settings/tenants">{t("pages.tenantMemberships.actions.open")}</Link>
+              </Button>
+            </div>
+          </div>
+
           <Separator />
           <div className="space-y-1">
             <Label htmlFor="settings-language">{t("pages.settings.telegramLanguage.label")}:</Label>

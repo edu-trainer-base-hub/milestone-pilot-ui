@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Command, LifeBuoy, Send, SquareTerminal, LogIn, Building2, UserCog } from "lucide-react";
+import { Command, LifeBuoy, Send, SquareTerminal, LogIn, Building2, UserCog, Users } from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user.tsx";
 import {
   Sidebar,
@@ -37,6 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { sidebarContent } = useSidebarContext();
   const canViewPlatformUsers = principal?.authorities?.includes(Authority.UI_PLATFORM_USERS_VIEW);
   const canViewPlatformTenants = principal?.authorities?.includes(Authority.UI_PLATFORM_TENANTS_VIEW);
+  const canViewTenantUsers = principal?.authorities?.includes(Authority.UI_TENANT_USERS_VIEW);
 
   const user = React.useMemo(() => {
     if (!principal) return null;
@@ -46,6 +47,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       email: principal.email || principal.username,
       avatar: "", // TODO: Add avatar to principal or profile
       authorities: principal.authorities,
+      activeTenantName: principal.activeTenantName,
     };
   }, [principal]);
 
@@ -104,6 +106,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Link to="/platform/tenants">
                     <Building2 />
                     <span>{t("tenants.title")}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+        )}
+
+        {canViewTenantUsers && (
+          <SidebarGroup>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={t("tenants.users.title")}>
+                  <Link to="/tenant/users">
+                    <Users />
+                    <span>{t("tenants.users.title")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

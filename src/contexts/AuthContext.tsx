@@ -2,6 +2,7 @@ import { createContext, type ReactNode, useContext, useEffect, useRef, useState 
 import { post, registerLogoutFn, registerRefreshFn } from "@/services/ApiService.ts";
 import { type LoginResponse, logout as apiLogout, logoutTelegram } from "@/services/AuthService.ts";
 import { getMe, type UserProfileDto } from "@/services/ProfileService.ts";
+import { getTenantMembershipName, isDefaultTenantMembership, type TenantMembership } from "@/features/tenants/types";
 import WebApp from "@twa-dev/sdk";
 import { jwtDecode } from "jwt-decode";
 
@@ -12,6 +13,7 @@ export const Authority = {
   UI_PLATFORM_TENANTS_VIEW: "UI_PLATFORM_TENANTS_VIEW",
   UI_PLATFORM_USERS_VIEW: "UI_PLATFORM_USERS_VIEW",
   UI_TENANT_USERS_VIEW: "UI_TENANT_USERS_VIEW",
+  UI_TENANT_SETTINGS_VIEW: "UI_TENANT_SETTINGS_VIEW",
 } as const;
 
 export type Authority = (typeof Authority)[keyof typeof Authority];
@@ -22,7 +24,7 @@ const toAuthorities = (arr: string[] | undefined | null): Authority[] => {
   return arr.filter((a): a is Authority => allowed.has(a as Authority));
 };
 
-interface Principal {
+export interface Principal {
   id: string;
   authorities: Authority[];
   username: string;
@@ -30,6 +32,11 @@ interface Principal {
   lastName: string | null;
   email: string | null;
   profileType: "PRIMARY" | "SECONDARY";
+  activeTenantId: string | null;
+  activeTenantUuid: string | null;
+  activeTenantName: string | null;
+  activeTenantRole: string | null;
+  tenants: TenantMembership[];
 }
 
 export const EmailVerificationType = {
@@ -60,6 +67,27 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+interface DecodedAccessToken {
+  sub: string;
+  authorities?: string[];
+  activeTenantId?: string;
+  activeTenantUuid?: string;
+  activeTenantName?: string;
+  activeTenantRole?: string;
+  tenantId?: string;
+  tenantUuid?: string;
+  tenantName?: string;
+  tenantRole?: string;
+}
+
+interface TenantSessionState {
+  activeTenantId: string | null;
+  activeTenantUuid: string | null;
+  activeTenantName: string | null;
+  activeTenantRole: string | null;
+  tenants: TenantMembership[];
+}
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const didInit = useRef(false);
   const [initDone, setInitDone] = useState(false);
@@ -87,14 +115,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("token");
   };
 
+  const applyAuthenticatedSession = async (session: LoginResponse): Promise<Principal> => {
+    const { accessToken } = session;
+
+    setToken(accessToken);
+    localStorage.setItem("token", accessToken);
+
+    const newPrincipal = await fetchPrincipalData(accessToken, session);
+    setPrincipal(newPrincipal);
+
+    return newPrincipal;
+  };
+
   const refresh = async (): Promise<string> => {
     try {
-      const { accessToken } = await post<LoginResponse>("/auth/refresh", undefined, { withCredentials: true });
-      setToken(accessToken);
-      localStorage.setItem("token", accessToken);
-      const newPrincipal = await fetchPrincipalData(accessToken);
-      setPrincipal(newPrincipal);
-      return accessToken;
+      const session = await post<LoginResponse>("/auth/refresh", undefined, { withCredentials: true });
+      await applyAuthenticatedSession(session);
+      return session.accessToken;
     } catch (e) {
       console.error("AuthProvider Refresh - error", e);
       throw e;
@@ -115,17 +152,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     confirmPassword: string,
     confirmationCode: string
   ): Promise<void> => {
-    const { accessToken } = await post<LoginResponse>("/auth/registration", {
+    const session = await post<LoginResponse>("/auth/registration", {
       email,
       emailVerificationCode: confirmationCode,
       password,
       confirmPassword,
       initData: telegramInitDataString,
     });
-    setToken(accessToken);
-    localStorage.setItem("token", accessToken);
-    const newPrincipal = await fetchPrincipalData(accessToken);
-    setPrincipal(newPrincipal);
+    await applyAuthenticatedSession(session);
   };
 
   const doResetPassword = async (
@@ -144,27 +178,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const login = async (email: string, password: string): Promise<void> => {
-    const { accessToken } = await post<LoginResponse>("/auth/login", {
+    const session = await post<LoginResponse>("/auth/login", {
       username: email,
       password,
       initData: telegramInitDataString,
     });
-    setToken(accessToken);
-    localStorage.setItem("token", accessToken);
-    const newPrincipal = await fetchPrincipalData(accessToken);
-    setPrincipal(newPrincipal);
+    await applyAuthenticatedSession(session);
   };
 
   const loginWithTelegram = async (initDataParam?: string | null): Promise<string> => {
     const initData = initDataParam ?? telegramInitDataString;
-    const { accessToken } = await post<LoginResponse>("/auth/login/telegram", {
+    const session = await post<LoginResponse>("/auth/login/telegram", {
       initData: initData,
     });
-    setToken(accessToken);
-    localStorage.setItem("token", accessToken);
-    const newPrincipal = await fetchPrincipalData(accessToken);
-    setPrincipal(newPrincipal);
-    return accessToken;
+    await applyAuthenticatedSession(session);
+    return session.accessToken;
   };
 
   const logout = () => {
@@ -194,13 +222,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         WebApp.ready();
       }
 
-      let token = null;
       if (WebApp?.initData) {
         const initDataString = WebApp.initData;
         if (initDataString) {
           setTelegramInitDataString(initDataString);
           try {
-            token = await loginWithTelegram(initDataString);
+            await loginWithTelegram(initDataString);
           } catch (e) {
             console.error("AuthProvider useEffect - loginWithTelegram - error", e);
           }
@@ -209,18 +236,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const savedJwt = localStorage.getItem("token");
         if (savedJwt) {
           try {
-            token = await refresh();
+            await refresh();
           } catch (e) {
             console.error("AuthProvider useEffect - refresh savedJwt - error", e);
           }
-        }
-      }
-      if (token) {
-        try {
-          const newPrincipal = await fetchPrincipalData(token);
-          setPrincipal(newPrincipal);
-        } catch (e) {
-          console.error("AuthProvider useEffect - fetchPrincipalData - error", e);
         }
       }
       setInitDone(true);
@@ -253,23 +272,63 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const fetchPrincipalData = async (token: string): Promise<Principal> => {
-  // We still decode token for authorities if they are not in the profile response or if we prefer token source of truth for authz
-  const { sub, authorities } = jwtDecode<{
-    sub: string;
-    authorities: string[];
-  }>(token);
-
+const fetchPrincipalData = async (token: string, session?: LoginResponse): Promise<Principal> => {
+  const claims = jwtDecode<DecodedAccessToken>(token);
   const profile: UserProfileDto = await getMe();
+  const tenantSession = resolveTenantSession(session, claims);
 
   return {
-    id: sub,
+    id: claims.sub,
     username: profile.username,
     firstName: profile.firstName,
     lastName: profile.lastName,
     email: profile.email,
     profileType: profile.profileType,
-    authorities: toAuthorities(authorities),
+    authorities: toAuthorities(claims.authorities),
+    activeTenantId: tenantSession.activeTenantId,
+    activeTenantUuid: tenantSession.activeTenantUuid,
+    activeTenantName: tenantSession.activeTenantName,
+    activeTenantRole: tenantSession.activeTenantRole,
+    tenants: tenantSession.tenants,
+  };
+};
+
+const resolveTenantSession = (session: LoginResponse | undefined, claims: DecodedAccessToken): TenantSessionState =>
+  normalizeTenantSession(session, claims);
+
+const normalizeTenantSession = (session: LoginResponse | undefined, claims: DecodedAccessToken): TenantSessionState => {
+  const normalizedTenants = (session?.tenants ?? []).map((tenant) => ({
+    ...tenant,
+    tenantUuid: tenant.tenantUuid ?? tenant.tenantId ?? null,
+    tenantId: tenant.tenantId ?? tenant.tenantUuid ?? null,
+    tenantName: getTenantMembershipName(tenant),
+    isDefault: isDefaultTenantMembership(tenant),
+  }));
+
+  const activeTenantUuid = session?.activeTenantUuid ?? claims.activeTenantUuid ?? claims.tenantUuid ?? null;
+  const activeTenantId =
+    session?.activeTenantId ?? claims.activeTenantId ?? claims.tenantId ?? activeTenantUuid ?? null;
+  const activeTenantMembership = normalizedTenants.find((tenant) => tenant.tenantUuid === activeTenantUuid) ?? null;
+  const defaultTenantMembership = normalizedTenants.find((tenant) => tenant.isDefault) ?? null;
+
+  return {
+    activeTenantId,
+    activeTenantUuid,
+    activeTenantName:
+      session?.activeTenantName ??
+      claims.activeTenantName ??
+      claims.tenantName ??
+      activeTenantMembership?.tenantName ??
+      defaultTenantMembership?.tenantName ??
+      null,
+    activeTenantRole:
+      session?.activeTenantRole ??
+      claims.activeTenantRole ??
+      claims.tenantRole ??
+      activeTenantMembership?.role ??
+      defaultTenantMembership?.role ??
+      null,
+    tenants: normalizedTenants,
   };
 };
 

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { notifier } from "@/services/NotificationService";
 import { createUserInTenant, getUsersByTenant, updateUserInTenant } from "../api";
 import type { TenantUserRequest, TenantUserResponse } from "../types";
@@ -14,26 +15,31 @@ import { TenantUserDialog } from "../components/TenantUserDialog";
 export const TenantUsersPage: React.FC = () => {
   const { t } = useTranslation();
   const { tenantId } = useParams<{ tenantId: string }>();
+  const { principal } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<TenantUserResponse | null>(null);
+  const effectiveTenantId = tenantId ?? principal?.activeTenantUuid ?? principal?.activeTenantId ?? null;
+  const hasPlatformTenantContext = Boolean(tenantId);
 
   const {
     data: users = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["tenantUsers", tenantId],
-    queryFn: () => getUsersByTenant(tenantId!),
-    enabled: !!tenantId,
+    queryKey: ["tenantUsers", effectiveTenantId],
+    queryFn: () => getUsersByTenant(effectiveTenantId!),
+    enabled: !!effectiveTenantId,
   });
 
   const mutation = useMutation({
     mutationFn: (data: TenantUserRequest) =>
-      selectedUser ? updateUserInTenant(tenantId!, selectedUser.id, data) : createUserInTenant(tenantId!, data),
+      selectedUser
+        ? updateUserInTenant(effectiveTenantId!, selectedUser.id, data)
+        : createUserInTenant(effectiveTenantId!, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tenantUsers", tenantId] });
+      queryClient.invalidateQueries({ queryKey: ["tenantUsers", effectiveTenantId] });
       setDialogOpen(false);
       setSelectedUser(null);
       notifier.success(
@@ -41,7 +47,9 @@ export const TenantUsersPage: React.FC = () => {
       );
     },
     onError: () => {
-      notifier.error(selectedUser ? t("tenants.notifications.updateUserError") : t("tenants.notifications.createUserError"));
+      notifier.error(
+        selectedUser ? t("tenants.notifications.updateUserError") : t("tenants.notifications.createUserError")
+      );
     },
   });
 
@@ -55,10 +63,18 @@ export const TenantUsersPage: React.FC = () => {
     setDialogOpen(true);
   };
 
+  if (!effectiveTenantId) {
+    return <div className="p-6 text-center text-destructive">{t("pages.tenantMemberships.noActiveTenant")}</div>;
+  }
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/platform/tenants")}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate(hasPlatformTenantContext ? "/platform/tenants" : "/")}
+        >
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <h1 className="text-3xl font-bold">{t("tenants.users.title")}</h1>

@@ -9,6 +9,7 @@ const authMock = vi.hoisted(() => ({
   Authority: {
     UI_PLATFORM_TENANTS_VIEW: "UI_PLATFORM_TENANTS_VIEW",
     UI_PLATFORM_USERS_VIEW: "UI_PLATFORM_USERS_VIEW",
+    UI_TENANT_USERS_VIEW: "UI_TENANT_USERS_VIEW",
   } as const,
   state: {
     principal: null as {
@@ -54,10 +55,15 @@ const renderSidebar = (authorities: string[]) => {
 
 describe("AppSidebar", () => {
   it("shows platform links from UI authorities", () => {
-    renderSidebar([authMock.Authority.UI_PLATFORM_USERS_VIEW, authMock.Authority.UI_PLATFORM_TENANTS_VIEW]);
+    renderSidebar([
+      authMock.Authority.UI_PLATFORM_USERS_VIEW,
+      authMock.Authority.UI_PLATFORM_TENANTS_VIEW,
+      authMock.Authority.UI_TENANT_USERS_VIEW,
+    ]);
 
     expect(screen.getByText("Platform Users")).toBeInTheDocument();
     expect(screen.getByText("Tenants")).toBeInTheDocument();
+    expect(screen.getByText("Tenant Users")).toBeInTheDocument();
   });
 
   it("does not show admin links for legacy role strings alone", () => {
@@ -65,5 +71,6 @@ describe("AppSidebar", () => {
 
     expect(screen.queryByText("Platform Users")).not.toBeInTheDocument();
     expect(screen.queryByText("Tenants")).not.toBeInTheDocument();
+    expect(screen.queryByText("Tenant Users")).not.toBeInTheDocument();
   });
 });

@@ -9,6 +9,7 @@ import {
   Settings2,
   /*Sparkles,*/
   Users,
+  Building2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -34,6 +35,7 @@ export function NavUser({
     email: string;
     avatar: string;
     authorities: string[];
+    activeTenantName?: string | null;
   };
 }) {
   const { isMobile } = useSidebar();
@@ -44,6 +46,8 @@ export function NavUser({
   const canManageProfiles = user.authorities?.includes(Authority.MANAGE_PROFILES);
   const canManageSubscriptions = user.authorities?.includes(Authority.MANAGE_SUBSCRIPTIONS);
   const canViewPlatformUsers = user.authorities?.includes(Authority.UI_PLATFORM_USERS_VIEW);
+  const canViewTenantUsers = user.authorities?.includes(Authority.UI_TENANT_USERS_VIEW);
+  const canViewTenantSettings = user.authorities?.includes(Authority.UI_TENANT_SETTINGS_VIEW);
 
   return (
     <SidebarMenu>
@@ -79,7 +83,7 @@ export function NavUser({
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate text-xs">{user.activeTenantName || user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -102,12 +106,16 @@ export function NavUser({
                 <BadgeCheck />
                 {t("menu.user.account", "Account")}
               </DropdownMenuItem>*/}
-              {canManageProfiles && (
+              {(canManageProfiles || canViewTenantSettings) && (
                 <DropdownMenuItem onClick={() => navigate("/settings")}>
                   <Settings2 />
                   {t("menu.user.settings", "Settings")}
                 </DropdownMenuItem>
               )}
+              <DropdownMenuItem onClick={() => navigate("/settings/tenants")}>
+                <Building2 />
+                {t("menu.user.tenants", "Switch tenant")}
+              </DropdownMenuItem>
               {/*<DropdownMenuItem>
                 <CreditCard />
                 {t("menu.user.billing", "Billing")}
@@ -120,6 +128,12 @@ export function NavUser({
                 <DropdownMenuItem onClick={() => navigate("/platform/users")}>
                   <Users />
                   {t("platformUsers.title")}
+                </DropdownMenuItem>
+              )}
+              {canViewTenantUsers && (
+                <DropdownMenuItem onClick={() => navigate("/tenant/users")}>
+                  <Users />
+                  {t("tenants.users.title")}
                 </DropdownMenuItem>
               )}
             </DropdownMenuGroup>

@@ -26,6 +26,7 @@
       "subscriptions": "Подписки",
       "account": "Аккаунт",
       "settings": "Настройки",
+      "tenants": "Сменить тенант",
       "billing": "Оплата",
       "notifications": "Уведомления",
       "profiles": "Профили",
@@ -203,6 +204,36 @@
         "updateFail": "Не удалось обновить настройки.",
         "fetchFail": "Не удалось загрузить настройки.",
         "saveSuccess": "Настройки успешно сохранены."
+      }
+    },
+    "tenantMemberships": {
+      "title": "Ваши тенанты",
+      "description": "Выберите тенант, который будет активен для текущей сессии.",
+      "settingsLabel": "Активный тенант",
+      "settingsDescription": "Смените текущий тенант без выхода из аккаунта.",
+      "currentTenantLabel": "Текущий тенант:",
+      "noActiveTenant": "Нет активного тенанта",
+      "activeRoleLabel": "Роль: {{role}}",
+      "loadError": "Не удалось загрузить членства в тенантах.",
+      "empty": "Членства в тенантах не найдены.",
+      "columns": {
+        "tenant": "Тенант",
+        "role": "Роль",
+        "status": "Статус"
+      },
+      "badges": {
+        "active": "Активный",
+        "default": "По умолчанию"
+      },
+      "actions": {
+        "open": "Управлять тенантами",
+        "switch": "Переключить",
+        "active": "Активный",
+        "backToSettings": "Назад к настройкам"
+      },
+      "notifications": {
+        "switchSuccess": "Тенант успешно переключен.",
+        "switchError": "Не удалось переключить тенант."
       }
     },
     "loginPage": {
