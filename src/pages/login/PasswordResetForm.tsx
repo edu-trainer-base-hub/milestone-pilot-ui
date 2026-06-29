@@ -123,7 +123,7 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
                     {t("pages.resetPasswordPage.confirmationCode.sendCodeButtonLoading")}
                   </>
                 ) : secondsLeft > 0 ? (
-                  t("pages.registrationPage.confirmationCode.sendCodeButtonRe", {
+                  t("pages.resetPasswordPage.confirmationCode.sendCodeButtonRe", {
                     secondsLeft,
                   })
                 ) : (

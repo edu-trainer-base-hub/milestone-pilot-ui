@@ -254,43 +254,6 @@
         "submitError": "We can't find that email, username, or password. Try again."
       }
     },
-    "registrationPage": {
-      "titlePrompt": "Create your account",
-      "email": {
-        "label": "Email",
-        "placeholder": "Enter your email"
-      },
-      "confirmationCode": {
-        "label": "Confirmation Code",
-        "placeholder": "Enter the confirmation code",
-        "sendCodeButton": "Send confirmation code",
-        "sendCodeButtonRe": "Resend in {{secondsLeft}} s",
-        "sendCodeButtonLoading": "Sending code..."
-      },
-      "password": {
-        "label": "Password",
-        "placeholder": "Enter your password",
-        "showPasswordLabel": "Show password"
-      },
-      "confirmPassword": {
-        "label": "Confirm Password",
-        "placeholder": "Confirm your password"
-      },
-      "submitButton": "Sign up",
-      "submitButtonLoading": "Creating account...",
-      "loginPrompt": "Already have an account?",
-      "loginLinkText": "Sign in",
-      "validation": {
-        "invalidEmail": "Invalid email address",
-        "passwordsMismatch": "Passwords do not match"
-      },
-      "notifications": {
-        "submitSuccess": "New account created successfully.",
-        "submitError": "Registration failed. Please try again.",
-        "codeSentSuccess": "Code sent to your email.",
-        "codeSentError": "Failed to send code."
-      }
-    },
     "accountSetup": {
       "titlePrompt": "Set your password",
       "loginPrompt": "Already have an account?",
@@ -310,6 +273,7 @@
         "label": "Confirmation Code",
         "placeholder": "Enter the reset code",
         "sendCodeButton": "Send reset code",
+        "sendCodeButtonRe": "Resend in {{secondsLeft}} s",
         "sendCodeButtonLoading": "Sending code..."
       },
       "password": {
@@ -325,6 +289,10 @@
       "submitButtonLoading": "Resetting...",
       "loginPrompt": "Remembered your password?",
       "loginLinkText": "Sign in",
+      "validation": {
+        "invalidEmail": "Invalid email address",
+        "passwordsMismatch": "Passwords do not match"
+      },
       "notifications": {
         "submitSuccess": "Password reset successfully.",
         "submitError": "Reset password failed. Please try again.",

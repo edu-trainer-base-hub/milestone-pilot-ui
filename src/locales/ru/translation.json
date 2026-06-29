@@ -254,43 +254,6 @@
         "submitError": "Мы не можем найти этот email, имя пользователя или пароль. Попробуйте снова."
       }
     },
-    "registrationPage": {
-      "titlePrompt": "Регистрация",
-      "email": {
-        "label": "Email",
-        "placeholder": "Введите вашу электронную почту"
-      },
-      "confirmationCode": {
-        "label": "Код подтверждения",
-        "placeholder": "Введите код подтверждения",
-        "sendCodeButton": "Отправить код подтверждения",
-        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
-        "sendCodeButtonLoading": "Отправляем код..."
-      },
-      "password": {
-        "label": "Пароль",
-        "placeholder": "Введите ваш пароль",
-        "showPasswordLabel": "Показать пароль"
-      },
-      "confirmPassword": {
-        "label": "Подтвердите пароль",
-        "placeholder": "Подтвердите ваш пароль"
-      },
-      "submitButton": "Зарегистрироваться",
-      "submitButtonLoading": "Создание аккаунта...",
-      "loginPrompt": "Уже есть аккаунт?",
-      "loginLinkText": "Войти",
-      "validation": {
-        "invalidEmail": "Неверный адрес электронной почты",
-        "passwordsMismatch": "Пароли не совпадают"
-      },
-      "notifications": {
-        "submitSuccess": "Новый аккаунт успешно создан.",
-        "submitError": "Не удалось зарегистрироваться. Пожалуйста, попробуйте снова.",
-        "codeSentSuccess": "Код отправлен на вашу электронную почту.",
-        "codeSentError": "Не удалось отправить код."
-      }
-    },
     "accountSetup": {
       "titlePrompt": "Установите пароль",
       "loginPrompt": "Уже есть аккаунт?",
@@ -310,6 +273,7 @@
         "label": "Код сброса",
         "placeholder": "Введите код сброса",
         "sendCodeButton": "Отправить код сброса пароля",
+        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
         "sendCodeButtonLoading": "Отправляем код..."
       },
       "password": {
@@ -325,6 +289,10 @@
       "submitButtonLoading": "Сброс...",
       "loginPrompt": "Вспомнили пароль?",
       "loginLinkText": "Войти",
+      "validation": {
+        "invalidEmail": "Неверный адрес электронной почты",
+        "passwordsMismatch": "Пароли не совпадают"
+      },
       "notifications": {
         "submitSuccess": "Пароль успешно сброшен.",
         "submitError": "Не удалось сбросить пароль. Пожалуйста, попробуйте снова.",

@@ -254,43 +254,6 @@
         "submitError": "Ми не можемо знайти цей емейл, ім'я користувача або пароль. Спробуйте ще раз."
       }
     },
-    "registrationPage": {
-      "titlePrompt": "Реєстрація",
-      "email": {
-        "label": "Email",
-        "placeholder": "Введіть вашу електронну пошту"
-      },
-      "confirmationCode": {
-        "label": "Код підтвердження",
-        "placeholder": "Введіть код підтвердження",
-        "sendCodeButton": "Надіслати код підтвердження",
-        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
-        "sendCodeButtonLoading": "Надсилаємо код..."
-      },
-      "password": {
-        "label": "Пароль",
-        "placeholder": "Введіть ваш пароль",
-        "showPasswordLabel": "Показати пароль"
-      },
-      "confirmPassword": {
-        "label": "Підтвердьте пароль",
-        "placeholder": "Підтвердіть ваш пароль"
-      },
-      "submitButton": "Зареєструватися",
-      "submitButtonLoading": "Створення облікового запису...",
-      "loginPrompt": "Вже є обліковий запис?",
-      "loginLinkText": "Увійти",
-      "validation": {
-        "invalidEmail": "Невірна електронна адреса",
-        "passwordsMismatch": "Паролі не співпадають"
-      },
-      "notifications": {
-        "submitSuccess": "Новий обліковий запис успішно створено.",
-        "submitError": "Не вдалося зареєструватися. Будь ласка, спробуйте ще раз.",
-        "codeSentSuccess": "Код надіслано на вашу електронну пошту.",
-        "codeSentError": "Не вдалося надіслати код."
-      }
-    },
     "accountSetup": {
       "titlePrompt": "Встановіть пароль",
       "loginPrompt": "Вже маєте аккаунт?",
@@ -310,6 +273,7 @@
         "label": "Код оновлення",
         "placeholder": "Введіть код оновлення",
         "sendCodeButton": "Надіслати код оновлення паролю",
+        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
         "sendCodeButtonLoading": "Надсилаємо код..."
       },
       "password": {
@@ -325,6 +289,10 @@
       "submitButtonLoading": "Оновлення...",
       "loginPrompt": "Згадали пароль?",
       "loginLinkText": "Увійти",
+      "validation": {
+        "invalidEmail": "Невірна електронна адреса",
+        "passwordsMismatch": "Паролі не співпадають"
+      },
       "notifications": {
         "submitSuccess": "Пароль успішно оновлено.",
         "submitError": "Не вдалося оновити пароль. Будь ласка, спробуйте ще раз.",

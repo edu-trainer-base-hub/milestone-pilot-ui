@@ -69,6 +69,8 @@ describe("ResetPasswordPage", () => {
       );
     });
 
+    expect(screen.getByRole("button", { name: "Resend in 60 s" })).toBeDisabled();
+
     fireEvent.change(await screen.findByLabelText("Confirmation Code"), { target: { value: "123456" } });
     fireEvent.change(screen.getByLabelText("Password"), { target: { value: "Valid123!" } });
     fireEvent.change(screen.getByLabelText("Confirm Password"), { target: { value: "Valid123!" } });
@@ -79,6 +81,17 @@ describe("ResetPasswordPage", () => {
     });
 
     expect(await screen.findByText("Login Route")).toBeInTheDocument();
+  });
+
+  it("shows reset-password validation messages without registration translations", async () => {
+    renderPage("/password/reset");
+
+    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "invalid-email" } });
+    expect(screen.getByText("Invalid email address")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Password"), { target: { value: "Valid123!" } });
+    fireEvent.change(screen.getByLabelText("Confirm Password"), { target: { value: "Different123!" } });
+    expect(screen.getAllByText("Passwords do not match")).not.toHaveLength(0);
   });
 
   it("preserves tenant account setup mode without the send-code step", async () => {

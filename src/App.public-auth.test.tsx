@@ -82,10 +82,9 @@ describe("App public auth routes", () => {
     expect(await screen.findByText("Reset Password Page")).toBeInTheDocument();
   });
 
-  it("falls through /register to the catch-all redirect", async () => {
+  it("redirects unmatched legacy /register requests to the public auth default", async () => {
     renderApp("/register");
 
     expect(await screen.findByText("Вітаємо у Milestone Pilot!")).toBeInTheDocument();
-    expect(screen.queryByText("Registration Page")).not.toBeInTheDocument();
   });
 });

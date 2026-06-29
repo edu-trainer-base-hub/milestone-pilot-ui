@@ -90,7 +90,7 @@ export function usePasswordResetForm({
     if (!value) {
       setEmailError(null);
     } else if (!emailRegex.test(value)) {
-      setEmailError(t("pages.registrationPage.validation.invalidEmail"));
+      setEmailError(t("pages.resetPasswordPage.validation.invalidEmail"));
     } else {
       setEmailError(null);
     }
@@ -139,7 +139,7 @@ export function usePasswordResetForm({
     setPassword(value);
     setPasswordErrors(validatePassword(value));
     if (confirmPassword && value !== confirmPassword) {
-      setConfirmError(t("pages.registrationPage.validation.passwordsMismatch"));
+      setConfirmError(t("pages.resetPasswordPage.validation.passwordsMismatch"));
     } else {
       setConfirmError(null);
     }
@@ -149,7 +149,7 @@ export function usePasswordResetForm({
     const value = e.target.value;
     setConfirmPassword(value);
     if (password && password !== value) {
-      setConfirmError(t("pages.registrationPage.validation.passwordsMismatch"));
+      setConfirmError(t("pages.resetPasswordPage.validation.passwordsMismatch"));
     } else {
       setConfirmError(null);
     }
