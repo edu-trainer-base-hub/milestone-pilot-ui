@@ -35,7 +35,7 @@ export function NavUser({
     email: string;
     avatar: string;
     authorities: string[];
-    activeTenantName?: string | null;
+    activeWorkspaceLabel?: string | null;
   };
 }) {
   const { isMobile } = useSidebar();
@@ -83,7 +83,7 @@ export function NavUser({
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.activeTenantName || user.email}</span>
+                  <span className="truncate text-xs">{user.activeWorkspaceLabel || user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -114,7 +114,7 @@ export function NavUser({
               )}
               <DropdownMenuItem onClick={() => navigate("/settings/tenants")}>
                 <Building2 />
-                {t("menu.user.tenants", "Switch tenant")}
+                {t("menu.user.tenants", "Manage workspaces")}
               </DropdownMenuItem>
               {/*<DropdownMenuItem>
                 <CreditCard />

@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarContextProvider } from "@/contexts/SidebarContext";
+import { WorkspaceContextType } from "@/features/tenants/types";
 import { AppSidebar } from "./app-sidebar";
 
 const authMock = vi.hoisted(() => ({
@@ -18,6 +19,8 @@ const authMock = vi.hoisted(() => ({
       lastName: string | null;
       email: string | null;
       authorities: string[];
+      contextType: WorkspaceContextType;
+      activeWorkspaceName: string | null;
     } | null,
   },
 }));
@@ -40,6 +43,8 @@ const renderSidebar = (authorities: string[]) => {
     lastName: "User",
     email: "platform@example.com",
     authorities,
+    contextType: WorkspaceContextType.PLATFORM,
+    activeWorkspaceName: null,
   };
 
   render(

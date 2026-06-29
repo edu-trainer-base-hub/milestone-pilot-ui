@@ -2,11 +2,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { WorkspaceContextType } from "../types";
 import { TenantMembershipsPage } from "./TenantMembershipsPage";
 
 const apiMock = vi.hoisted(() => ({
-  getCurrentUserTenantMemberships: vi.fn(),
-  setDefaultTenant: vi.fn(),
+  getCurrentUserWorkspaces: vi.fn(),
+  setDefaultWorkspace: vi.fn(),
 }));
 
 const notifierMock = vi.hoisted(() => ({
@@ -14,7 +15,10 @@ const notifierMock = vi.hoisted(() => ({
   error: vi.fn(),
 }));
 
+const navigateMock = vi.hoisted(() => vi.fn());
+
 const authMock = vi.hoisted(() => ({
+  switchWorkspace: vi.fn(),
   doRefresh: vi.fn(),
   principal: {
     id: "user-1",
@@ -24,17 +28,17 @@ const authMock = vi.hoisted(() => ({
     email: "tenant.user@example.com",
     profileType: "PRIMARY",
     authorities: [],
-    activeTenantId: "tenant-1",
-    activeTenantUuid: null,
-    activeTenantName: "Tenant Alpha",
-    activeTenantRole: "ROLE_TENANT_ADMIN",
-    tenants: [],
+    contextType: "TENANT",
+    activeTenantUuid: "tenant-1",
+    activeRole: "ROLE_TENANT_ADMIN",
+    activeWorkspaceName: "Tenant Alpha",
+    availableWorkspaces: [],
   },
 }));
 
 vi.mock("../api", () => ({
-  getCurrentUserTenantMemberships: apiMock.getCurrentUserTenantMemberships,
-  setDefaultTenant: apiMock.setDefaultTenant,
+  getCurrentUserWorkspaces: apiMock.getCurrentUserWorkspaces,
+  setDefaultWorkspace: apiMock.setDefaultWorkspace,
 }));
 
 vi.mock("@/services/NotificationService", () => ({
@@ -47,9 +51,18 @@ vi.mock("@/services/NotificationService", () => ({
 vi.mock("@/contexts/AuthContext", () => ({
   useAuth: () => ({
     principal: authMock.principal,
+    switchWorkspace: authMock.switchWorkspace,
     doRefresh: authMock.doRefresh,
   }),
 }));
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => navigateMock,
+  };
+});
 
 const renderPage = () => {
   const queryClient = new QueryClient({
@@ -74,36 +87,61 @@ const renderPage = () => {
 
 describe("TenantMembershipsPage", () => {
   beforeEach(() => {
-    apiMock.getCurrentUserTenantMemberships.mockReset();
-    apiMock.setDefaultTenant.mockReset();
+    apiMock.getCurrentUserWorkspaces.mockReset();
+    apiMock.setDefaultWorkspace.mockReset();
     notifierMock.success.mockReset();
     notifierMock.error.mockReset();
+    navigateMock.mockReset();
+    authMock.switchWorkspace.mockReset();
     authMock.doRefresh.mockReset();
   });
 
-  it("renders memberships and switches inactive tenants in refresh order", async () => {
-    const calls: string[] = [];
-
-    apiMock.getCurrentUserTenantMemberships.mockResolvedValue([
+  it("renders platform and tenant workspaces with independent active and default badges", async () => {
+    apiMock.getCurrentUserWorkspaces.mockResolvedValue([
       {
-        tenantId: "tenant-1",
-        tenantName: "Tenant Alpha",
-        role: "ROLE_TENANT_ADMIN",
+        contextType: WorkspaceContextType.PLATFORM,
+        role: "ROLE_PLATFORM_ADMIN",
+        isActive: false,
         isDefault: true,
       },
       {
-        tenantId: "tenant-2",
-        tenantName: "Tenant Beta",
-        role: "ROLE_TENANT_MANAGER",
+        contextType: WorkspaceContextType.TENANT,
+        tenantUuid: "tenant-1",
+        tenantName: "Tenant Alpha",
+        role: "ROLE_TENANT_ADMIN",
+        isActive: true,
         isDefault: false,
       },
     ]);
-    apiMock.setDefaultTenant.mockImplementation(async () => {
-      calls.push("setDefaultTenant");
-    });
-    authMock.doRefresh.mockImplementation(async () => {
-      calls.push("doRefresh");
-      return "new-token";
+
+    renderPage();
+
+    expect(await screen.findByText("Platform")).toBeInTheDocument();
+    expect(screen.getAllByText("Tenant Alpha")).toHaveLength(2);
+    expect(screen.getAllByText("Default")).toHaveLength(2);
+    expect(screen.getAllByText("Active").length).toBeGreaterThan(0);
+    expect(screen.getByRole("button", { name: "Switch Tenant Alpha" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Set default Tenant Alpha" })).toBeInTheDocument();
+  });
+
+  it("switches workspace, invalidates cache, and navigates home", async () => {
+    const calls: string[] = [];
+
+    apiMock.getCurrentUserWorkspaces.mockResolvedValue([
+      {
+        contextType: WorkspaceContextType.TENANT,
+        tenantUuid: "tenant-1",
+        tenantName: "Tenant Alpha",
+        role: "ROLE_TENANT_ADMIN",
+        isActive: true,
+      },
+      {
+        contextType: WorkspaceContextType.PLATFORM,
+        role: "ROLE_PLATFORM_ADMIN",
+      },
+    ]);
+    authMock.switchWorkspace.mockImplementation(async () => {
+      calls.push("switchWorkspace");
     });
 
     const { invalidateSpy } = renderPage();
@@ -112,22 +150,49 @@ describe("TenantMembershipsPage", () => {
       return undefined;
     });
 
-    expect(await screen.findByRole("button", { name: "Switch Tenant Beta" })).toBeInTheDocument();
-    expect(screen.getAllByText("Tenant Alpha")).toHaveLength(2);
-    expect(screen.getByText("Default")).toBeInTheDocument();
-    expect(screen.getAllByText("Active")).toHaveLength(2);
-
-    expect(screen.getByRole("button", { name: "Active Tenant Alpha" })).toBeDisabled();
-
-    fireEvent.click(screen.getByRole("button", { name: "Switch Tenant Beta" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Switch Platform" }));
 
     await waitFor(() => {
-      expect(apiMock.setDefaultTenant).toHaveBeenCalledWith("tenant-2");
-      expect(authMock.doRefresh).toHaveBeenCalled();
+      expect(authMock.switchWorkspace).toHaveBeenCalledWith(WorkspaceContextType.PLATFORM, null);
       expect(invalidateSpy).toHaveBeenCalled();
+      expect(navigateMock).toHaveBeenCalledWith("/");
     });
 
-    expect(calls).toEqual(["setDefaultTenant", "doRefresh", "invalidateQueries"]);
+    expect(calls).toEqual(["switchWorkspace", "invalidateQueries"]);
     expect(notifierMock.success).toHaveBeenCalled();
+  });
+
+  it("sets the default workspace without switching context", async () => {
+    apiMock.getCurrentUserWorkspaces.mockResolvedValue([
+      {
+        contextType: WorkspaceContextType.PLATFORM,
+        role: "ROLE_PLATFORM_ADMIN",
+        isDefault: false,
+      },
+      {
+        contextType: WorkspaceContextType.TENANT,
+        tenantUuid: "tenant-1",
+        tenantName: "Tenant Alpha",
+        role: "ROLE_TENANT_ADMIN",
+        isActive: true,
+        isDefault: true,
+      },
+    ]);
+    apiMock.setDefaultWorkspace.mockResolvedValue(undefined);
+    authMock.doRefresh.mockResolvedValue("new-token");
+
+    renderPage();
+
+    fireEvent.click(await screen.findByRole("button", { name: "Set default Platform" }));
+
+    await waitFor(() => {
+      expect(apiMock.setDefaultWorkspace).toHaveBeenCalledWith({
+        contextType: WorkspaceContextType.PLATFORM,
+        tenantUuid: null,
+      });
+      expect(authMock.switchWorkspace).not.toHaveBeenCalled();
+      expect(authMock.doRefresh).toHaveBeenCalled();
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
   });
 });

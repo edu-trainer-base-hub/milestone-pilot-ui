@@ -17,6 +17,7 @@ import { useSidebarContext } from "@/contexts/SidebarContext";
 import { Link } from "react-router-dom";
 import { NavSecondary } from "@/components/sidebar/nav-secondary";
 import { useTranslation } from "react-i18next";
+import { WorkspaceContextType } from "@/features/tenants/types";
 
 const navSecondaryData = [
   {
@@ -47,9 +48,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       email: principal.email || principal.username,
       avatar: "", // TODO: Add avatar to principal or profile
       authorities: principal.authorities,
-      activeTenantName: principal.activeTenantName,
+      activeWorkspaceLabel:
+        principal.contextType === WorkspaceContextType.PLATFORM
+          ? t("pages.tenantMemberships.platformWorkspace")
+          : principal.activeWorkspaceName,
     };
-  }, [principal]);
+  }, [principal, t]);
 
   return (
     <Sidebar variant="inset" {...props}>

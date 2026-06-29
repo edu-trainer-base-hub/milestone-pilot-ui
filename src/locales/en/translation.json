@@ -26,7 +26,7 @@
       "subscriptions": "Subscriptions",
       "account": "Account",
       "settings": "Settings",
-      "tenants": "Switch tenant",
+      "tenants": "Manage workspaces",
       "billing": "Billing",
       "notifications": "Notifications",
       "profiles": "Profiles",
@@ -207,33 +207,39 @@
       }
     },
     "tenantMemberships": {
-      "title": "Your tenants",
-      "description": "Choose which tenant is active for the current session.",
-      "settingsLabel": "Active tenant",
-      "settingsDescription": "Switch your current tenant without leaving your signed-in session.",
-      "currentTenantLabel": "Current tenant:",
-      "noActiveTenant": "No active tenant",
+      "title": "Your workspaces",
+      "description": "Choose which workspace is active for the current session and which one should be the default next time you sign in.",
+      "settingsLabel": "Active workspace",
+      "settingsDescription": "Switch your current workspace or save a different default without leaving your signed-in session.",
+      "currentTenantLabel": "Current workspace:",
+      "noActiveTenant": "No active tenant or workspace",
       "activeRoleLabel": "Role: {{role}}",
-      "loadError": "Failed to load tenant memberships.",
-      "empty": "No tenant memberships found.",
+      "platformWorkspace": "Platform",
+      "loadError": "Failed to load workspaces.",
+      "empty": "No workspaces found.",
       "columns": {
-        "tenant": "Tenant",
+        "tenant": "Workspace",
         "role": "Role",
-        "status": "Status"
+        "status": "Status",
+        "actions": "Actions"
       },
       "badges": {
         "active": "Active",
         "default": "Default"
       },
       "actions": {
-        "open": "Manage tenants",
+        "open": "Manage workspaces",
         "switch": "Switch",
         "active": "Active",
+        "setDefault": "Set default",
+        "default": "Default",
         "backToSettings": "Back to settings"
       },
       "notifications": {
-        "switchSuccess": "Tenant switched successfully.",
-        "switchError": "Failed to switch tenant."
+        "switchSuccess": "Workspace switched successfully.",
+        "switchError": "Failed to switch workspace.",
+        "defaultSuccess": "Default workspace updated successfully.",
+        "defaultError": "Failed to update the default workspace."
       }
     },
     "loginPage": {

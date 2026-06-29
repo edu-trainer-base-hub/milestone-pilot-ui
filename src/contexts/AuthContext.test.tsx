@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { WorkspaceContextType } from "@/features/tenants/types";
 import { AuthProvider, useAuth } from "./AuthContext";
 
 const apiMock = vi.hoisted(() => ({
@@ -15,6 +16,10 @@ const profileMock = vi.hoisted(() => ({
 const authServiceMock = vi.hoisted(() => ({
   logout: vi.fn(),
   logoutTelegram: vi.fn(),
+}));
+
+const workspaceApiMock = vi.hoisted(() => ({
+  switchWorkspace: vi.fn(),
 }));
 
 const jwtMock = vi.hoisted(() => ({
@@ -41,6 +46,10 @@ vi.mock("@/services/AuthService.ts", () => ({
   logoutTelegram: authServiceMock.logoutTelegram,
 }));
 
+vi.mock("@/features/tenants/api", () => ({
+  switchWorkspace: workspaceApiMock.switchWorkspace,
+}));
+
 vi.mock("jwt-decode", () => ({
   jwtDecode: jwtMock.jwtDecode,
 }));
@@ -60,11 +69,8 @@ const TestHarness = () => {
       <button type="button" onClick={() => auth.doRefresh()}>
         refresh
       </button>
-      <button type="button" onClick={() => auth.loginWithTelegram()}>
-        telegram
-      </button>
-      <button type="button" onClick={() => auth.logout()}>
-        logout
+      <button type="button" onClick={() => auth.switchWorkspace(WorkspaceContextType.PLATFORM)}>
+        switch-platform
       </button>
       <div data-testid="principal">{JSON.stringify(auth.principal)}</div>
     </div>
@@ -80,6 +86,7 @@ describe("AuthContext", () => {
     profileMock.getMe.mockReset();
     authServiceMock.logout.mockReset();
     authServiceMock.logoutTelegram.mockReset();
+    workspaceApiMock.switchWorkspace.mockReset();
     jwtMock.jwtDecode.mockReset();
     webAppMock.ready.mockReset();
     webAppMock.initData = "";
@@ -96,30 +103,28 @@ describe("AuthContext", () => {
       primaryProfileUuid: null,
       verifiedEmail: true,
     });
-    authServiceMock.logout.mockResolvedValue(undefined);
-    authServiceMock.logoutTelegram.mockResolvedValue(undefined);
   });
 
-  it("populates tenant fields in principal from the login response", async () => {
+  it("stores a tenant workspace session from login", async () => {
     apiMock.post.mockResolvedValue({
       accessToken: "login-token",
-      activeTenantId: "tenant-1",
+      contextType: WorkspaceContextType.TENANT,
       activeTenantUuid: "tenant-uuid-1",
-      activeTenantName: "Tenant Alpha",
-      activeTenantRole: "ROLE_TENANT_ADMIN",
-      tenants: [
+      activeRole: "ROLE_TENANT_ADMIN",
+      availableWorkspaces: [
         {
-          tenantId: "tenant-1",
+          contextType: WorkspaceContextType.TENANT,
+          tenantUuid: "tenant-uuid-1",
           tenantName: "Tenant Alpha",
           role: "ROLE_TENANT_ADMIN",
-          isDefault: true,
           isActive: true,
+          isDefault: true,
         },
       ],
     });
     jwtMock.jwtDecode.mockReturnValue({
       sub: "user-1",
-      authorities: ["MANAGE_PROFILES"],
+      authorities: ["MANAGE_PROFILES", "TENANT_USERS_READ"],
     });
 
     render(
@@ -128,27 +133,34 @@ describe("AuthContext", () => {
       </AuthProvider>
     );
 
-    await screen.findByRole("button", { name: "login" });
-    fireEvent.click(screen.getByRole("button", { name: "login" }));
+    fireEvent.click(await screen.findByRole("button", { name: "login" }));
 
     await waitFor(() => {
-      expect(screen.getByTestId("principal")).toHaveTextContent("Tenant Alpha");
-      expect(screen.getByTestId("principal")).toHaveTextContent("ROLE_TENANT_ADMIN");
-      expect(screen.getByTestId("principal")).toHaveTextContent("tenant-uuid-1");
+      expect(screen.getByTestId("principal")).toHaveTextContent('"contextType":"TENANT"');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"activeTenantUuid":"tenant-uuid-1"');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"activeRole":"ROLE_TENANT_ADMIN"');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"activeWorkspaceName":"Tenant Alpha"');
     });
   });
 
-  it("falls back to JWT tenant claims when refresh response omits tenant fields", async () => {
+  it("stores a platform workspace session from login", async () => {
     apiMock.post.mockResolvedValue({
-      accessToken: "refresh-token",
+      accessToken: "platform-token",
+      contextType: WorkspaceContextType.PLATFORM,
+      activeTenantUuid: null,
+      activeRole: "ROLE_PLATFORM_ADMIN",
+      availableWorkspaces: [
+        {
+          contextType: WorkspaceContextType.PLATFORM,
+          role: "ROLE_PLATFORM_ADMIN",
+          isActive: true,
+          isDefault: true,
+        },
+      ],
     });
     jwtMock.jwtDecode.mockReturnValue({
       sub: "user-2",
-      authorities: ["MANAGE_PROFILES"],
-      tenantId: "tenant-2",
-      tenantUuid: "tenant-uuid-2",
-      tenantName: "Tenant Beta",
-      tenantRole: "ROLE_TENANT_MANAGER",
+      authorities: ["MANAGE_PROFILES", "PLATFORM_ADMINS_READ"],
     });
 
     render(
@@ -157,22 +169,38 @@ describe("AuthContext", () => {
       </AuthProvider>
     );
 
-    await screen.findByRole("button", { name: "refresh" });
-    fireEvent.click(screen.getByRole("button", { name: "refresh" }));
+    fireEvent.click(await screen.findByRole("button", { name: "login" }));
 
     await waitFor(() => {
-      expect(screen.getByTestId("principal")).toHaveTextContent("Tenant Beta");
-      expect(screen.getByTestId("principal")).toHaveTextContent("tenant-2");
-      expect(screen.getByTestId("principal")).toHaveTextContent("ROLE_TENANT_MANAGER");
+      expect(screen.getByTestId("principal")).toHaveTextContent('"contextType":"PLATFORM"');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"activeTenantUuid":null');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"activeRole":"ROLE_PLATFORM_ADMIN"');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"activeWorkspaceName":"Platform"');
     });
   });
 
-  it("uses the same tenant-aware session path for Telegram login", async () => {
+  it("keeps the workspace returned by refresh even when another workspace is default", async () => {
     apiMock.post.mockResolvedValue({
-      accessToken: "telegram-token",
-      activeTenantId: "tenant-3",
-      activeTenantName: "Tenant Gamma",
-      activeTenantRole: "ROLE_TENANT_MANAGER",
+      accessToken: "refresh-token",
+      contextType: WorkspaceContextType.PLATFORM,
+      activeTenantUuid: null,
+      activeRole: "ROLE_PLATFORM_MANAGER",
+      availableWorkspaces: [
+        {
+          contextType: WorkspaceContextType.PLATFORM,
+          role: "ROLE_PLATFORM_MANAGER",
+          isActive: true,
+          isDefault: false,
+        },
+        {
+          contextType: WorkspaceContextType.TENANT,
+          tenantUuid: "tenant-uuid-2",
+          tenantName: "Tenant Beta",
+          role: "ROLE_TENANT_ADMIN",
+          isActive: false,
+          isDefault: true,
+        },
+      ],
     });
     jwtMock.jwtDecode.mockReturnValue({
       sub: "user-3",
@@ -185,24 +213,48 @@ describe("AuthContext", () => {
       </AuthProvider>
     );
 
-    await screen.findByRole("button", { name: "telegram" });
-    fireEvent.click(screen.getByRole("button", { name: "telegram" }));
+    fireEvent.click(await screen.findByRole("button", { name: "refresh" }));
 
     await waitFor(() => {
-      expect(apiMock.post).toHaveBeenCalledWith("/auth/login/telegram", { initData: null });
-      expect(screen.getByTestId("principal")).toHaveTextContent("Tenant Gamma");
-      expect(screen.getByTestId("principal")).toHaveTextContent("tenant-3");
+      expect(screen.getByTestId("principal")).toHaveTextContent('"contextType":"PLATFORM"');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"activeWorkspaceName":"Platform"');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"availableWorkspaces":[');
+      expect(screen.getByTestId("principal")).toHaveTextContent("Tenant Beta");
     });
   });
 
-  it("clears session state and calls backend logout", async () => {
+  it("replaces the session snapshot on workspace switch", async () => {
     apiMock.post.mockResolvedValue({
       accessToken: "login-token",
-      tenants: [],
+      contextType: WorkspaceContextType.TENANT,
+      activeTenantUuid: "tenant-uuid-1",
+      activeRole: "ROLE_TENANT_ADMIN",
+      availableWorkspaces: [
+        {
+          contextType: WorkspaceContextType.TENANT,
+          tenantUuid: "tenant-uuid-1",
+          tenantName: "Tenant Alpha",
+          role: "ROLE_TENANT_ADMIN",
+          isActive: true,
+        },
+      ],
+    });
+    workspaceApiMock.switchWorkspace.mockResolvedValue({
+      accessToken: "switch-token",
+      contextType: WorkspaceContextType.PLATFORM,
+      activeTenantUuid: null,
+      activeRole: "ROLE_PLATFORM_ADMIN",
+      availableWorkspaces: [
+        {
+          contextType: WorkspaceContextType.PLATFORM,
+          role: "ROLE_PLATFORM_ADMIN",
+          isActive: true,
+        },
+      ],
     });
     jwtMock.jwtDecode.mockReturnValue({
-      sub: "user-1",
-      authorities: ["MANAGE_PROFILES"],
+      sub: "user-4",
+      authorities: ["MANAGE_PROFILES", "UI_PLATFORM_USERS_VIEW"],
     });
 
     render(
@@ -211,19 +263,21 @@ describe("AuthContext", () => {
       </AuthProvider>
     );
 
-    await screen.findByRole("button", { name: "login" });
-    fireEvent.click(screen.getByRole("button", { name: "login" }));
+    fireEvent.click(await screen.findByRole("button", { name: "login" }));
 
     await waitFor(() => {
-      expect(screen.getByTestId("principal")).toHaveTextContent("tenant.user");
+      expect(screen.getByTestId("principal")).toHaveTextContent('"contextType":"TENANT"');
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "logout" }));
+    fireEvent.click(screen.getByRole("button", { name: "switch-platform" }));
 
     await waitFor(() => {
-      expect(authServiceMock.logout).toHaveBeenCalled();
-      expect(screen.getByTestId("principal")).toHaveTextContent("null");
-      expect(localStorage.getItem("token")).toBeNull();
+      expect(workspaceApiMock.switchWorkspace).toHaveBeenCalledWith({
+        contextType: WorkspaceContextType.PLATFORM,
+        tenantUuid: undefined,
+      });
+      expect(screen.getByTestId("principal")).toHaveTextContent('"contextType":"PLATFORM"');
+      expect(screen.getByTestId("principal")).toHaveTextContent('"activeWorkspaceName":"Platform"');
     });
   });
 });

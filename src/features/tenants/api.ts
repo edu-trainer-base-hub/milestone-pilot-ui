@@ -1,22 +1,25 @@
 import { get, post, put } from "@/services/ApiService";
+import type { LoginResponse } from "@/services/AuthService";
 import type {
   CreatePlatformUserRequest,
   CreateTenantRequest,
   CreateTenantUserRequest,
   PlatformUserResponse,
-  TenantMembership,
-  TenantMembershipListResponse,
   TenantResponse,
   TenantUserResponse,
   UpdatePlatformUserRequest,
   UpdateTenantRequest,
   UpdateTenantUserRequest,
+  Workspace,
+  WorkspaceContextType,
+  WorkspaceListResponse,
 } from "./types";
+import { getWorkspaceLabel, getWorkspaceTenantUuid, isDefaultWorkspace, isWorkspaceActive } from "./types";
 
 const PLATFORM_TENANTS_BASE_URL = "/api/v1/platform/tenants";
 const PLATFORM_USERS_BASE_URL = "/api/v1/platform/users";
 const TENANT_USERS_BASE_URL = "/api/v1/tenants";
-const AUTH_TENANTS_BASE_URL = "/auth/tenants";
+const AUTH_WORKSPACES_BASE_URL = "/auth/workspaces";
 
 export const createTenant = (request: CreateTenantRequest): Promise<TenantResponse> =>
   post<TenantResponse>(PLATFORM_TENANTS_BASE_URL, request);
@@ -48,20 +51,29 @@ export const updateUserInTenant = (
 ): Promise<TenantUserResponse> =>
   put<TenantUserResponse>(`${TENANT_USERS_BASE_URL}/${tenantId}/users/${userId}`, request);
 
-export const getCurrentUserTenantMemberships = async (): Promise<TenantMembership[]> => {
-  const response = await get<TenantMembership[] | TenantMembershipListResponse>(AUTH_TENANTS_BASE_URL);
+export interface WorkspaceSelectionRequest {
+  contextType: WorkspaceContextType;
+  tenantUuid?: string | null;
+}
 
-  const memberships = Array.isArray(response) ? response : response.items;
+const normalizeWorkspace = (workspace: Workspace): Workspace => ({
+  ...workspace,
+  tenantUuid: getWorkspaceTenantUuid(workspace),
+  tenantId: workspace.tenantId ?? workspace.tenantUuid ?? null,
+  tenantName: getWorkspaceLabel(workspace),
+  isActive: isWorkspaceActive(workspace),
+  isDefault: isDefaultWorkspace(workspace),
+});
 
-  return memberships.map((membership) => ({
-    ...membership,
-    tenantUuid: membership.tenantUuid ?? membership.tenantId ?? null,
-    tenantId: membership.tenantId ?? membership.tenantUuid ?? null,
-    tenantName: membership.tenantName ?? membership.name ?? "",
-    isDefault: membership.isDefault ?? membership.defaultTenant ?? false,
-  }));
+export const getCurrentUserWorkspaces = async (): Promise<Workspace[]> => {
+  const response = await get<Workspace[] | WorkspaceListResponse>(AUTH_WORKSPACES_BASE_URL);
+  const workspaces = Array.isArray(response) ? response : response.items;
+  return workspaces.map(normalizeWorkspace);
 };
 
-export const setDefaultTenant = async (tenantId: string): Promise<void> => {
-  await post(`${AUTH_TENANTS_BASE_URL}/${tenantId}/default`);
+export const switchWorkspace = async (request: WorkspaceSelectionRequest): Promise<LoginResponse> =>
+  post<LoginResponse>(`${AUTH_WORKSPACES_BASE_URL}/switch`, request);
+
+export const setDefaultWorkspace = async (request: WorkspaceSelectionRequest): Promise<void> => {
+  await put(`${AUTH_WORKSPACES_BASE_URL}/default`, request);
 };

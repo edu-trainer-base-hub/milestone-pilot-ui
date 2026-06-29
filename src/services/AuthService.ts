@@ -1,13 +1,12 @@
-import type { TenantMembership } from "@/features/tenants/types";
+import type { Workspace, WorkspaceContextType } from "@/features/tenants/types";
 import { post } from "./ApiService";
 
 export interface LoginResponse {
   accessToken: string;
-  activeTenantId?: string | null;
+  contextType: WorkspaceContextType;
   activeTenantUuid?: string | null;
-  activeTenantName?: string | null;
-  activeTenantRole?: string | null;
-  tenants?: TenantMembership[] | null;
+  activeRole?: string | null;
+  availableWorkspaces?: Workspace[] | null;
 }
 
 export interface LoginRequest {

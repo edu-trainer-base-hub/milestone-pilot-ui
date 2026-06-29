@@ -13,7 +13,7 @@ import { extractErrorCode } from "@/services/ApiService.ts";
 import LanguageSelector from "@/components/lang/LanguageSelector.tsx";
 import { useAuth } from "@/contexts/AuthContext.tsx";
 import { Link } from "react-router-dom";
-import { formatRoleLabel } from "@/features/tenants/types";
+import { formatRoleLabel, WorkspaceContextType } from "@/features/tenants/types";
 
 const LOCALES: readonly { value: Locale5; label: string }[] = [
   { value: "en-US", label: "English (en-US)" },
@@ -79,6 +79,12 @@ const SettingsPage: React.FC = () => {
     }
   };
 
+  const activeWorkspaceLabel = principal
+    ? principal.contextType === WorkspaceContextType.PLATFORM
+      ? t("pages.tenantMemberships.platformWorkspace")
+      : principal.activeWorkspaceName
+    : null;
+
   return (
     <div className="bg-background py-0 px-0 sm:py-8 sm:px-4">
       <Card className="w-full max-w-3xl mx-auto">
@@ -117,12 +123,12 @@ const SettingsPage: React.FC = () => {
               <div className="space-y-1">
                 <div className="flex items-center gap-2 font-medium">
                   <Building2 className="h-4 w-4" />
-                  {principal?.activeTenantName ?? t("pages.tenantMemberships.noActiveTenant")}
+                  {activeWorkspaceLabel ?? t("pages.tenantMemberships.noActiveTenant")}
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {principal?.activeTenantRole
+                  {principal?.activeRole
                     ? t("pages.tenantMemberships.activeRoleLabel", {
-                        role: formatRoleLabel(principal.activeTenantRole),
+                        role: formatRoleLabel(principal.activeRole),
                       })
                     : t("pages.tenantMemberships.description")}
                 </p>

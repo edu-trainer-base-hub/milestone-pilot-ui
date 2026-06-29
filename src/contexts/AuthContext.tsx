@@ -2,7 +2,14 @@ import { createContext, type ReactNode, useContext, useEffect, useRef, useState 
 import { post, registerLogoutFn, registerRefreshFn } from "@/services/ApiService.ts";
 import { type LoginResponse, logout as apiLogout, logoutTelegram } from "@/services/AuthService.ts";
 import { getMe, type UserProfileDto } from "@/services/ProfileService.ts";
-import { getTenantMembershipName, isDefaultTenantMembership, type TenantMembership } from "@/features/tenants/types";
+import {
+  type Workspace,
+  type WorkspaceContextType,
+  WorkspaceContextType as WorkspaceContextTypeValue,
+  getWorkspaceLabel,
+  getWorkspaceTenantUuid,
+} from "@/features/tenants/types";
+import { switchWorkspace as switchWorkspaceRequest } from "@/features/tenants/api";
 import WebApp from "@twa-dev/sdk";
 import { jwtDecode } from "jwt-decode";
 
@@ -50,11 +57,11 @@ export interface Principal {
   lastName: string | null;
   email: string | null;
   profileType: "PRIMARY" | "SECONDARY";
-  activeTenantId: string | null;
+  contextType: WorkspaceContextType;
   activeTenantUuid: string | null;
-  activeTenantName: string | null;
-  activeTenantRole: string | null;
-  tenants: TenantMembership[];
+  activeRole: string | null;
+  activeWorkspaceName: string | null;
+  availableWorkspaces: Workspace[];
 }
 
 export const EmailVerificationType = {
@@ -79,6 +86,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   loginWithTelegram: () => Promise<string>;
   doRefresh: () => Promise<string>;
+  switchWorkspace: (contextType: WorkspaceContextType, tenantUuid?: string | null) => Promise<void>;
   logout: () => void;
 }
 
@@ -87,22 +95,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 interface DecodedAccessToken {
   sub: string;
   authorities?: string[];
-  activeTenantId?: string;
+  contextType?: WorkspaceContextType;
   activeTenantUuid?: string;
-  activeTenantName?: string;
-  activeTenantRole?: string;
-  tenantId?: string;
-  tenantUuid?: string;
-  tenantName?: string;
-  tenantRole?: string;
+  activeRole?: string;
 }
 
-interface TenantSessionState {
-  activeTenantId: string | null;
+interface WorkspaceSessionState {
+  contextType: WorkspaceContextType;
   activeTenantUuid: string | null;
-  activeTenantName: string | null;
-  activeTenantRole: string | null;
-  tenants: TenantMembership[];
+  activeRole: string | null;
+  activeWorkspaceName: string | null;
+  availableWorkspaces: Workspace[];
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -196,6 +199,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return session.accessToken;
   };
 
+  const switchWorkspace = async (contextType: WorkspaceContextType, tenantUuid?: string | null): Promise<void> => {
+    const session = await switchWorkspaceRequest({ contextType, tenantUuid });
+    await applyAuthenticatedSession(session);
+  };
+
   const logout = () => {
     // Call backend logout
     if (telegramInitDataString) {
@@ -264,6 +272,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         loginWithTelegram,
         doRefresh: refreshFn,
+        switchWorkspace,
         logout,
       }}
     >
@@ -275,7 +284,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 const fetchPrincipalData = async (token: string, session?: LoginResponse): Promise<Principal> => {
   const claims = jwtDecode<DecodedAccessToken>(token);
   const profile: UserProfileDto = await getMe();
-  const tenantSession = resolveTenantSession(session, claims);
+  const workspaceSession = resolveWorkspaceSession(session, claims);
 
   return {
     id: claims.sub,
@@ -285,50 +294,47 @@ const fetchPrincipalData = async (token: string, session?: LoginResponse): Promi
     email: profile.email,
     profileType: profile.profileType,
     authorities: toAuthorities(claims.authorities),
-    activeTenantId: tenantSession.activeTenantId,
-    activeTenantUuid: tenantSession.activeTenantUuid,
-    activeTenantName: tenantSession.activeTenantName,
-    activeTenantRole: tenantSession.activeTenantRole,
-    tenants: tenantSession.tenants,
+    contextType: workspaceSession.contextType,
+    activeTenantUuid: workspaceSession.activeTenantUuid,
+    activeRole: workspaceSession.activeRole,
+    activeWorkspaceName: workspaceSession.activeWorkspaceName,
+    availableWorkspaces: workspaceSession.availableWorkspaces,
   };
 };
 
-const resolveTenantSession = (session: LoginResponse | undefined, claims: DecodedAccessToken): TenantSessionState =>
-  normalizeTenantSession(session, claims);
+const resolveWorkspaceSession = (
+  session: LoginResponse | undefined,
+  claims: DecodedAccessToken
+): WorkspaceSessionState => normalizeWorkspaceSession(session, claims);
 
-const normalizeTenantSession = (session: LoginResponse | undefined, claims: DecodedAccessToken): TenantSessionState => {
-  const normalizedTenants = (session?.tenants ?? []).map((tenant) => ({
-    ...tenant,
-    tenantUuid: tenant.tenantUuid ?? tenant.tenantId ?? null,
-    tenantId: tenant.tenantId ?? tenant.tenantUuid ?? null,
-    tenantName: getTenantMembershipName(tenant),
-    isDefault: isDefaultTenantMembership(tenant),
+const normalizeWorkspaceSession = (
+  session: LoginResponse | undefined,
+  claims: DecodedAccessToken
+): WorkspaceSessionState => {
+  const availableWorkspaces = (session?.availableWorkspaces ?? []).map((workspace) => ({
+    ...workspace,
+    tenantUuid: getWorkspaceTenantUuid(workspace),
+    tenantId: workspace.tenantId ?? workspace.tenantUuid ?? null,
+    tenantName: getWorkspaceLabel(workspace),
+    isActive: workspace.isActive ?? workspace.activeWorkspace ?? false,
+    isDefault: workspace.isDefault ?? workspace.defaultWorkspace ?? workspace.defaultTenant ?? false,
   }));
 
-  const activeTenantUuid = session?.activeTenantUuid ?? claims.activeTenantUuid ?? claims.tenantUuid ?? null;
-  const activeTenantId =
-    session?.activeTenantId ?? claims.activeTenantId ?? claims.tenantId ?? activeTenantUuid ?? null;
-  const activeTenantMembership = normalizedTenants.find((tenant) => tenant.tenantUuid === activeTenantUuid) ?? null;
-  const defaultTenantMembership = normalizedTenants.find((tenant) => tenant.isDefault) ?? null;
+  const contextType = session?.contextType ?? claims.contextType ?? WorkspaceContextTypeValue.PLATFORM;
+  const activeTenantUuid = session?.activeTenantUuid ?? claims.activeTenantUuid ?? null;
+  const activeWorkspace =
+    availableWorkspaces.find((workspace) =>
+      workspace.contextType === WorkspaceContextTypeValue.PLATFORM
+        ? contextType === WorkspaceContextTypeValue.PLATFORM
+        : workspace.tenantUuid === activeTenantUuid
+    ) ?? null;
 
   return {
-    activeTenantId,
+    contextType,
     activeTenantUuid,
-    activeTenantName:
-      session?.activeTenantName ??
-      claims.activeTenantName ??
-      claims.tenantName ??
-      activeTenantMembership?.tenantName ??
-      defaultTenantMembership?.tenantName ??
-      null,
-    activeTenantRole:
-      session?.activeTenantRole ??
-      claims.activeTenantRole ??
-      claims.tenantRole ??
-      activeTenantMembership?.role ??
-      defaultTenantMembership?.role ??
-      null,
-    tenants: normalizedTenants,
+    activeRole: session?.activeRole ?? claims.activeRole ?? activeWorkspace?.role ?? null,
+    activeWorkspaceName: activeWorkspace?.tenantName ?? null,
+    availableWorkspaces,
   };
 };
 

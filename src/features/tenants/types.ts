@@ -74,19 +74,30 @@ export interface TenantUserResponse {
   updatedAt?: string;
 }
 
-export interface TenantMembership {
-  tenantId?: string | null;
+export const WorkspaceContextType = {
+  PLATFORM: "PLATFORM",
+  TENANT: "TENANT",
+} as const;
+
+export type WorkspaceContextType = (typeof WorkspaceContextType)[keyof typeof WorkspaceContextType];
+
+export interface Workspace {
+  contextType: WorkspaceContextType;
   tenantUuid?: string | null;
+  tenantId?: string | null;
   tenantName?: string | null;
+  workspaceName?: string | null;
   name?: string | null;
   role: string;
-  isDefault?: boolean;
-  defaultTenant?: boolean;
   isActive?: boolean;
+  isDefault?: boolean;
+  activeWorkspace?: boolean;
+  defaultWorkspace?: boolean;
+  defaultTenant?: boolean;
 }
 
-export interface TenantMembershipListResponse {
-  items: TenantMembership[];
+export interface WorkspaceListResponse {
+  items: Workspace[];
 }
 
 export const PlatformRole = {
@@ -120,11 +131,28 @@ export const getTenantUuidForTenantScopedOps = (tenant: Pick<TenantResponse, "uu
 
 export const getTenantUserId = (user: Pick<TenantUserResponse, "uuid">): string => user.uuid;
 
-export const getTenantMembershipId = (membership: Pick<TenantMembership, "tenantId" | "tenantUuid">): string | null =>
-  membership.tenantId ?? membership.tenantUuid ?? null;
+export const getWorkspaceKey = (workspace: Pick<Workspace, "contextType" | "tenantUuid" | "tenantId">): string =>
+  workspace.contextType === WorkspaceContextType.PLATFORM
+    ? WorkspaceContextType.PLATFORM
+    : (workspace.tenantUuid ?? workspace.tenantId ?? "tenant-workspace");
 
-export const getTenantMembershipName = (membership: Pick<TenantMembership, "tenantName" | "name">): string =>
-  membership.tenantName ?? membership.name ?? "";
+export const getWorkspaceTenantUuid = (workspace: Pick<Workspace, "tenantUuid" | "tenantId">): string | null =>
+  workspace.tenantUuid ?? workspace.tenantId ?? null;
 
-export const isDefaultTenantMembership = (membership: Pick<TenantMembership, "isDefault" | "defaultTenant">): boolean =>
-  Boolean(membership.isDefault ?? membership.defaultTenant);
+export const getWorkspaceLabel = (
+  workspace: Pick<Workspace, "tenantName" | "workspaceName" | "name" | "contextType">
+): string =>
+  workspace.tenantName ??
+  workspace.workspaceName ??
+  workspace.name ??
+  (workspace.contextType === WorkspaceContextType.PLATFORM ? "Platform" : "");
+
+export const isWorkspaceActive = (workspace: Pick<Workspace, "isActive" | "activeWorkspace">): boolean =>
+  Boolean(workspace.isActive ?? workspace.activeWorkspace);
+
+export const isDefaultWorkspace = (
+  workspace: Pick<Workspace, "isDefault" | "defaultWorkspace" | "defaultTenant">
+): boolean => Boolean(workspace.isDefault ?? workspace.defaultWorkspace ?? workspace.defaultTenant);
+
+export const isPlatformWorkspace = (workspace: Pick<Workspace, "contextType">): boolean =>
+  workspace.contextType === WorkspaceContextType.PLATFORM;
