@@ -63,6 +63,9 @@ const TestHarness = () => {
       <button type="button" onClick={() => auth.loginWithTelegram()}>
         telegram
       </button>
+      <button type="button" onClick={() => auth.logout()}>
+        logout
+      </button>
       <div data-testid="principal">{JSON.stringify(auth.principal)}</div>
     </div>
   );
@@ -93,6 +96,8 @@ describe("AuthContext", () => {
       primaryProfileUuid: null,
       verifiedEmail: true,
     });
+    authServiceMock.logout.mockResolvedValue(undefined);
+    authServiceMock.logoutTelegram.mockResolvedValue(undefined);
   });
 
   it("populates tenant fields in principal from the login response", async () => {
@@ -187,6 +192,38 @@ describe("AuthContext", () => {
       expect(apiMock.post).toHaveBeenCalledWith("/auth/login/telegram", { initData: null });
       expect(screen.getByTestId("principal")).toHaveTextContent("Tenant Gamma");
       expect(screen.getByTestId("principal")).toHaveTextContent("tenant-3");
+    });
+  });
+
+  it("clears session state and calls backend logout", async () => {
+    apiMock.post.mockResolvedValue({
+      accessToken: "login-token",
+      tenants: [],
+    });
+    jwtMock.jwtDecode.mockReturnValue({
+      sub: "user-1",
+      authorities: ["MANAGE_PROFILES"],
+    });
+
+    render(
+      <AuthProvider>
+        <TestHarness />
+      </AuthProvider>
+    );
+
+    await screen.findByRole("button", { name: "login" });
+    fireEvent.click(screen.getByRole("button", { name: "login" }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("principal")).toHaveTextContent("tenant.user");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "logout" }));
+
+    await waitFor(() => {
+      expect(authServiceMock.logout).toHaveBeenCalled();
+      expect(screen.getByTestId("principal")).toHaveTextContent("null");
+      expect(localStorage.getItem("token")).toBeNull();
     });
   });
 });

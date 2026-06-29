@@ -250,8 +250,6 @@
       },
       "submitButton": "Войти",
       "submitButtonLoading": "Выполняется вход...",
-      "registrationPrompt": "Нет аккаунта?",
-      "registrationLinkText": "Зарегистрироваться",
       "notifications": {
         "submitError": "Мы не можем найти этот email, имя пользователя или пароль. Попробуйте снова."
       }

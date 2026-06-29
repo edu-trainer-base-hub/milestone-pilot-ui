@@ -250,8 +250,6 @@
       },
       "submitButton": "Sign in",
       "submitButtonLoading": "Signing in...",
-      "registrationPrompt": "Don't have an account?",
-      "registrationLinkText": "Sign up",
       "notifications": {
         "submitError": "We can't find that email, username, or password. Try again."
       }

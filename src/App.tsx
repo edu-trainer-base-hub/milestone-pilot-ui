@@ -1,13 +1,10 @@
-import { Outlet, Route, Routes } from "react-router";
-
 import CommonLayout from "@/layout/CommonLayout.tsx";
-import RegistrationPage from "@/pages/login/RegistrationPage.tsx";
 import DefaultLayout from "@/layout/DefaultLayout.tsx";
 import ResetPasswordPage from "@/pages/login/ResetPasswordPage.tsx";
 import LoginPage from "@/pages/login/LoginPage.tsx";
 import PrivateRoute from "@/components/PrivateRoute.tsx";
 import WebLayout from "./layout/WebLayout.tsx";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import SettingsPage from "@/pages/SettingsPage.tsx";
 import SubscriptionPage from "@/pages/subscriptions/SubscriptionPage.tsx";
 import AuthorityRoute from "@/components/AuthorityRoute.tsx";
@@ -26,14 +23,6 @@ export default function App() {
   usePageTitle();
   return (
     <Routes>
-      <Route
-        path="register"
-        element={
-          <DefaultLayout>
-            <RegistrationPage />
-          </DefaultLayout>
-        }
-      />
       <Route
         path="password/reset"
         element={

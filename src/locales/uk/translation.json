@@ -250,8 +250,6 @@
       },
       "submitButton": "Увійти",
       "submitButtonLoading": "Вхід до облікового запису в процесі...",
-      "registrationPrompt": "Не маєте облікового запису?",
-      "registrationLinkText": "Зареєструватися",
       "notifications": {
         "submitError": "Ми не можемо знайти цей емейл, ім'я користувача або пароль. Спробуйте ще раз."
       }

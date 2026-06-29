@@ -52,7 +52,6 @@ interface AuthContextType {
   principal: Principal | null;
   isTelegram: boolean;
   sendConfirmationCode: (email: string, verificationCodeType: EmailVerificationType) => Promise<void>;
-  doRegister: (email: string, password: string, confirmPassword: string, confirmationCode: string) => Promise<void>;
   doResetPassword: (
     email: string,
     password: string,
@@ -144,22 +143,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       verificationCodeType,
       initData: telegramInitDataString,
     });
-  };
-
-  const doRegister = async (
-    email: string,
-    password: string,
-    confirmPassword: string,
-    confirmationCode: string
-  ): Promise<void> => {
-    const session = await post<LoginResponse>("/auth/registration", {
-      email,
-      emailVerificationCode: confirmationCode,
-      password,
-      confirmPassword,
-      initData: telegramInitDataString,
-    });
-    await applyAuthenticatedSession(session);
   };
 
   const doResetPassword = async (
@@ -259,7 +242,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         principal,
         isTelegram: Boolean(telegramInitDataString),
         sendConfirmationCode,
-        doRegister,
         doResetPassword,
         login,
         loginWithTelegram,
