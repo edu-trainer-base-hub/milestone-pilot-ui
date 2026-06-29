@@ -16,9 +16,15 @@ interface UserFormFieldsProps {
   values: UserFormValues;
   onChange: (values: UserFormValues) => void;
   roleOptions: readonly UserRoleOption[];
+  roleDisabled?: boolean;
 }
 
-export const UserFormFields: React.FC<UserFormFieldsProps> = ({ values, onChange, roleOptions }) => {
+export const UserFormFields: React.FC<UserFormFieldsProps> = ({
+  values,
+  onChange,
+  roleOptions,
+  roleDisabled = false,
+}) => {
   const { t } = useTranslation();
 
   const setField =
@@ -65,7 +71,7 @@ export const UserFormFields: React.FC<UserFormFieldsProps> = ({ values, onChange
       </div>
       <div className="space-y-2">
         <Label htmlFor="role">{t("tenants.dialog.roleLabel")}</Label>
-        <Select value={values.role} onValueChange={(value) => setField("role")(value)}>
+        <Select value={values.role} onValueChange={(value) => setField("role")(value)} disabled={roleDisabled}>
           <SelectTrigger id="role">
             <SelectValue placeholder={t("users.form.rolePlaceholder")} />
           </SelectTrigger>

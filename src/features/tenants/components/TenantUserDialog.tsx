@@ -9,13 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  TenantRole,
-  type TenantUserRequest,
-  type TenantUserResponse,
-  type UserRoleOption,
-  formatRoleLabel,
-} from "../types";
+import { type TenantUserRequest, type TenantUserResponse, type UserRoleOption } from "../types";
 import { UserFormFields, type UserFormValues } from "./UserFormFields";
 
 interface TenantUserDialogProps {
@@ -24,23 +18,30 @@ interface TenantUserDialogProps {
   onSubmit: (data: TenantUserRequest) => Promise<void>;
   user?: TenantUserResponse | null;
   loading?: boolean;
+  roleOptions: readonly UserRoleOption[];
+  defaultRole?: string | null;
 }
 
-const tenantRoleOptions: readonly UserRoleOption[] = Object.values(TenantRole).map((role) => ({
-  value: role,
-  label: formatRoleLabel(role),
-}));
-
-const emptyValues: UserFormValues = {
+const emptyValues = (role: string): UserFormValues => ({
   email: "",
   firstName: "",
   lastName: "",
-  role: TenantRole.ROLE_TENANT_MANAGER,
-};
+  role,
+});
 
-export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({ open, onOpenChange, onSubmit, user, loading }) => {
+export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({
+  open,
+  onOpenChange,
+  onSubmit,
+  user,
+  loading,
+  roleOptions,
+  defaultRole,
+}) => {
   const { t } = useTranslation();
-  const [values, setValues] = useState<UserFormValues>(emptyValues);
+  const fallbackRole = defaultRole ?? roleOptions[0]?.value ?? "";
+  const [values, setValues] = useState<UserFormValues>(emptyValues(fallbackRole));
+  const hasAllowedRole = roleOptions.some((roleOption) => roleOption.value === values.role);
 
   const defaultValues = useMemo<UserFormValues>(
     () =>
@@ -49,10 +50,10 @@ export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({ open, onOpen
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
-            role: user.role,
+            role: roleOptions.some((roleOption) => roleOption.value === user.role) ? user.role : fallbackRole,
           }
-        : emptyValues,
-    [user]
+        : emptyValues(fallbackRole),
+    [fallbackRole, roleOptions, user]
   );
 
   useEffect(() => {
@@ -63,6 +64,10 @@ export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({ open, onOpen
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!hasAllowedRole) {
+      return;
+    }
+
     await onSubmit({
       email: values.email,
       firstName: values.firstName,
@@ -79,12 +84,17 @@ export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({ open, onOpen
           <DialogDescription>{t("tenants.dialog.roleLabel")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <UserFormFields values={values} onChange={setValues} roleOptions={tenantRoleOptions} />
+          <UserFormFields
+            values={values}
+            onChange={setValues}
+            roleOptions={roleOptions}
+            roleDisabled={roleOptions.length === 0}
+          />
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || !hasAllowedRole}>
               {loading ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>

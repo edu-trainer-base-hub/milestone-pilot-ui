@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { notifier } from "@/services/NotificationService";
 import { createUserInTenant, getUsersByTenant, updateUserInTenant } from "../api";
 import type { TenantUserRequest, TenantUserResponse } from "../types";
-import { formatRoleLabel } from "../types";
+import { canManageTenantUser, formatRoleLabel, getAssignableTenantRoles, getTenantRoleOptions } from "../types";
 import { TenantUserDialog } from "../components/TenantUserDialog";
 
 export const TenantUsersPage: React.FC = () => {
@@ -22,6 +22,10 @@ export const TenantUsersPage: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<TenantUserResponse | null>(null);
   const effectiveTenantId = tenantId ?? principal?.activeTenantUuid ?? principal?.activeTenantId ?? null;
   const hasPlatformTenantContext = Boolean(tenantId);
+  const actorTenantRole = principal?.activeTenantRole ?? null;
+  const assignableRoles = getAssignableTenantRoles(actorTenantRole);
+  const roleOptions = getTenantRoleOptions(actorTenantRole);
+  const canCreateUsers = assignableRoles.length > 0;
 
   const {
     data: users = [],
@@ -54,11 +58,19 @@ export const TenantUsersPage: React.FC = () => {
   });
 
   const handleCreate = () => {
+    if (!canCreateUsers) {
+      return;
+    }
+
     setSelectedUser(null);
     setDialogOpen(true);
   };
 
   const handleEdit = (user: TenantUserResponse) => {
+    if (!canManageTenantUser(actorTenantRole, user.role)) {
+      return;
+    }
+
     setSelectedUser(user);
     setDialogOpen(true);
   };
@@ -79,7 +91,7 @@ export const TenantUsersPage: React.FC = () => {
         </Button>
         <h1 className="text-3xl font-bold">{t("tenants.users.title")}</h1>
         <div className="flex-1" />
-        <Button onClick={handleCreate}>
+        <Button onClick={handleCreate} disabled={!canCreateUsers}>
           <Plus className="mr-2 h-4 w-4" /> {t("tenants.users.create")}
         </Button>
       </div>
@@ -117,14 +129,16 @@ export const TenantUsersPage: React.FC = () => {
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{formatRoleLabel(user.role)}</TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label={t("common.edit")}
-                        onClick={() => handleEdit(user)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      {canManageTenantUser(actorTenantRole, user.role) ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={t("common.edit")}
+                          onClick={() => handleEdit(user)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))
@@ -138,10 +152,26 @@ export const TenantUsersPage: React.FC = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSubmit={async (data) => {
+          if (!assignableRoles.some((role) => role === data.role)) {
+            notifier.error(
+              selectedUser ? t("tenants.notifications.updateUserError") : t("tenants.notifications.createUserError")
+            );
+            return;
+          }
+
+          if (selectedUser && !canManageTenantUser(actorTenantRole, selectedUser.role)) {
+            notifier.error(t("tenants.notifications.updateUserError"));
+            setDialogOpen(false);
+            setSelectedUser(null);
+            return;
+          }
+
           await mutation.mutateAsync(data);
         }}
         user={selectedUser}
         loading={mutation.isPending}
+        roleOptions={roleOptions}
+        defaultRole={assignableRoles[0] ?? null}
       />
     </div>
   );

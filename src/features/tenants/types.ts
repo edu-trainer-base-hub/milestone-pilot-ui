@@ -83,6 +83,7 @@ export type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
 export const TenantRole = {
   ROLE_TENANT_ADMIN: "ROLE_TENANT_ADMIN",
   ROLE_TENANT_MANAGER: "ROLE_TENANT_MANAGER",
+  ROLE_TENANT_USER: "ROLE_TENANT_USER",
 } as const;
 
 export type TenantRole = (typeof TenantRole)[keyof typeof TenantRole];
@@ -93,6 +94,34 @@ export interface UserRoleOption {
 }
 
 export const formatRoleLabel = (role: string): string => role.replace("ROLE_", "").replaceAll("_", " ");
+
+export const getAssignableTenantRoles = (actorRole?: string | null): TenantRole[] => {
+  switch (actorRole) {
+    case TenantRole.ROLE_TENANT_ADMIN:
+      return [TenantRole.ROLE_TENANT_MANAGER, TenantRole.ROLE_TENANT_USER];
+    case TenantRole.ROLE_TENANT_MANAGER:
+      return [TenantRole.ROLE_TENANT_USER];
+    default:
+      return [];
+  }
+};
+
+export const canManageTenantUser = (actorRole?: string | null, targetRole?: string | null): boolean => {
+  switch (actorRole) {
+    case TenantRole.ROLE_TENANT_ADMIN:
+      return targetRole === TenantRole.ROLE_TENANT_MANAGER || targetRole === TenantRole.ROLE_TENANT_USER;
+    case TenantRole.ROLE_TENANT_MANAGER:
+      return targetRole === TenantRole.ROLE_TENANT_USER;
+    default:
+      return false;
+  }
+};
+
+export const getTenantRoleOptions = (actorRole?: string | null): UserRoleOption[] =>
+  getAssignableTenantRoles(actorRole).map((role) => ({
+    value: role,
+    label: formatRoleLabel(role),
+  }));
 
 export const getPlatformUserId = (user: Pick<PlatformUserResponse, "id" | "uuid">): string =>
   user.id ?? user.uuid ?? "";
