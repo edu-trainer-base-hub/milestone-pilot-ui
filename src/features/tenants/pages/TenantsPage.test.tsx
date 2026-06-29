@@ -15,6 +15,12 @@ const notifierMock = vi.hoisted(() => ({
   error: vi.fn(),
 }));
 
+const authMock = vi.hoisted(() => ({
+  principal: {
+    authorities: [] as string[],
+  },
+}));
+
 vi.mock("../api", () => ({
   getAllTenants: apiMock.getAllTenants,
   createTenant: apiMock.createTenant,
@@ -27,6 +33,17 @@ vi.mock("@/services/NotificationService", () => ({
     error: notifierMock.error,
   },
 }));
+
+vi.mock("@/contexts/AuthContext", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/contexts/AuthContext")>();
+
+  return {
+    ...actual,
+    useAuth: () => ({
+      principal: authMock.principal,
+    }),
+  };
+});
 
 const renderPage = () => {
   const queryClient = new QueryClient({
@@ -53,9 +70,11 @@ describe("TenantsPage", () => {
     apiMock.updateTenant.mockReset();
     notifierMock.success.mockReset();
     notifierMock.error.mockReset();
+    authMock.principal.authorities = [];
   });
 
   it("renders tenants and wires tenant creation", async () => {
+    authMock.principal.authorities = ["PLATFORM_TENANTS_READ", "PLATFORM_TENANTS_CREATE"];
     apiMock.getAllTenants.mockResolvedValue([
       {
         id: 1,
@@ -100,6 +119,7 @@ describe("TenantsPage", () => {
   });
 
   it("wires tenant updates through the edit dialog", async () => {
+    authMock.principal.authorities = ["PLATFORM_TENANTS_READ", "PLATFORM_TENANTS_UPDATE"];
     apiMock.getAllTenants.mockResolvedValue([
       {
         id: 1,
@@ -136,5 +156,26 @@ describe("TenantsPage", () => {
       })
     );
     expect(notifierMock.success).toHaveBeenCalled();
+  });
+
+  it("hides edit when tenant update authority is missing", async () => {
+    authMock.principal.authorities = ["PLATFORM_TENANTS_READ"];
+    apiMock.getAllTenants.mockResolvedValue([
+      {
+        id: 1,
+        uuid: "tenant-uuid-1",
+        name: "Alpha",
+        email: "alpha@example.com",
+        address: "Main street",
+        timezone: "UTC",
+        locale: "en",
+        status: "ACTIVE",
+      },
+    ]);
+
+    renderPage();
+
+    expect(await screen.findByText("Alpha")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Edit" })).not.toBeInTheDocument();
   });
 });

@@ -9,6 +9,7 @@ const authMock = vi.hoisted(() => ({
     UI_PLATFORM_USERS_VIEW: "UI_PLATFORM_USERS_VIEW",
     UI_TENANT_USERS_VIEW: "UI_TENANT_USERS_VIEW",
     UI_TENANT_SETTINGS_VIEW: "UI_TENANT_SETTINGS_VIEW",
+    PLATFORM_MANAGERS_READ: "PLATFORM_MANAGERS_READ",
   } as const,
   state: {
     principal: null as { authorities: string[] } | null,
@@ -112,5 +113,32 @@ describe("authority-gated routes", () => {
 
     expect(await screen.findByText("Home Page")).toBeInTheDocument();
     expect(screen.queryByText("Tenant Users Page")).not.toBeInTheDocument();
+  });
+
+  it("requires allAuthorities in addition to any matching authority", async () => {
+    authMock.state.principal = {
+      authorities: [authMock.Authority.PLATFORM_MANAGERS_READ],
+    };
+
+    render(
+      <MemoryRouter initialEntries={["/platform/users"]}>
+        <Routes>
+          <Route path="/" element={<div>Home Page</div>} />
+          <Route
+            element={
+              <AuthorityRoute
+                authority={authMock.Authority.PLATFORM_MANAGERS_READ as never}
+                allAuthorities={[authMock.Authority.UI_PLATFORM_USERS_VIEW as never]}
+              />
+            }
+          >
+            <Route path="/platform/users" element={<div>Platform Users Page</div>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(await screen.findByText("Home Page")).toBeInTheDocument();
+    expect(screen.queryByText("Platform Users Page")).not.toBeInTheDocument();
   });
 });

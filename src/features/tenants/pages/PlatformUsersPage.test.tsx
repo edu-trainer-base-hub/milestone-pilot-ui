@@ -16,6 +16,12 @@ const notifierMock = vi.hoisted(() => ({
   error: vi.fn(),
 }));
 
+const authMock = vi.hoisted(() => ({
+  principal: {
+    authorities: [] as string[],
+  },
+}));
+
 vi.mock("../api", () => ({
   getPlatformUsers: apiMock.getPlatformUsers,
   createPlatformUser: apiMock.createPlatformUser,
@@ -28,6 +34,17 @@ vi.mock("@/services/NotificationService", () => ({
     error: notifierMock.error,
   },
 }));
+
+vi.mock("@/contexts/AuthContext", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/contexts/AuthContext")>();
+
+  return {
+    ...actual,
+    useAuth: () => ({
+      principal: authMock.principal,
+    }),
+  };
+});
 
 const renderWithRouter = (initialEntry: string) => {
   const queryClient = new QueryClient({
@@ -58,9 +75,11 @@ describe("Platform user management", () => {
     apiMock.updatePlatformUser.mockReset();
     notifierMock.success.mockReset();
     notifierMock.error.mockReset();
+    authMock.principal.authorities = [];
   });
 
-  it("renders the platform user list and hides edit for platform admins", async () => {
+  it("renders the platform user list and hides edit for rows without matching update authority", async () => {
+    authMock.principal.authorities = ["PLATFORM_MANAGERS_READ", "PLATFORM_MANAGERS_UPDATE"];
     apiMock.getPlatformUsers.mockResolvedValue([
       {
         uuid: "user-admin",
@@ -92,8 +111,8 @@ describe("Platform user management", () => {
     expect(within(managerRow as HTMLElement).getByRole("button", { name: "Edit" })).toBeInTheDocument();
   });
 
-  it("wires platform user creation with the only supported role", async () => {
-    apiMock.getPlatformUsers.mockResolvedValue([]);
+  it("exposes only creatable platform roles in the create form", async () => {
+    authMock.principal.authorities = ["PLATFORM_MANAGERS_CREATE"];
     apiMock.createPlatformUser.mockResolvedValue({
       uuid: "user-2",
     });
@@ -109,6 +128,7 @@ describe("Platform user management", () => {
     fireEvent.click(roleSelect);
     const listbox = await screen.findByRole("listbox");
     expect(within(listbox).getByRole("option", { name: "PLATFORM MANAGER" })).toBeInTheDocument();
+    expect(within(listbox).queryByRole("option", { name: "PLATFORM ADMIN" })).not.toBeInTheDocument();
     fireEvent.keyDown(listbox, { key: "Escape" });
 
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
@@ -125,6 +145,7 @@ describe("Platform user management", () => {
   });
 
   it("wires platform user updates", async () => {
+    authMock.principal.authorities = ["PLATFORM_MANAGERS_READ", "PLATFORM_MANAGERS_UPDATE"];
     apiMock.getPlatformUsers.mockResolvedValue([
       {
         uuid: "user-1",
@@ -154,5 +175,14 @@ describe("Platform user management", () => {
       })
     );
     expect(notifierMock.success).toHaveBeenCalled();
+  });
+
+  it("does not unlock create access from legacy role strings alone", async () => {
+    authMock.principal.authorities = [];
+
+    renderWithRouter("/platform/users/new");
+
+    expect(await screen.findByText("Platform user not found.")).toBeInTheDocument();
+    expect(apiMock.createPlatformUser).not.toHaveBeenCalled();
   });
 });

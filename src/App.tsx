@@ -58,9 +58,6 @@ export default function App() {
 
         <Route element={<PrivateRoute />}>
           <Route path="settings/tenants" element={<TenantMembershipsPage />} />
-          <Route element={<AuthorityRoute authority={Authority.UI_TENANT_USERS_VIEW} />}>
-            <Route path="tenant/users" element={<TenantUsersPage />} />
-          </Route>
 
           <Route element={<AuthorityRoute authority={Authority.MANAGE_SUBSCRIPTIONS} />}>
             <Route path="subscriptions" element={<SubscriptionPage />} />
@@ -72,17 +69,59 @@ export default function App() {
             <Route path="settings" element={<SettingsPage />} />
           </Route>
 
-          <Route element={<AuthorityRoute authority={Authority.UI_PLATFORM_TENANTS_VIEW} />}>
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.PLATFORM_TENANTS_READ]}
+                allAuthorities={[Authority.UI_PLATFORM_TENANTS_VIEW]}
+              />
+            }
+          >
             <Route path="platform/tenants" element={<TenantsPage />} />
           </Route>
 
-          <Route element={<AuthorityRoute authority={Authority.UI_PLATFORM_USERS_VIEW} />}>
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.PLATFORM_ADMINS_READ, Authority.PLATFORM_MANAGERS_READ]}
+                allAuthorities={[Authority.UI_PLATFORM_USERS_VIEW]}
+              />
+            }
+          >
             <Route path="platform/users" element={<PlatformUsersPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.PLATFORM_ADMINS_CREATE, Authority.PLATFORM_MANAGERS_CREATE]}
+                allAuthorities={[Authority.UI_PLATFORM_USERS_VIEW]}
+              />
+            }
+          >
             <Route path="platform/users/new" element={<PlatformUserUpsertPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.PLATFORM_ADMINS_READ, Authority.PLATFORM_MANAGERS_READ]}
+                allAuthorities={[Authority.UI_PLATFORM_USERS_VIEW]}
+              />
+            }
+          >
             <Route path="platform/users/:userId/edit" element={<PlatformUserUpsertPage />} />
           </Route>
 
-          <Route element={<AuthorityRoute authority={Authority.UI_TENANT_USERS_VIEW} />}>
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.TENANT_ADMINS_READ, Authority.TENANT_MANAGERS_READ, Authority.TENANT_USERS_READ]}
+                allAuthorities={[Authority.UI_TENANT_USERS_VIEW]}
+              />
+            }
+          >
+            <Route path="tenant/users" element={<TenantUsersPage />} />
             <Route path="platform/tenants/:tenantId/users" element={<TenantUsersPage />} />
           </Route>
         </Route>

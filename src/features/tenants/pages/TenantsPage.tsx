@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2, Pencil, Plus } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { notifier } from "@/services/NotificationService";
 import { getAllTenants, createTenant, updateTenant } from "../api";
 import {
@@ -12,13 +13,19 @@ import {
   type TenantResponse,
   type UpdateTenantRequest,
 } from "../types";
+import { canCreatePlatformTenants, canReadPlatformTenants, canUpdatePlatformTenants } from "../access-policy";
 import { TenantDialog } from "../components/TenantDialog";
 
 export const TenantsPage: React.FC = () => {
   const { t } = useTranslation();
+  const { principal } = useAuth();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState<TenantResponse | null>(null);
+  const authorities = principal?.authorities ?? [];
+  const canRead = canReadPlatformTenants(authorities);
+  const canCreate = canCreatePlatformTenants(authorities);
+  const canUpdate = canUpdatePlatformTenants(authorities);
 
   const {
     data: tenants = [],
@@ -27,6 +34,7 @@ export const TenantsPage: React.FC = () => {
   } = useQuery({
     queryKey: ["tenants"],
     queryFn: getAllTenants,
+    enabled: canRead,
   });
 
   const mutation = useMutation({
@@ -47,11 +55,19 @@ export const TenantsPage: React.FC = () => {
   });
 
   const handleCreate = () => {
+    if (!canCreate) {
+      return;
+    }
+
     setSelectedTenant(null);
     setDialogOpen(true);
   };
 
   const handleEdit = (tenant: TenantResponse) => {
+    if (!canUpdate) {
+      return;
+    }
+
     setSelectedTenant(tenant);
     setDialogOpen(true);
   };
@@ -60,12 +76,14 @@ export const TenantsPage: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">{t("tenants.title")}</h1>
-        <Button onClick={handleCreate}>
+        <Button onClick={handleCreate} disabled={!canCreate}>
           <Plus className="mr-2 h-4 w-4" /> {t("tenants.create")}
         </Button>
       </div>
 
-      {isLoading ? (
+      {!canRead ? (
+        <div className="text-center text-destructive py-10">Failed to load tenants.</div>
+      ) : isLoading ? (
         <div className="flex justify-center py-10">
           <Loader2 className="h-10 w-10 animate-spin" />
         </div>
@@ -96,14 +114,16 @@ export const TenantsPage: React.FC = () => {
                     <TableCell>{tenant.timezone}</TableCell>
                     <TableCell>{tenant.status}</TableCell>
                     <TableCell className="text-right space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label={t("common.edit")}
-                        onClick={() => handleEdit(tenant)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      {canUpdate ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={t("common.edit")}
+                          onClick={() => handleEdit(tenant)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))
@@ -117,6 +137,13 @@ export const TenantsPage: React.FC = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSubmit={async (data) => {
+          if ((selectedTenant && !canUpdate) || (!selectedTenant && !canCreate)) {
+            notifier.error(
+              selectedTenant ? t("tenants.notifications.updateError") : t("tenants.notifications.createError")
+            );
+            return;
+          }
+
           await mutation.mutateAsync(data);
         }}
         tenant={selectedTenant}

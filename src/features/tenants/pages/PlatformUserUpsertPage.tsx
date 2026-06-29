@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { notifier } from "@/services/NotificationService";
 import { createPlatformUser, getPlatformUsers, updatePlatformUser } from "../api";
 import {
@@ -13,40 +14,68 @@ import {
   type UpdatePlatformUserRequest,
   type UserRoleOption,
 } from "../types";
+import {
+  canCreatePlatformUser,
+  canReadPlatformUsers,
+  canUpdatePlatformUser,
+  getCreatablePlatformRoles,
+} from "../access-policy";
 import { PlatformUserForm } from "../components/PlatformUserForm";
 import type { UserFormValues } from "../components/UserFormFields";
-
-const platformRoleOptions: readonly UserRoleOption[] = [
-  {
-    value: PlatformRole.ROLE_PLATFORM_MANAGER,
-    label: formatRoleLabel(PlatformRole.ROLE_PLATFORM_MANAGER),
-  },
-];
-
-const emptyValues: UserFormValues = {
-  email: "",
-  firstName: "",
-  lastName: "",
-  role: PlatformRole.ROLE_PLATFORM_MANAGER,
-};
 
 export const PlatformUserUpsertPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
+  const { principal } = useAuth();
   const queryClient = useQueryClient();
   const isEdit = Boolean(userId);
+  const authorities = principal?.authorities ?? [];
+  const creatableRoles = getCreatablePlatformRoles(authorities);
+  const editableRoles = useMemo(
+    () =>
+      [PlatformRole.ROLE_PLATFORM_ADMIN, PlatformRole.ROLE_PLATFORM_MANAGER].filter((role) =>
+        canUpdatePlatformUser(authorities, role)
+      ),
+    [authorities]
+  );
+  const formRoles = isEdit ? editableRoles : creatableRoles;
+  const roleOptions = useMemo<readonly UserRoleOption[]>(
+    () =>
+      formRoles.map((role) => ({
+        value: role,
+        label: formatRoleLabel(role),
+      })),
+    [formRoles]
+  );
+  const emptyValues = useMemo<UserFormValues>(
+    () => ({
+      email: "",
+      firstName: "",
+      lastName: "",
+      role: formRoles[0] ?? "",
+    }),
+    [formRoles]
+  );
 
   const { data: users = [], isLoading: isLoadingUsers } = useQuery({
     queryKey: ["platformUsers"],
     queryFn: getPlatformUsers,
+    enabled: isEdit && canReadPlatformUsers(authorities),
   });
 
   const selectedUser = useMemo(() => users.find((user) => getPlatformUserId(user) === userId) ?? null, [userId, users]);
-  const isManagedUser = selectedUser?.platformRole === PlatformRole.ROLE_PLATFORM_MANAGER;
+  const canEditSelectedUser = canUpdatePlatformUser(authorities, selectedUser?.platformRole ?? null);
 
   const mutation = useMutation({
     mutationFn: async (values: UserFormValues) => {
+      if (
+        (!isEdit && !canCreatePlatformUser(authorities, values.role)) ||
+        (isEdit && (!canEditSelectedUser || !canUpdatePlatformUser(authorities, values.role)))
+      ) {
+        throw new Error("Unauthorized platform user mutation");
+      }
+
       const request: CreatePlatformUserRequest | UpdatePlatformUserRequest = {
         email: values.email,
         firstName: values.firstName,
@@ -82,7 +111,11 @@ export const PlatformUserUpsertPage: React.FC = () => {
     );
   }
 
-  if (isEdit && (!selectedUser || !isManagedUser)) {
+  if (!isEdit && roleOptions.length === 0) {
+    return <div className="p-6 text-center text-destructive">{t("platformUsers.notFound")}</div>;
+  }
+
+  if (isEdit && (!canReadPlatformUsers(authorities) || !selectedUser || !canEditSelectedUser)) {
     return <div className="p-6 text-center text-destructive">{t("platformUsers.notFound")}</div>;
   }
 
@@ -99,10 +132,20 @@ export const PlatformUserUpsertPage: React.FC = () => {
             }
           : emptyValues
       }
-      roleOptions={platformRoleOptions}
+      roleOptions={roleOptions}
       loading={mutation.isPending}
       onCancel={() => navigate("/platform/users")}
       onSubmit={async (values) => {
+        if (!isEdit && !canCreatePlatformUser(authorities, values.role)) {
+          notifier.error(t("platformUsers.notifications.createError"));
+          return;
+        }
+
+        if (isEdit && (!canEditSelectedUser || !canUpdatePlatformUser(authorities, values.role))) {
+          notifier.error(t("platformUsers.notifications.updateError"));
+          return;
+        }
+
         await mutation.mutateAsync(values);
       }}
     />

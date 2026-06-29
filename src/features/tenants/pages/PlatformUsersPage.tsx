@@ -5,12 +5,18 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2, Pencil, Plus } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { getPlatformUsers } from "../api";
-import { formatRoleLabel, getPlatformUserId, PlatformRole } from "../types";
+import { canReadPlatformUsers, canUpdatePlatformUser, getCreatablePlatformRoles } from "../access-policy";
+import { formatRoleLabel, getPlatformUserId } from "../types";
 
 export const PlatformUsersPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { principal } = useAuth();
+  const authorities = principal?.authorities ?? [];
+  const canRead = canReadPlatformUsers(authorities);
+  const canCreate = getCreatablePlatformRoles(authorities).length > 0;
   const {
     data: users = [],
     isLoading,
@@ -18,19 +24,22 @@ export const PlatformUsersPage: React.FC = () => {
   } = useQuery({
     queryKey: ["platformUsers"],
     queryFn: getPlatformUsers,
+    enabled: canRead,
   });
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">{t("platformUsers.title")}</h1>
-        <Button onClick={() => navigate("/platform/users/new")}>
+        <Button onClick={() => navigate("/platform/users/new")} disabled={!canCreate}>
           <Plus className="mr-2 h-4 w-4" />
           {t("platformUsers.create")}
         </Button>
       </div>
 
-      {isLoading ? (
+      {!canRead ? (
+        <div className="py-10 text-center text-destructive">{t("platformUsers.loadError")}</div>
+      ) : isLoading ? (
         <div className="flex justify-center py-10">
           <Loader2 className="h-10 w-10 animate-spin" />
         </div>
@@ -63,7 +72,7 @@ export const PlatformUsersPage: React.FC = () => {
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{formatRoleLabel(user.platformRole)}</TableCell>
                     <TableCell className="text-right">
-                      {user.platformRole === PlatformRole.ROLE_PLATFORM_MANAGER ? (
+                      {canUpdatePlatformUser(authorities, user.platformRole) ? (
                         <Button
                           variant="ghost"
                           size="icon"

@@ -30,6 +30,7 @@ Match the current commit style, for example `feat: GH-30 - Add User Manager API`
 ## Convention Discovery
 
 Capture user-requested coding conventions or convention changes that appear during implementation or review chats. If a requested convention is missing from this file, suggest adding it as a repository standard. Only add or modify conventions in `AGENTS.md` after explicit user approval, and keep each entry short, actionable, and non-duplicative.
+
 - Create report-style Markdown documents in `temp/docs/`.
 - Prefix report filenames with a date-time stamp in `YYYYMMDD-HHMM-...` format.
 

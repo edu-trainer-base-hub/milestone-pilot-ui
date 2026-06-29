@@ -20,6 +20,7 @@ const authMock = vi.hoisted(() => ({
     activeTenantId: "1",
     activeTenantUuid: "tenant-uuid-1",
     activeTenantRole: "ROLE_TENANT_ADMIN",
+    authorities: [] as string[],
   },
 }));
 
@@ -36,11 +37,16 @@ vi.mock("@/services/NotificationService", () => ({
   },
 }));
 
-vi.mock("@/contexts/AuthContext", () => ({
-  useAuth: () => ({
-    principal: authMock.principal,
-  }),
-}));
+vi.mock("@/contexts/AuthContext", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/contexts/AuthContext")>();
+
+  return {
+    ...actual,
+    useAuth: () => ({
+      principal: authMock.principal,
+    }),
+  };
+});
 
 const renderPage = (initialEntry = "/platform/tenants/tenant-uuid-1/users") => {
   const queryClient = new QueryClient({
@@ -79,9 +85,11 @@ describe("TenantUsersPage", () => {
     notifierMock.success.mockReset();
     notifierMock.error.mockReset();
     authMock.principal.activeTenantRole = "ROLE_TENANT_ADMIN";
+    authMock.principal.authorities = [];
   });
 
-  it("lets tenant admins create tenant users and choose manager or user roles", async () => {
+  it("lets tenant-user management authorities create the matching tenant roles", async () => {
+    authMock.principal.authorities = ["TENANT_MANAGERS_CREATE", "TENANT_USERS_CREATE", "TENANT_MANAGERS_READ"];
     apiMock.getUsersByTenant.mockResolvedValue([]);
     apiMock.createUserInTenant.mockResolvedValue({ uuid: "user-2" });
 
@@ -113,8 +121,9 @@ describe("TenantUsersPage", () => {
     expect(notifierMock.success).toHaveBeenCalled();
   });
 
-  it("limits tenant managers to creating tenant users only", async () => {
+  it("limits creation to tenant-user authority even when the actor role is manager", async () => {
     authMock.principal.activeTenantRole = "ROLE_TENANT_MANAGER";
+    authMock.principal.authorities = ["TENANT_USERS_CREATE", "TENANT_USERS_READ"];
     apiMock.getUsersByTenant.mockResolvedValue([]);
     apiMock.createUserInTenant.mockResolvedValue({ uuid: "user-2" });
 
@@ -148,6 +157,7 @@ describe("TenantUsersPage", () => {
 
   it("hides edit actions for rows a tenant manager cannot manage", async () => {
     authMock.principal.activeTenantRole = "ROLE_TENANT_MANAGER";
+    authMock.principal.authorities = ["TENANT_USERS_READ", "TENANT_USERS_UPDATE"];
     apiMock.getUsersByTenant.mockResolvedValue([
       {
         uuid: "user-1",
@@ -183,7 +193,8 @@ describe("TenantUsersPage", () => {
     expect(within(userRow).getByRole("button", { name: "Edit" })).toBeInTheDocument();
   });
 
-  it("keeps tenant admin rows read-only for tenant admins while allowing manager edits", async () => {
+  it("keeps rows read-only when their role lacks update authority", async () => {
+    authMock.principal.authorities = ["TENANT_MANAGERS_READ", "TENANT_MANAGERS_UPDATE"];
     apiMock.getUsersByTenant.mockResolvedValue([
       {
         uuid: "user-1",
@@ -224,8 +235,9 @@ describe("TenantUsersPage", () => {
     expect(notifierMock.success).toHaveBeenCalled();
   });
 
-  it("disables user creation when the actor has no assignable roles", async () => {
-    authMock.principal.activeTenantRole = "ROLE_TENANT_USER";
+  it("disables user creation when the actor has no tenant create authorities", async () => {
+    authMock.principal.activeTenantRole = "ROLE_TENANT_ADMIN";
+    authMock.principal.authorities = ["TENANT_USERS_READ"];
     apiMock.getUsersByTenant.mockResolvedValue([]);
 
     renderPage();
@@ -234,6 +246,7 @@ describe("TenantUsersPage", () => {
   });
 
   it("uses the active tenant when opened from the tenant route", async () => {
+    authMock.principal.authorities = ["TENANT_ADMINS_READ"];
     apiMock.getUsersByTenant.mockResolvedValue([
       {
         uuid: "user-1",
@@ -248,5 +261,24 @@ describe("TenantUsersPage", () => {
 
     expect(await screen.findByText("tenant-admin@example.com")).toBeInTheDocument();
     expect(apiMock.getUsersByTenant).toHaveBeenCalledWith("tenant-uuid-1");
+  });
+
+  it("does not unlock management actions from activeTenantRole alone", async () => {
+    authMock.principal.activeTenantRole = "ROLE_TENANT_ADMIN";
+    authMock.principal.authorities = [];
+    apiMock.getUsersByTenant.mockResolvedValue([
+      {
+        uuid: "user-1",
+        email: "tenant-user@example.com",
+        firstName: "Tenant",
+        lastName: "User",
+        role: "ROLE_TENANT_USER",
+      },
+    ]);
+
+    renderPage();
+
+    expect(await screen.findByRole("button", { name: "Add User" })).toBeDisabled();
+    expect(screen.queryByRole("button", { name: "Edit" })).not.toBeInTheDocument();
   });
 });

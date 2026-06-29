@@ -8,14 +8,15 @@ import { ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { notifier } from "@/services/NotificationService";
 import { createUserInTenant, getUsersByTenant, updateUserInTenant } from "../api";
-import type { CreateTenantUserRequest, TenantUserResponse, UpdateTenantUserRequest } from "../types";
 import {
-  canManageTenantUser,
-  formatRoleLabel,
-  getAssignableTenantRoles,
-  getTenantRoleOptions,
-  getTenantUserId,
-} from "../types";
+  canCreateTenantUser,
+  canReadTenantUsers,
+  canUpdateTenantUser,
+  getCreatableTenantRoles,
+  getEditableTenantRoles,
+} from "../access-policy";
+import type { CreateTenantUserRequest, TenantUserResponse, UpdateTenantUserRequest, UserRoleOption } from "../types";
+import { formatRoleLabel, getTenantUserId } from "../types";
 import { TenantUserDialog } from "../components/TenantUserDialog";
 
 export const TenantUsersPage: React.FC = () => {
@@ -28,10 +29,15 @@ export const TenantUsersPage: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<TenantUserResponse | null>(null);
   const effectiveTenantId = tenantId ?? principal?.activeTenantUuid ?? null;
   const hasPlatformTenantContext = Boolean(tenantId);
-  const actorTenantRole = principal?.activeTenantRole ?? null;
-  const assignableRoles = getAssignableTenantRoles(actorTenantRole);
-  const roleOptions = getTenantRoleOptions(actorTenantRole);
-  const canCreateUsers = assignableRoles.length > 0;
+  const authorities = principal?.authorities ?? [];
+  const canRead = canReadTenantUsers(authorities);
+  const creatableRoles = getCreatableTenantRoles(authorities);
+  const editableRoles = getEditableTenantRoles(authorities);
+  const roleOptions: UserRoleOption[] = creatableRoles.map((role) => ({
+    value: role,
+    label: formatRoleLabel(role),
+  }));
+  const canCreateUsers = creatableRoles.length > 0;
 
   const {
     data: users = [],
@@ -40,7 +46,7 @@ export const TenantUsersPage: React.FC = () => {
   } = useQuery({
     queryKey: ["tenantUsers", effectiveTenantId],
     queryFn: () => getUsersByTenant(effectiveTenantId!),
-    enabled: !!effectiveTenantId,
+    enabled: !!effectiveTenantId && canRead,
   });
 
   const mutation = useMutation({
@@ -73,7 +79,7 @@ export const TenantUsersPage: React.FC = () => {
   };
 
   const handleEdit = (user: TenantUserResponse) => {
-    if (!canManageTenantUser(actorTenantRole, user.role)) {
+    if (!canUpdateTenantUser(authorities, user.role)) {
       return;
     }
 
@@ -102,7 +108,9 @@ export const TenantUsersPage: React.FC = () => {
         </Button>
       </div>
 
-      {isLoading ? (
+      {!canRead ? (
+        <div className="text-center text-destructive py-10">Failed to load tenant users.</div>
+      ) : isLoading ? (
         <div className="flex justify-center py-10">
           <Loader2 className="h-10 w-10 animate-spin" />
         </div>
@@ -135,7 +143,7 @@ export const TenantUsersPage: React.FC = () => {
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{formatRoleLabel(user.role)}</TableCell>
                     <TableCell className="text-right">
-                      {canManageTenantUser(actorTenantRole, user.role) ? (
+                      {canUpdateTenantUser(authorities, user.role) ? (
                         <Button
                           variant="ghost"
                           size="icon"
@@ -158,14 +166,17 @@ export const TenantUsersPage: React.FC = () => {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSubmit={async (data) => {
-          if (!assignableRoles.some((role) => role === data.role)) {
+          if (
+            (!selectedUser && !canCreateTenantUser(authorities, data.role)) ||
+            (selectedUser && !canUpdateTenantUser(authorities, data.role))
+          ) {
             notifier.error(
               selectedUser ? t("tenants.notifications.updateUserError") : t("tenants.notifications.createUserError")
             );
             return;
           }
 
-          if (selectedUser && !canManageTenantUser(actorTenantRole, selectedUser.role)) {
+          if (selectedUser && !canUpdateTenantUser(authorities, selectedUser.role)) {
             notifier.error(t("tenants.notifications.updateUserError"));
             setDialogOpen(false);
             setSelectedUser(null);
@@ -176,8 +187,10 @@ export const TenantUsersPage: React.FC = () => {
         }}
         user={selectedUser}
         loading={mutation.isPending}
-        roleOptions={roleOptions}
-        defaultRole={assignableRoles[0] ?? null}
+        roleOptions={
+          selectedUser ? editableRoles.map((role) => ({ value: role, label: formatRoleLabel(role) })) : roleOptions
+        }
+        defaultRole={creatableRoles[0] ?? null}
       />
     </div>
   );
