@@ -54,6 +54,8 @@
   "users": {
     "backToList": "Назад до користувачів",
     "form": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "Введіть email",
       "rolePlaceholder": "Оберіть роль"
     }
   },

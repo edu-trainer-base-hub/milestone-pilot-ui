@@ -54,6 +54,8 @@
   "users": {
     "backToList": "Back to users",
     "form": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter email",
       "rolePlaceholder": "Select a role"
     }
   },

@@ -16,6 +16,9 @@ interface UserFormFieldsProps {
   values: UserFormValues;
   onChange: (values: UserFormValues) => void;
   roleOptions: readonly UserRoleOption[];
+  emailLabel: string;
+  emailPlaceholder: string;
+  emailReadOnly?: boolean;
   roleDisabled?: boolean;
 }
 
@@ -23,6 +26,9 @@ export const UserFormFields: React.FC<UserFormFieldsProps> = ({
   values,
   onChange,
   roleOptions,
+  emailLabel,
+  emailPlaceholder,
+  emailReadOnly = false,
   roleDisabled = false,
 }) => {
   const { t } = useTranslation();
@@ -39,14 +45,15 @@ export const UserFormFields: React.FC<UserFormFieldsProps> = ({
   return (
     <>
       <div className="space-y-2">
-        <Label htmlFor="email">{t("tenants.dialog.emailLabel")}</Label>
+        <Label htmlFor="email">{emailLabel}</Label>
         <Input
           id="email"
           type="email"
           value={values.email}
           onChange={(event) => setField("email")(event.target.value)}
-          placeholder={t("tenants.dialog.emailPlaceholder")}
+          placeholder={emailPlaceholder}
           required
+          readOnly={emailReadOnly}
         />
       </div>
       <div className="space-y-2">

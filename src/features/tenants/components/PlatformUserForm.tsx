@@ -9,6 +9,7 @@ import type { UserRoleOption } from "../types";
 interface PlatformUserFormProps {
   defaultValues: UserFormValues;
   title: string;
+  isEdit?: boolean;
   roleOptions: readonly UserRoleOption[];
   loading?: boolean;
   onSubmit: (values: UserFormValues) => Promise<void>;
@@ -18,6 +19,7 @@ interface PlatformUserFormProps {
 export const PlatformUserForm: React.FC<PlatformUserFormProps> = ({
   defaultValues,
   title,
+  isEdit = false,
   roleOptions,
   loading = false,
   onSubmit,
@@ -48,7 +50,14 @@ export const PlatformUserForm: React.FC<PlatformUserFormProps> = ({
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <UserFormFields values={values} onChange={setValues} roleOptions={roleOptions} />
+            <UserFormFields
+              values={values}
+              onChange={setValues}
+              roleOptions={roleOptions}
+              emailLabel={t("users.form.emailLabel")}
+              emailPlaceholder={t("users.form.emailPlaceholder")}
+              emailReadOnly={isEdit}
+            />
             <div className="flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={onCancel}>
                 {t("common.cancel")}

@@ -33,7 +33,6 @@ export interface CreatePlatformUserRequest {
 }
 
 export interface UpdatePlatformUserRequest {
-  email: string;
   firstName: string;
   lastName: string;
   role: string;
@@ -58,7 +57,6 @@ export interface CreateTenantUserRequest {
 }
 
 export interface UpdateTenantUserRequest {
-  email: string;
   firstName: string;
   lastName: string;
   role: string;

@@ -126,16 +126,12 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
 
           <div className="space-y-2">
             <Label htmlFor="timezone">{t("tenants.dialog.timezoneLabel")}</Label>
-            {isEdit ? (
-              <Input id="timezone" value={timezone} readOnly />
-            ) : (
-              <TimezoneSelector
-                id="timezone"
-                value={timezone}
-                onChange={setTimezone}
-                placeholder={t("tenants.dialog.timezonePlaceholder")}
-              />
-            )}
+            <TimezoneSelector
+              id="timezone"
+              value={timezone}
+              onChange={setTimezone}
+              placeholder={t("tenants.dialog.timezonePlaceholder")}
+            />
           </div>
 
           <div className="space-y-2">
@@ -145,7 +141,6 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
               value={locale}
               onChange={(e) => setLocale(e.target.value)}
               placeholder={t("tenants.dialog.localePlaceholder")}
-              readOnly={isEdit}
             />
           </div>
 
@@ -156,7 +151,6 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               placeholder={t("tenants.dialog.statusPlaceholder")}
-              readOnly={isEdit}
             />
           </div>
 

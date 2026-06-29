@@ -105,7 +105,7 @@ describe("TenantUsersPage", () => {
     expect(within(listbox).getByRole("option", { name: "TENANT MANAGER" })).toBeInTheDocument();
     fireEvent.click(within(listbox).getByRole("option", { name: "TENANT USER" }));
 
-    fireEvent.change(screen.getByLabelText("Admin's Email"), { target: { value: "member@example.com" } });
+    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "member@example.com" } });
     fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "Tenant" } });
     fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "Member" } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
@@ -140,7 +140,7 @@ describe("TenantUsersPage", () => {
     expect(within(listbox).queryByRole("option", { name: "TENANT MANAGER" })).not.toBeInTheDocument();
     fireEvent.keyDown(listbox, { key: "Escape" });
 
-    fireEvent.change(screen.getByLabelText("Admin's Email"), { target: { value: "user@example.com" } });
+    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "user@example.com" } });
     fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "Tenant" } });
     fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "User" } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
@@ -221,12 +221,12 @@ describe("TenantUsersPage", () => {
     expect(within(adminRow).queryByRole("button", { name: "Edit" })).not.toBeInTheDocument();
 
     fireEvent.click(within(managerRow).getByRole("button", { name: "Edit" }));
+    expect(screen.getByLabelText("Email")).toHaveAttribute("readonly");
     fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "Updated Tenant" } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
       expect(apiMock.updateUserInTenant).toHaveBeenCalledWith("tenant-uuid-1", "user-2", {
-        email: "tenant-manager@example.com",
         firstName: "Updated Tenant",
         lastName: "Manager",
         role: "ROLE_TENANT_MANAGER",

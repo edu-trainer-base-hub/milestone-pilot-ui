@@ -119,7 +119,7 @@ describe("Platform user management", () => {
 
     renderWithRouter("/platform/users/new");
 
-    fireEvent.change(await screen.findByLabelText("Admin's Email"), { target: { value: "manager@example.com" } });
+    fireEvent.change(await screen.findByLabelText("Email"), { target: { value: "manager@example.com" } });
     fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "Grace" } });
     fireEvent.change(screen.getByLabelText("Last Name"), { target: { value: "Hopper" } });
 
@@ -162,13 +162,13 @@ describe("Platform user management", () => {
     renderWithRouter("/platform/users/user-1/edit");
 
     expect(await screen.findByDisplayValue("Grace")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toHaveAttribute("readonly");
 
     fireEvent.change(screen.getByLabelText("First Name"), { target: { value: "Updated Grace" } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
       expect(apiMock.updatePlatformUser).toHaveBeenCalledWith("user-1", {
-        email: "manager@example.com",
         firstName: "Updated Grace",
         lastName: "Hopper",
         role: "ROLE_PLATFORM_MANAGER",

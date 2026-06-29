@@ -77,7 +77,6 @@ export const PlatformUserUpsertPage: React.FC = () => {
       }
 
       const request: CreatePlatformUserRequest | UpdatePlatformUserRequest = {
-        email: values.email,
         firstName: values.firstName,
         lastName: values.lastName,
         role: values.role,
@@ -87,7 +86,10 @@ export const PlatformUserUpsertPage: React.FC = () => {
         return updatePlatformUser(userId, request);
       }
 
-      return createPlatformUser(request);
+      return createPlatformUser({
+        email: values.email,
+        ...request,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["platformUsers"] });
@@ -122,6 +124,7 @@ export const PlatformUserUpsertPage: React.FC = () => {
   return (
     <PlatformUserForm
       title={isEdit ? t("platformUsers.edit") : t("platformUsers.create")}
+      isEdit={isEdit}
       defaultValues={
         selectedUser
           ? {

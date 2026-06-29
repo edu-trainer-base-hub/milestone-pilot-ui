@@ -143,9 +143,13 @@ describe("TenantsPage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
     expect(screen.getByLabelText("Admin's Email")).toHaveAttribute("readonly");
-    expect(screen.getByLabelText("Timezone")).toHaveAttribute("readonly");
-    expect(screen.getByLabelText("Locale")).toHaveAttribute("readonly");
-    expect(screen.getByLabelText("Status")).toHaveAttribute("readonly");
+    expect(screen.getByRole("combobox")).toBeEnabled();
+    expect(screen.getByLabelText("Locale")).not.toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Status")).not.toHaveAttribute("readonly");
+    fireEvent.change(screen.getByLabelText("Locale"), { target: { value: "uk" } });
+    fireEvent.change(screen.getByLabelText("Status"), { target: { value: "INACTIVE" } });
+    expect(screen.getByLabelText("Locale")).toHaveValue("uk");
+    expect(screen.getByLabelText("Status")).toHaveValue("INACTIVE");
     fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Alpha Updated" } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 

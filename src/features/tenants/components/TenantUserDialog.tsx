@@ -45,6 +45,7 @@ export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({
 }) => {
   const { t } = useTranslation();
   const fallbackRole = defaultRole ?? roleOptions[0]?.value ?? "";
+  const isEdit = Boolean(user);
   const [values, setValues] = useState<UserFormValues>(emptyValues(fallbackRole));
   const hasAllowedRole = roleOptions.some((roleOption) => roleOption.value === values.role);
 
@@ -73,6 +74,15 @@ export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({
       return;
     }
 
+    if (isEdit) {
+      await onSubmit({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        role: values.role,
+      });
+      return;
+    }
+
     await onSubmit({
       email: values.email,
       firstName: values.firstName,
@@ -93,6 +103,9 @@ export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({
             values={values}
             onChange={setValues}
             roleOptions={roleOptions}
+            emailLabel={t("users.form.emailLabel")}
+            emailPlaceholder={t("users.form.emailPlaceholder")}
+            emailReadOnly={isEdit}
             roleDisabled={roleOptions.length === 0}
           />
           <DialogFooter>
