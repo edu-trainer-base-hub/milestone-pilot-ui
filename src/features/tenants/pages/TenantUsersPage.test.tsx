@@ -17,8 +17,8 @@ const notifierMock = vi.hoisted(() => ({
 
 const authMock = vi.hoisted(() => ({
   principal: {
-    activeTenantId: "tenant-1",
-    activeTenantUuid: "tenant-1",
+    activeTenantId: "1",
+    activeTenantUuid: "tenant-uuid-1",
     activeTenantRole: "ROLE_TENANT_ADMIN",
   },
 }));
@@ -42,7 +42,7 @@ vi.mock("@/contexts/AuthContext", () => ({
   }),
 }));
 
-const renderPage = (initialEntry = "/platform/tenants/tenant-1/users") => {
+const renderPage = (initialEntry = "/platform/tenants/tenant-uuid-1/users") => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -83,7 +83,7 @@ describe("TenantUsersPage", () => {
 
   it("lets tenant admins create tenant users and choose manager or user roles", async () => {
     apiMock.getUsersByTenant.mockResolvedValue([]);
-    apiMock.createUserInTenant.mockResolvedValue({ id: "user-2" });
+    apiMock.createUserInTenant.mockResolvedValue({ uuid: "user-2" });
 
     renderPage();
 
@@ -103,7 +103,7 @@ describe("TenantUsersPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
-      expect(apiMock.createUserInTenant).toHaveBeenCalledWith("tenant-1", {
+      expect(apiMock.createUserInTenant).toHaveBeenCalledWith("tenant-uuid-1", {
         email: "member@example.com",
         firstName: "Tenant",
         lastName: "Member",
@@ -116,7 +116,7 @@ describe("TenantUsersPage", () => {
   it("limits tenant managers to creating tenant users only", async () => {
     authMock.principal.activeTenantRole = "ROLE_TENANT_MANAGER";
     apiMock.getUsersByTenant.mockResolvedValue([]);
-    apiMock.createUserInTenant.mockResolvedValue({ id: "user-2" });
+    apiMock.createUserInTenant.mockResolvedValue({ uuid: "user-2" });
 
     renderPage();
 
@@ -137,7 +137,7 @@ describe("TenantUsersPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
-      expect(apiMock.createUserInTenant).toHaveBeenCalledWith("tenant-1", {
+      expect(apiMock.createUserInTenant).toHaveBeenCalledWith("tenant-uuid-1", {
         email: "user@example.com",
         firstName: "Tenant",
         lastName: "User",
@@ -150,24 +150,21 @@ describe("TenantUsersPage", () => {
     authMock.principal.activeTenantRole = "ROLE_TENANT_MANAGER";
     apiMock.getUsersByTenant.mockResolvedValue([
       {
-        id: "user-1",
-        tenantId: "tenant-1",
+        uuid: "user-1",
         email: "tenant-admin@example.com",
         firstName: "Tenant",
         lastName: "Admin",
         role: "ROLE_TENANT_ADMIN",
       },
       {
-        id: "user-2",
-        tenantId: "tenant-1",
+        uuid: "user-2",
         email: "tenant-manager@example.com",
         firstName: "Tenant",
         lastName: "Manager",
         role: "ROLE_TENANT_MANAGER",
       },
       {
-        id: "user-3",
-        tenantId: "tenant-1",
+        uuid: "user-3",
         email: "tenant-user@example.com",
         firstName: "Tenant",
         lastName: "User",
@@ -189,23 +186,21 @@ describe("TenantUsersPage", () => {
   it("keeps tenant admin rows read-only for tenant admins while allowing manager edits", async () => {
     apiMock.getUsersByTenant.mockResolvedValue([
       {
-        id: "user-1",
-        tenantId: "tenant-1",
+        uuid: "user-1",
         email: "tenant-admin@example.com",
         firstName: "Tenant",
         lastName: "Admin",
         role: "ROLE_TENANT_ADMIN",
       },
       {
-        id: "user-2",
-        tenantId: "tenant-1",
+        uuid: "user-2",
         email: "tenant-manager@example.com",
         firstName: "Tenant",
         lastName: "Manager",
         role: "ROLE_TENANT_MANAGER",
       },
     ]);
-    apiMock.updateUserInTenant.mockResolvedValue({ id: "user-2" });
+    apiMock.updateUserInTenant.mockResolvedValue({ uuid: "user-2" });
 
     renderPage();
 
@@ -219,7 +214,7 @@ describe("TenantUsersPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
-      expect(apiMock.updateUserInTenant).toHaveBeenCalledWith("tenant-1", "user-2", {
+      expect(apiMock.updateUserInTenant).toHaveBeenCalledWith("tenant-uuid-1", "user-2", {
         email: "tenant-manager@example.com",
         firstName: "Updated Tenant",
         lastName: "Manager",
@@ -241,8 +236,7 @@ describe("TenantUsersPage", () => {
   it("uses the active tenant when opened from the tenant route", async () => {
     apiMock.getUsersByTenant.mockResolvedValue([
       {
-        id: "user-1",
-        tenantId: "tenant-1",
+        uuid: "user-1",
         email: "tenant-admin@example.com",
         firstName: "Tenant",
         lastName: "Admin",
@@ -253,6 +247,6 @@ describe("TenantUsersPage", () => {
     renderPage("/tenant/users");
 
     expect(await screen.findByText("tenant-admin@example.com")).toBeInTheDocument();
-    expect(apiMock.getUsersByTenant).toHaveBeenCalledWith("tenant-1");
+    expect(apiMock.getUsersByTenant).toHaveBeenCalledWith("tenant-uuid-1");
   });
 });

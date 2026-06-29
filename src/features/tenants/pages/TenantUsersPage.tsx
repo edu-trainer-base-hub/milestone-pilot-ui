@@ -8,8 +8,14 @@ import { ArrowLeft, Loader2, Pencil, Plus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { notifier } from "@/services/NotificationService";
 import { createUserInTenant, getUsersByTenant, updateUserInTenant } from "../api";
-import type { TenantUserRequest, TenantUserResponse } from "../types";
-import { canManageTenantUser, formatRoleLabel, getAssignableTenantRoles, getTenantRoleOptions } from "../types";
+import type { CreateTenantUserRequest, TenantUserResponse, UpdateTenantUserRequest } from "../types";
+import {
+  canManageTenantUser,
+  formatRoleLabel,
+  getAssignableTenantRoles,
+  getTenantRoleOptions,
+  getTenantUserId,
+} from "../types";
 import { TenantUserDialog } from "../components/TenantUserDialog";
 
 export const TenantUsersPage: React.FC = () => {
@@ -20,7 +26,7 @@ export const TenantUsersPage: React.FC = () => {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<TenantUserResponse | null>(null);
-  const effectiveTenantId = tenantId ?? principal?.activeTenantUuid ?? principal?.activeTenantId ?? null;
+  const effectiveTenantId = tenantId ?? principal?.activeTenantUuid ?? null;
   const hasPlatformTenantContext = Boolean(tenantId);
   const actorTenantRole = principal?.activeTenantRole ?? null;
   const assignableRoles = getAssignableTenantRoles(actorTenantRole);
@@ -38,10 +44,10 @@ export const TenantUsersPage: React.FC = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: TenantUserRequest) =>
+    mutationFn: (data: CreateTenantUserRequest | UpdateTenantUserRequest) =>
       selectedUser
-        ? updateUserInTenant(effectiveTenantId!, selectedUser.id, data)
-        : createUserInTenant(effectiveTenantId!, data),
+        ? updateUserInTenant(effectiveTenantId!, getTenantUserId(selectedUser), data as UpdateTenantUserRequest)
+        : createUserInTenant(effectiveTenantId!, data as CreateTenantUserRequest),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenantUsers", effectiveTenantId] });
       setDialogOpen(false);
@@ -123,7 +129,7 @@ export const TenantUsersPage: React.FC = () => {
                 </TableRow>
               ) : (
                 users.map((user) => (
-                  <TableRow key={user.id}>
+                  <TableRow key={getTenantUserId(user)}>
                     <TableCell>{user.firstName}</TableCell>
                     <TableCell>{user.lastName}</TableCell>
                     <TableCell>{user.email}</TableCell>

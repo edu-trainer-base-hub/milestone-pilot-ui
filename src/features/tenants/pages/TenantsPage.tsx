@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, Pencil, Plus, Users } from "lucide-react";
+import { Loader2, Pencil, Plus } from "lucide-react";
 import { notifier } from "@/services/NotificationService";
 import { getAllTenants, createTenant, updateTenant } from "../api";
-import type { TenantRequest, TenantResponse } from "../types";
+import {
+  getTenantIdForPlatformOps,
+  type CreateTenantRequest,
+  type TenantResponse,
+  type UpdateTenantRequest,
+} from "../types";
 import { TenantDialog } from "../components/TenantDialog";
 
 export const TenantsPage: React.FC = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState<TenantResponse | null>(null);
@@ -27,7 +30,10 @@ export const TenantsPage: React.FC = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: TenantRequest) => (selectedTenant ? updateTenant(selectedTenant.id, data) : createTenant(data)),
+    mutationFn: (data: CreateTenantRequest | UpdateTenantRequest) =>
+      selectedTenant
+        ? updateTenant(getTenantIdForPlatformOps(selectedTenant), data as UpdateTenantRequest)
+        : createTenant(data as CreateTenantRequest),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
       setDialogOpen(false);
@@ -71,7 +77,6 @@ export const TenantsPage: React.FC = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("tenants.columns.name")}</TableHead>
-                <TableHead>{t("tenants.columns.description")}</TableHead>
                 <TableHead>{t("tenants.columns.timezone")}</TableHead>
                 <TableHead>{t("tenants.columns.status")}</TableHead>
                 <TableHead className="text-right">{t("common.list.actions")}</TableHead>
@@ -80,7 +85,7 @@ export const TenantsPage: React.FC = () => {
             <TableBody>
               {tenants.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-10">
+                  <TableCell colSpan={4} className="text-center py-10">
                     {t("tenants.empty")}
                   </TableCell>
                 </TableRow>
@@ -88,18 +93,9 @@ export const TenantsPage: React.FC = () => {
                 tenants.map((tenant) => (
                   <TableRow key={tenant.id}>
                     <TableCell className="font-medium">{tenant.name}</TableCell>
-                    <TableCell>{tenant.description}</TableCell>
                     <TableCell>{tenant.timezone}</TableCell>
                     <TableCell>{tenant.status}</TableCell>
                     <TableCell className="text-right space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label={t("tenants.users.title")}
-                        onClick={() => navigate(`/platform/tenants/${tenant.id}/users`)}
-                      >
-                        <Users className="h-4 w-4" />
-                      </Button>
                       <Button
                         variant="ghost"
                         size="icon"

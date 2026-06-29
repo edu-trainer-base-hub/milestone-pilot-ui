@@ -1,6 +1,5 @@
-export interface TenantRequest {
+export interface CreateTenantRequest {
   name: string;
-  description?: string;
   email: string;
   address: string;
   timezone: string;
@@ -8,11 +7,15 @@ export interface TenantRequest {
   status?: string;
 }
 
-export interface TenantResponse {
-  id: string;
-  uuid?: string;
+export interface UpdateTenantRequest {
   name: string;
-  description?: string;
+  address: string;
+}
+
+export interface TenantResponse {
+  id: number;
+  uuid: string;
+  name: string;
   email: string;
   address: string;
   timezone: string;
@@ -22,11 +25,18 @@ export interface TenantResponse {
   updatedAt?: string;
 }
 
-export interface PlatformUserRequest {
+export interface CreatePlatformUserRequest {
   email: string;
   firstName: string;
   lastName: string;
-  platformRole: string;
+  role: string;
+}
+
+export interface UpdatePlatformUserRequest {
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
 }
 
 export interface PlatformUserResponse {
@@ -40,7 +50,14 @@ export interface PlatformUserResponse {
   updatedAt?: string;
 }
 
-export interface TenantUserRequest {
+export interface CreateTenantUserRequest {
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
+export interface UpdateTenantUserRequest {
   email: string;
   firstName: string;
   lastName: string;
@@ -48,12 +65,11 @@ export interface TenantUserRequest {
 }
 
 export interface TenantUserResponse {
-  id: string;
+  uuid: string;
   email: string;
   firstName: string;
   lastName: string;
   role: string;
-  tenantId: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -125,6 +141,12 @@ export const getTenantRoleOptions = (actorRole?: string | null): UserRoleOption[
 
 export const getPlatformUserId = (user: Pick<PlatformUserResponse, "id" | "uuid">): string =>
   user.id ?? user.uuid ?? "";
+
+export const getTenantIdForPlatformOps = (tenant: Pick<TenantResponse, "id">): string => String(tenant.id);
+
+export const getTenantUuidForTenantScopedOps = (tenant: Pick<TenantResponse, "uuid">): string => tenant.uuid;
+
+export const getTenantUserId = (user: Pick<TenantUserResponse, "uuid">): string => user.uuid;
 
 export const getTenantMembershipId = (membership: Pick<TenantMembership, "tenantId" | "tenantUuid">): string | null =>
   membership.tenantId ?? membership.tenantUuid ?? null;

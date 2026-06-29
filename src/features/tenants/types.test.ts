@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { TenantRole, canManageTenantUser, getAssignableTenantRoles, getTenantRoleOptions } from "./types";
+import {
+  TenantRole,
+  canManageTenantUser,
+  getAssignableTenantRoles,
+  getTenantIdForPlatformOps,
+  getTenantRoleOptions,
+  getTenantUserId,
+  getTenantUuidForTenantScopedOps,
+} from "./types";
 
 describe("tenant role policy helpers", () => {
   it("returns backend-aligned assignable roles for tenant admins", () => {
@@ -32,5 +40,11 @@ describe("tenant role policy helpers", () => {
     expect(canManageTenantUser(TenantRole.ROLE_TENANT_MANAGER, TenantRole.ROLE_TENANT_MANAGER)).toBe(false);
     expect(canManageTenantUser(TenantRole.ROLE_TENANT_MANAGER, TenantRole.ROLE_TENANT_USER)).toBe(true);
     expect(canManageTenantUser(TenantRole.ROLE_TENANT_USER, TenantRole.ROLE_TENANT_USER)).toBe(false);
+  });
+
+  it("uses explicit tenant and tenant-user identifiers for each API scope", () => {
+    expect(getTenantIdForPlatformOps({ id: 12 })).toBe("12");
+    expect(getTenantUuidForTenantScopedOps({ uuid: "tenant-uuid-1" })).toBe("tenant-uuid-1");
+    expect(getTenantUserId({ uuid: "user-uuid-1" })).toBe("user-uuid-1");
   });
 });

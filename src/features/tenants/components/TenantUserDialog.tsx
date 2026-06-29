@@ -9,13 +9,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { type TenantUserRequest, type TenantUserResponse, type UserRoleOption } from "../types";
+import {
+  type CreateTenantUserRequest,
+  type TenantUserResponse,
+  type UpdateTenantUserRequest,
+  type UserRoleOption,
+} from "../types";
 import { UserFormFields, type UserFormValues } from "./UserFormFields";
 
 interface TenantUserDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: TenantUserRequest) => Promise<void>;
+  onSubmit: (data: CreateTenantUserRequest | UpdateTenantUserRequest) => Promise<void>;
   user?: TenantUserResponse | null;
   loading?: boolean;
   roleOptions: readonly UserRoleOption[];

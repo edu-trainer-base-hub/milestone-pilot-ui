@@ -58,9 +58,9 @@ describe("TenantsPage", () => {
   it("renders tenants and wires tenant creation", async () => {
     apiMock.getAllTenants.mockResolvedValue([
       {
-        id: "tenant-1",
+        id: 1,
+        uuid: "tenant-uuid-1",
         name: "Alpha",
-        description: "Primary tenant",
         email: "alpha@example.com",
         address: "Main street",
         timezone: "UTC",
@@ -69,18 +69,19 @@ describe("TenantsPage", () => {
       },
     ]);
     apiMock.createTenant.mockResolvedValue({
-      id: "tenant-2",
+      id: 2,
+      uuid: "tenant-uuid-2",
     });
 
     renderPage();
 
     expect(await screen.findByText("Alpha")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Tenant Users" })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Create Tenant" }));
     fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Beta" } });
     fireEvent.change(screen.getByLabelText("Admin's Email"), { target: { value: "beta@example.com" } });
     fireEvent.change(screen.getByLabelText("Address"), { target: { value: "Tenant address" } });
-    fireEvent.change(screen.getByLabelText("Description"), { target: { value: "Beta description" } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
@@ -89,19 +90,21 @@ describe("TenantsPage", () => {
           name: "Beta",
           email: "beta@example.com",
           address: "Tenant address",
-          description: "Beta description",
+          locale: "en",
+          status: "ACTIVE",
         })
       )
     );
+    expect(apiMock.createTenant.mock.calls[0]?.[0]).not.toHaveProperty("description");
     expect(notifierMock.success).toHaveBeenCalled();
   });
 
   it("wires tenant updates through the edit dialog", async () => {
     apiMock.getAllTenants.mockResolvedValue([
       {
-        id: "tenant-1",
+        id: 1,
+        uuid: "tenant-uuid-1",
         name: "Alpha",
-        description: "Primary tenant",
         email: "alpha@example.com",
         address: "Main street",
         timezone: "UTC",
@@ -110,7 +113,8 @@ describe("TenantsPage", () => {
       },
     ]);
     apiMock.updateTenant.mockResolvedValue({
-      id: "tenant-1",
+      id: 1,
+      uuid: "tenant-uuid-1",
     });
 
     renderPage();
@@ -118,16 +122,18 @@ describe("TenantsPage", () => {
     expect(await screen.findByText("Alpha")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    expect(screen.getByLabelText("Admin's Email")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Timezone")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Locale")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Status")).toHaveAttribute("readonly");
     fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Alpha Updated" } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
-      expect(apiMock.updateTenant).toHaveBeenCalledWith(
-        "tenant-1",
-        expect.objectContaining({
-          name: "Alpha Updated",
-        })
-      )
+      expect(apiMock.updateTenant).toHaveBeenCalledWith("1", {
+        name: "Alpha Updated",
+        address: "Main street",
+      })
     );
     expect(notifierMock.success).toHaveBeenCalled();
   });

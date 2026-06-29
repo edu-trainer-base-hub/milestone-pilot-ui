@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2, Pencil, Plus } from "lucide-react";
 import { getPlatformUsers } from "../api";
-import { formatRoleLabel, getPlatformUserId } from "../types";
+import { formatRoleLabel, getPlatformUserId, PlatformRole } from "../types";
 
 export const PlatformUsersPage: React.FC = () => {
   const { t } = useTranslation();
@@ -63,14 +63,16 @@ export const PlatformUsersPage: React.FC = () => {
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{formatRoleLabel(user.platformRole)}</TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label={t("common.edit")}
-                        onClick={() => navigate(`/platform/users/${getPlatformUserId(user)}/edit`)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      {user.platformRole === PlatformRole.ROLE_PLATFORM_MANAGER ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={t("common.edit")}
+                          onClick={() => navigate(`/platform/users/${getPlatformUserId(user)}/edit`)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))

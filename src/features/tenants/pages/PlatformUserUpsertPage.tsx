@@ -9,16 +9,19 @@ import {
   PlatformRole,
   formatRoleLabel,
   getPlatformUserId,
-  type PlatformUserRequest,
+  type CreatePlatformUserRequest,
+  type UpdatePlatformUserRequest,
   type UserRoleOption,
 } from "../types";
 import { PlatformUserForm } from "../components/PlatformUserForm";
 import type { UserFormValues } from "../components/UserFormFields";
 
-const platformRoleOptions: readonly UserRoleOption[] = Object.values(PlatformRole).map((role) => ({
-  value: role,
-  label: formatRoleLabel(role),
-}));
+const platformRoleOptions: readonly UserRoleOption[] = [
+  {
+    value: PlatformRole.ROLE_PLATFORM_MANAGER,
+    label: formatRoleLabel(PlatformRole.ROLE_PLATFORM_MANAGER),
+  },
+];
 
 const emptyValues: UserFormValues = {
   email: "",
@@ -40,14 +43,15 @@ export const PlatformUserUpsertPage: React.FC = () => {
   });
 
   const selectedUser = useMemo(() => users.find((user) => getPlatformUserId(user) === userId) ?? null, [userId, users]);
+  const isManagedUser = selectedUser?.platformRole === PlatformRole.ROLE_PLATFORM_MANAGER;
 
   const mutation = useMutation({
     mutationFn: async (values: UserFormValues) => {
-      const request: PlatformUserRequest = {
+      const request: CreatePlatformUserRequest | UpdatePlatformUserRequest = {
         email: values.email,
         firstName: values.firstName,
         lastName: values.lastName,
-        platformRole: values.role,
+        role: values.role,
       };
 
       if (userId) {
@@ -78,7 +82,7 @@ export const PlatformUserUpsertPage: React.FC = () => {
     );
   }
 
-  if (isEdit && !selectedUser) {
+  if (isEdit && (!selectedUser || !isManagedUser)) {
     return <div className="p-6 text-center text-destructive">{t("platformUsers.notFound")}</div>;
   }
 
