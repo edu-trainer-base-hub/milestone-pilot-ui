@@ -138,59 +138,6 @@
     }
   },
   "pages": {
-    "secondaryProfiles": {
-      "title": "Другорядні профілі",
-      "createButton": {
-        "tooltip": "Створити профіль"
-      },
-      "loadError": "Не вдалося завантажити профілі.",
-      "empty": "Другорядних профілів не знайдено.",
-      "confirmDelete": "Ви впевнені, що хочете видалити цей профіль?",
-      "columns": {
-        "name": "Ім'я",
-        "username": "Нікнейм",
-        "locale": "Мова",
-        "ownership": "Власність"
-      },
-      "row": {
-        "ownership": {
-          "secondary": "Другорядний"
-        }
-      },
-      "notifications": {
-        "deleteSuccess": "Профіль успішно видалено",
-        "deleteError": "Не вдалося видалити профіль"
-      }
-    },
-    "profileForm": {
-      "createTitle": "Створити профіль",
-      "editTitle": "Редагувати профіль",
-      "username": "Нікнейм",
-      "firstName": "Ім'я",
-      "lastName": "Прізвище",
-      "locale": "Мова",
-      "password": "Пароль",
-      "newPassword": "Новий пароль (необов'язково)",
-      "showPasswordLabel": "Показати пароль",
-      "localePlaceholder": "Оберіть мову",
-      "locales": {
-        "en": "Англійська (США)",
-        "uk": "Українська",
-        "ru": "Російська"
-      },
-      "validation": {
-        "invalidUsername": "Нікнейм може містити лише літери, цифри, '-', '_', '.'."
-      }
-    },
-    "createProfile": {
-      "success": "Профіль успішно створено",
-      "error": "Не вдалося створити профіль"
-    },
-    "editProfile": {
-      "success": "Профіль успішно оновлено",
-      "error": "Не вдалося оновити профіль",
-      "notFound": "Профіль не знайдено"
-    },
     "settings": {
       "title": "Налаштування",
       "telegramLanguage": {
@@ -208,19 +155,19 @@
         "saveSuccess": "Налаштування збережено."
       }
     },
-    "tenantMemberships": {
+    "workspaceMemberships": {
       "title": "Ваші робочі простори",
       "description": "Оберіть, який робочий простір буде активним у поточній сесії, а який стане типовим для наступного входу.",
       "settingsLabel": "Активний робочий простір",
       "settingsDescription": "Перемикайте поточний робочий простір або зберігайте інший типовий, не виходячи з облікового запису.",
-      "currentTenantLabel": "Поточний робочий простір:",
-      "noActiveTenant": "Немає активного тенанта або робочого простору",
+      "currentWorkspaceLabel": "Поточний робочий простір:",
+      "noActiveWorkspace": "Немає активного робочого простору",
       "activeRoleLabel": "Роль: {{role}}",
       "platformWorkspace": "Платформа",
       "loadError": "Не вдалося завантажити робочі простори.",
       "empty": "Робочих просторів не знайдено.",
       "columns": {
-        "tenant": "Робочий простір",
+        "workspace": "Робочий простір",
         "role": "Роль",
         "status": "Статус",
         "actions": "Дії"
@@ -366,7 +313,6 @@
       "PROFILE_NOT_FOUND": "Ми не можемо знайти цей аккаунт.",
       "EMAIL_ALREADY_EXISTS": "Email вже зареєстровано.",
       "USERNAME_ALREADY_EXISTS": "Username вже зареєстровано.",
-      "MAX_SECONDARY_PROFILES_REACHED": "Ліміт додаткових профілів досягнуто.",
       "PROFILE_OWNERSHIP_VIOLATION": "Нарушение владения профилем.",
       "RATE_LIMIT_EXCEEDED": "Забагато спроб. Спробуйте пізніше.",
       "USER_BLOCKED": "Користувача заблоковано.",

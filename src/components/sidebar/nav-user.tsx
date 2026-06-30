@@ -112,7 +112,7 @@ export function NavUser({
                   {t("menu.user.settings", "Settings")}
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem onClick={() => navigate("/settings/tenants")}>
+              <DropdownMenuItem onClick={() => navigate("/settings/workspaces")}>
                 <Building2 />
                 {t("menu.user.tenants", "Manage workspaces")}
               </DropdownMenuItem>

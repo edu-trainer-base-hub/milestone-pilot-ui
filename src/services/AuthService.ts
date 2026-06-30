@@ -1,4 +1,4 @@
-import type { Workspace, WorkspaceContextType } from "@/features/tenants/types";
+import type { Workspace, WorkspaceContextType } from "@/features/workspaces/model/types";
 import { post } from "./ApiService";
 
 export interface LoginResponse {

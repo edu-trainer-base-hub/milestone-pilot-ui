@@ -138,59 +138,6 @@
     }
   },
   "pages": {
-    "secondaryProfiles": {
-      "title": "Второстепенные профили",
-      "createButton": {
-        "tooltip": "Создать профиль"
-      },
-      "loadError": "Не удалось загрузить профили.",
-      "empty": "Второстепенные профили не найдены.",
-      "confirmDelete": "Вы уверены, что хотите удалить этот профиль?",
-      "columns": {
-        "name": "Имя",
-        "username": "Никнейм",
-        "locale": "Язык",
-        "ownership": "Владение"
-      },
-      "row": {
-        "ownership": {
-          "secondary": "Второстепенный"
-        }
-      },
-      "notifications": {
-        "deleteSuccess": "Профиль успешно удален",
-        "deleteError": "Не удалось удалить профиль"
-      }
-    },
-    "profileForm": {
-      "createTitle": "Создать профиль",
-      "editTitle": "Редактировать профиль",
-      "username": "Никнейм",
-      "firstName": "Имя",
-      "lastName": "Фамилия",
-      "locale": "Язык",
-      "password": "Пароль",
-      "newPassword": "Новый пароль (необязательно)",
-      "showPasswordLabel": "Показать пароль",
-      "localePlaceholder": "Выберите язык",
-      "locales": {
-        "en": "Английский (США)",
-        "uk": "Украинский",
-        "ru": "Русский"
-      },
-      "validation": {
-        "invalidUsername": "Никнейм может содержать только буквы, цифры, '-', '_', '.'."
-      }
-    },
-    "createProfile": {
-      "success": "Профиль успешно создан",
-      "error": "Не удалось создать профиль"
-    },
-    "editProfile": {
-      "success": "Профиль успешно обновлен",
-      "error": "Не удалось обновить профиль",
-      "notFound": "Профиль не найден"
-    },
     "settings": {
       "title": "Настройки",
       "telegramLanguage": {
@@ -208,19 +155,19 @@
         "saveSuccess": "Настройки успешно сохранены."
       }
     },
-    "tenantMemberships": {
+    "workspaceMemberships": {
       "title": "Ваши рабочие пространства",
       "description": "Выберите, какое рабочее пространство будет активным в текущей сессии и какое станет пространством по умолчанию при следующем входе.",
       "settingsLabel": "Активное рабочее пространство",
       "settingsDescription": "Переключайте текущее рабочее пространство или сохраняйте другое по умолчанию, не выходя из аккаунта.",
-      "currentTenantLabel": "Текущее рабочее пространство:",
-      "noActiveTenant": "Нет активного тенанта или рабочего пространства",
+      "currentWorkspaceLabel": "Текущее рабочее пространство:",
+      "noActiveWorkspace": "Нет активного рабочего пространства",
       "activeRoleLabel": "Роль: {{role}}",
       "platformWorkspace": "Платформа",
       "loadError": "Не удалось загрузить рабочие пространства.",
       "empty": "Рабочие пространства не найдены.",
       "columns": {
-        "tenant": "Рабочее пространство",
+        "workspace": "Рабочее пространство",
         "role": "Роль",
         "status": "Статус",
         "actions": "Действия"
@@ -366,7 +313,6 @@
       "PROFILE_NOT_FOUND": "Не удаётся найти этот аккаунт.",
       "EMAIL_ALREADY_EXISTS": "Email уже зарегистрирован.",
       "USERNAME_ALREADY_EXISTS": "Username уже зарегистрирован.",
-      "MAX_SECONDARY_PROFILES_REACHED": "Лимит дополнительных профилей достигнут.",
       "PROFILE_OWNERSHIP_VIOLATION": "Нарушение владения профилем.",
       "RATE_LIMIT_EXCEEDED": "Слишком много попыток. Попробуйте позже.",
       "USER_BLOCKED": "Пользователь заблокирован.",

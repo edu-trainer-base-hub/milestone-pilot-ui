@@ -1,15 +1,14 @@
 import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { post, registerLogoutFn, registerRefreshFn } from "@/services/ApiService.ts";
 import { type LoginResponse, logout as apiLogout, logoutTelegram } from "@/services/AuthService.ts";
-import { getMe, type UserProfileDto } from "@/services/ProfileService.ts";
+import { getMe, type UserProfileDto } from "@/services/CurrentUserService.ts";
+import { getWorkspaceLabel, getWorkspaceTenantUuid } from "@/features/workspaces/model/helpers";
 import {
   type Workspace,
   type WorkspaceContextType,
   WorkspaceContextType as WorkspaceContextTypeValue,
-  getWorkspaceLabel,
-  getWorkspaceTenantUuid,
-} from "@/features/tenants/types";
-import { switchWorkspace as switchWorkspaceRequest } from "@/features/tenants/api";
+} from "@/features/workspaces/model/types";
+import { switchWorkspace as switchWorkspaceRequest } from "@/features/workspaces/api/workspaces";
 import WebApp from "@twa-dev/sdk";
 import { jwtDecode } from "jwt-decode";
 

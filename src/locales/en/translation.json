@@ -138,59 +138,6 @@
     }
   },
   "pages": {
-    "secondaryProfiles": {
-      "title": "Secondary Profiles",
-      "createButton": {
-        "tooltip": "Create Profile"
-      },
-      "loadError": "Failed to load profiles.",
-      "empty": "No secondary profiles found.",
-      "confirmDelete": "Are you sure you want to delete this profile?",
-      "columns": {
-        "name": "Name",
-        "username": "Username",
-        "locale": "Locale",
-        "ownership": "Ownership"
-      },
-      "row": {
-        "ownership": {
-          "secondary": "Secondary"
-        }
-      },
-      "notifications": {
-        "deleteSuccess": "Profile deleted successfully",
-        "deleteError": "Failed to delete profile"
-      }
-    },
-    "profileForm": {
-      "createTitle": "Create Profile",
-      "editTitle": "Edit Profile",
-      "username": "Username",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "locale": "Locale",
-      "password": "Password",
-      "newPassword": "New Password (Optional)",
-      "showPasswordLabel": "Show password",
-      "localePlaceholder": "Select locale",
-      "locales": {
-        "en": "English (US)",
-        "uk": "Ukrainian",
-        "ru": "Russian"
-      },
-      "validation": {
-        "invalidUsername": "Username can only contain letters, digits, '-', '_', '.'."
-      }
-    },
-    "createProfile": {
-      "success": "Profile created successfully",
-      "error": "Failed to create profile"
-    },
-    "editProfile": {
-      "success": "Profile updated successfully",
-      "error": "Failed to update profile",
-      "notFound": "Profile not found"
-    },
     "settings": {
       "title": "Settings",
       "telegramLanguage": {
@@ -208,19 +155,19 @@
         "saveSuccess": "Settings saved successfully."
       }
     },
-    "tenantMemberships": {
+    "workspaceMemberships": {
       "title": "Your workspaces",
       "description": "Choose which workspace is active for the current session and which one should be the default next time you sign in.",
       "settingsLabel": "Active workspace",
       "settingsDescription": "Switch your current workspace or save a different default without leaving your signed-in session.",
-      "currentTenantLabel": "Current workspace:",
-      "noActiveTenant": "No active tenant or workspace",
+      "currentWorkspaceLabel": "Current workspace:",
+      "noActiveWorkspace": "No active workspace",
       "activeRoleLabel": "Role: {{role}}",
       "platformWorkspace": "Platform",
       "loadError": "Failed to load workspaces.",
       "empty": "No workspaces found.",
       "columns": {
-        "tenant": "Workspace",
+        "workspace": "Workspace",
         "role": "Role",
         "status": "Status",
         "actions": "Actions"
@@ -366,7 +313,6 @@
       "PROFILE_NOT_FOUND": "We can't find that profile.",
       "EMAIL_ALREADY_EXISTS": "Email already exists.",
       "USERNAME_ALREADY_EXISTS": "Username already exists.",
-      "MAX_SECONDARY_PROFILES_REACHED": "Limit of secondary profiles reached.",
       "PROFILE_OWNERSHIP_VIOLATION": "Profile ownership violation.",
       "RATE_LIMIT_EXCEEDED": "Too many attempts. Try again later.",
       "USER_BLOCKED": "User blocked.",

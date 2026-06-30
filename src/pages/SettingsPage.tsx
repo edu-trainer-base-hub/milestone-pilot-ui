@@ -12,8 +12,9 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { extractErrorCode } from "@/services/ApiService.ts";
 import LanguageSelector from "@/components/lang/LanguageSelector.tsx";
 import { useAuth } from "@/contexts/AuthContext.tsx";
+import { WorkspaceContextType } from "@/features/workspaces/model/types";
+import { formatRoleLabel } from "@/lib/roles";
 import { Link } from "react-router-dom";
-import { formatRoleLabel, WorkspaceContextType } from "@/features/tenants/types";
 
 const LOCALES: readonly { value: Locale5; label: string }[] = [
   { value: "en-US", label: "English (en-US)" },
@@ -81,7 +82,7 @@ const SettingsPage: React.FC = () => {
 
   const activeWorkspaceLabel = principal
     ? principal.contextType === WorkspaceContextType.PLATFORM
-      ? t("pages.tenantMemberships.platformWorkspace")
+      ? t("pages.workspaceMemberships.platformWorkspace")
       : principal.activeWorkspaceName
     : null;
 
@@ -116,25 +117,25 @@ const SettingsPage: React.FC = () => {
           <Separator />
           <div className="space-y-3">
             <div>
-              <Label>{t("pages.tenantMemberships.settingsLabel")}</Label>
-              <p className="text-sm text-muted-foreground">{t("pages.tenantMemberships.settingsDescription")}</p>
+              <Label>{t("pages.workspaceMemberships.settingsLabel")}</Label>
+              <p className="text-sm text-muted-foreground">{t("pages.workspaceMemberships.settingsDescription")}</p>
             </div>
             <div className="flex flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 font-medium">
                   <Building2 className="h-4 w-4" />
-                  {activeWorkspaceLabel ?? t("pages.tenantMemberships.noActiveTenant")}
+                  {activeWorkspaceLabel ?? t("pages.workspaceMemberships.noActiveWorkspace")}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {principal?.activeRole
-                    ? t("pages.tenantMemberships.activeRoleLabel", {
+                    ? t("pages.workspaceMemberships.activeRoleLabel", {
                         role: formatRoleLabel(principal.activeRole),
                       })
-                    : t("pages.tenantMemberships.description")}
+                    : t("pages.workspaceMemberships.description")}
                 </p>
               </div>
               <Button asChild variant="outline">
-                <Link to="/settings/tenants">{t("pages.tenantMemberships.actions.open")}</Link>
+                <Link to="/settings/workspaces">{t("pages.workspaceMemberships.actions.open")}</Link>
               </Button>
             </div>
           </div>
