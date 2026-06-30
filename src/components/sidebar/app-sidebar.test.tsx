@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarContextProvider } from "@/contexts/SidebarContext";
-import { WorkspaceContextType } from "@/features/tenants/types";
+import { WorkspaceContextType } from "@/features/workspaces/model/types";
 import { AppSidebar } from "./app-sidebar";
 
 const authMock = vi.hoisted(() => ({

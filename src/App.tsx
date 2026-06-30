@@ -9,13 +9,11 @@ import SettingsPage from "@/pages/SettingsPage.tsx";
 import SubscriptionPage from "@/pages/subscriptions/SubscriptionPage.tsx";
 import AuthorityRoute from "@/components/AuthorityRoute.tsx";
 import { Authority } from "@/contexts/AuthContext.tsx";
-import {
-  PlatformUserUpsertPage,
-  PlatformUsersPage,
-  TenantMembershipsPage,
-  TenantsPage,
-  TenantUsersPage,
-} from "@/features/tenants/pages";
+import { PlatformUserUpsertPage } from "@/features/platform-users/pages/PlatformUserUpsertPage";
+import { PlatformUsersPage } from "@/features/platform-users/pages/PlatformUsersPage";
+import { TenantsPage } from "@/features/tenant-management/pages/TenantsPage";
+import { TenantUsersPage } from "@/features/tenant-users/pages/TenantUsersPage";
+import { WorkspaceMembershipsPage } from "@/features/workspaces/pages/WorkspaceMembershipsPage";
 
 import { usePageTitle } from "@/hooks/usePageTitle.ts";
 
@@ -57,7 +55,7 @@ export default function App() {
         <Route path="/" element={<div className="p-8 text-2xl font-bold">Вітаємо у Milestone Pilot!</div>} />
 
         <Route element={<PrivateRoute />}>
-          <Route path="settings/tenants" element={<TenantMembershipsPage />} />
+          <Route path="settings/workspaces" element={<WorkspaceMembershipsPage />} />
 
           <Route element={<AuthorityRoute authority={Authority.MANAGE_SUBSCRIPTIONS} />}>
             <Route path="subscriptions" element={<SubscriptionPage />} />

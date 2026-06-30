@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { WorkspaceContextType } from "@/features/tenants/types";
+import { WorkspaceContextType } from "@/features/workspaces/model/types";
 import { AuthProvider, useAuth } from "./AuthContext";
 
 const apiMock = vi.hoisted(() => ({
@@ -37,7 +37,7 @@ vi.mock("@/services/ApiService.ts", () => ({
   registerLogoutFn: apiMock.registerLogoutFn,
 }));
 
-vi.mock("@/services/ProfileService.ts", () => ({
+vi.mock("@/services/CurrentUserService.ts", () => ({
   getMe: profileMock.getMe,
 }));
 
@@ -46,7 +46,7 @@ vi.mock("@/services/AuthService.ts", () => ({
   logoutTelegram: authServiceMock.logoutTelegram,
 }));
 
-vi.mock("@/features/tenants/api", () => ({
+vi.mock("@/features/workspaces/api/workspaces", () => ({
   switchWorkspace: workspaceApiMock.switchWorkspace,
 }));
 

@@ -2,7 +2,23 @@
 
 ## Project Structure & Module Organization
 
-This is a React 19 + TypeScript + Vite frontend. Application code lives in `src/`, with route pages under `src/pages`, shared UI under `src/components`, app state in `src/contexts`, reusable hooks in `src/hooks`, and API clients in `src/services`. Feature-focused code is grouped in `src/features/*` (for example, `profiles` and `tenants`) with local `components`, `hooks`, `model`, `services`, and `tests`. Static assets live in `src/assets`, translations in `src/locales`, and public files in `public`.
+This is a React 19 + TypeScript + Vite frontend. Application code lives in `src/`, with route pages under `src/pages`, shared UI under `src/components`, app state in `src/contexts`, reusable hooks in `src/hooks`, and API clients in `src/services`. Static assets live in `src/assets`, translations in `src/locales`, and public files in `public`.
+
+Feature code should follow a feature-first package structure under `src/features/<feature-name>/`. Match the existing layout used by `platform-users`, `tenant-management`, `tenant-users`, and `workspaces`:
+
+- `api/`: feature-specific request functions and API mappers
+- `components/`: UI used only by that feature
+- `model/`: feature types, helpers, and access-policy logic
+- `pages/`: routed screens for that feature
+
+Package structure rules:
+
+- Put code in `src/features/<feature-name>/` when it primarily serves one business area.
+- Put code in shared `src/components`, `src/hooks`, `src/contexts`, `src/lib`, or `src/services` only when it is reused across multiple features or is truly app-wide.
+- Keep imports pointed at the owning feature package; do not add temporary cross-feature shim packages for renamed modules.
+- Prefer adding a new file to an existing feature package over creating a new top-level `src/pages/*` file when the screen belongs to one feature domain.
+- Keep feature internals flat and predictable; use the standard subfolders above before inventing new package names.
+- Keep tests next to the code they verify, using `*.test.ts` or `*.test.tsx` in the same package.
 
 ## Build, Test, and Development Commands
 

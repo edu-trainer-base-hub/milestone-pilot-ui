@@ -32,11 +32,23 @@ vi.mock("@/pages/subscriptions/SubscriptionPage.tsx", () => ({
   default: () => <div>Subscription Page</div>,
 }));
 
-vi.mock("@/features/tenants/pages", () => ({
+vi.mock("@/features/platform-users/pages/PlatformUserUpsertPage", () => ({
   PlatformUserUpsertPage: () => <div>Platform User Upsert Page</div>,
+}));
+
+vi.mock("@/features/platform-users/pages/PlatformUsersPage", () => ({
   PlatformUsersPage: () => <div>Platform Users Page</div>,
-  TenantMembershipsPage: () => <div>Tenant Memberships Page</div>,
+}));
+
+vi.mock("@/features/workspaces/pages/WorkspaceMembershipsPage", () => ({
+  WorkspaceMembershipsPage: () => <div>Workspace Memberships Page</div>,
+}));
+
+vi.mock("@/features/tenant-management/pages/TenantsPage", () => ({
   TenantsPage: () => <div>Tenants Page</div>,
+}));
+
+vi.mock("@/features/tenant-users/pages/TenantUsersPage", () => ({
   TenantUsersPage: () => <div>Tenant Users Page</div>,
 }));
 
