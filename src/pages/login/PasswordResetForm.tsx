@@ -8,11 +8,10 @@ import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
 import { AlertCircleIcon, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { FormMode, useRegistrationForm } from "@/hooks/use-registration-form.ts";
+import { usePasswordResetForm } from "@/hooks/use-password-reset-form.ts";
 import LanguageSelector, { LanguageSelectorMode } from "@/components/lang/LanguageSelector.tsx";
 
-export interface VerificationFormProps {
-  formMode: FormMode;
+export interface PasswordResetFormProps {
   initialEmail?: string;
   initialCode?: string;
   emailReadOnly?: boolean;
@@ -27,8 +26,7 @@ export interface VerificationFormProps {
   secondaryLinkTo: string;
 }
 
-const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
-  formMode,
+const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
   initialEmail,
   initialCode,
   emailReadOnly,
@@ -63,15 +61,13 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
     handlePasswordChange,
     handleConfirmChange,
     handleSubmit,
-  } = useRegistrationForm({
-    mode: formMode,
+  } = usePasswordResetForm({
     initialEmail,
     initialCode,
     submitSuccessMessage,
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
   const { t } = useTranslation();
 
   return (
@@ -93,9 +89,8 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email">{t("pages.registrationPage.email.label")}</Label>
+              <Label htmlFor="email">{t("pages.resetPasswordPage.email.label")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -115,7 +110,6 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
               )}
             </div>
 
-            {/* Send Confirmation Code */}
             {!hideSendCode && (
               <Button
                 type="button"
@@ -126,10 +120,10 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
                 {sendCodeLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("pages.registrationPage.confirmationCode.sendCodeButtonLoading")}
+                    {t("pages.resetPasswordPage.confirmationCode.sendCodeButtonLoading")}
                   </>
                 ) : secondsLeft > 0 ? (
-                  t("pages.registrationPage.confirmationCode.sendCodeButtonRe", {
+                  t("pages.resetPasswordPage.confirmationCode.sendCodeButtonRe", {
                     secondsLeft,
                   })
                 ) : (
@@ -138,10 +132,9 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
               </Button>
             )}
 
-            {/* Confirmation Code */}
             {codeSent && (
               <div className="space-y-2">
-                <Label htmlFor="confirmationCode">{t("pages.registrationPage.confirmationCode.label")}</Label>
+                <Label htmlFor="confirmationCode">{t("pages.resetPasswordPage.confirmationCode.label")}</Label>
                 <Input
                   id="confirmationCode"
                   type="text"
@@ -159,9 +152,8 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
               </div>
             )}
 
-            {/* Password */}
             <div className="space-y-2">
-              <Label htmlFor="password">{t("pages.registrationPage.password.label")}</Label>
+              <Label htmlFor="password">{t("pages.resetPasswordPage.password.label")}</Label>
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -184,9 +176,8 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
               )}
             </div>
 
-            {/* Confirm Password */}
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">{t("pages.registrationPage.confirmPassword.label")}</Label>
+              <Label htmlFor="confirmPassword">{t("pages.resetPasswordPage.confirmPassword.label")}</Label>
               <Input
                 id="confirmPassword"
                 type={showPassword ? "text" : "password"}
@@ -202,11 +193,7 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
                   onCheckedChange={(checked) => setShowPassword(!!checked)}
                 />
                 <Label htmlFor="show-password" className="text-sm font-normal cursor-pointer">
-                  {t(
-                    formMode === FormMode.REGISTRATION
-                      ? "pages.registrationPage.password.showPasswordLabel"
-                      : "pages.resetPasswordPage.password.showPasswordLabel"
-                  )}
+                  {t("pages.resetPasswordPage.password.showPasswordLabel")}
                 </Label>
               </div>
               {confirmError && (
@@ -216,7 +203,6 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
               )}
             </div>
 
-            {/* Submit */}
             <Button
               className="w-full flex items-center justify-center"
               type="submit"
@@ -250,4 +236,4 @@ const GenericRegistrationForm: React.FC<VerificationFormProps> = ({
   );
 };
 
-export default GenericRegistrationForm;
+export default PasswordResetForm;

@@ -26,6 +26,7 @@
       "subscriptions": "Subscriptions",
       "account": "Account",
       "settings": "Settings",
+      "tenants": "Manage workspaces",
       "billing": "Billing",
       "notifications": "Notifications",
       "profiles": "Profiles",
@@ -50,6 +51,14 @@
       }
     }
   },
+  "users": {
+    "backToList": "Back to users",
+    "form": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter email",
+      "rolePlaceholder": "Select a role"
+    }
+  },
   "tenants": {
     "title": "Tenants",
     "create": "Create Tenant",
@@ -65,6 +74,7 @@
     "users": {
       "title": "Tenant Users",
       "create": "Add User",
+      "edit": "Edit User",
       "empty": "No users found in this tenant.",
       "columns": {
         "email": "Email",
@@ -102,7 +112,29 @@
       "updateSuccess": "Tenant updated successfully",
       "updateError": "Failed to update tenant",
       "createUserSuccess": "User added successfully",
-      "createUserError": "Failed to add user"
+      "createUserError": "Failed to add user",
+      "updateUserSuccess": "User updated successfully",
+      "updateUserError": "Failed to update user"
+    }
+  },
+  "platformUsers": {
+    "title": "Platform Users",
+    "create": "Create Platform User",
+    "edit": "Edit Platform User",
+    "empty": "No platform users found.",
+    "loadError": "Failed to load platform users.",
+    "notFound": "Platform user not found.",
+    "columns": {
+      "email": "Email",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "role": "Role"
+    },
+    "notifications": {
+      "createSuccess": "Platform user created successfully",
+      "createError": "Failed to create platform user",
+      "updateSuccess": "Platform user updated successfully",
+      "updateError": "Failed to update platform user"
     }
   },
   "pages": {
@@ -176,6 +208,42 @@
         "saveSuccess": "Settings saved successfully."
       }
     },
+    "tenantMemberships": {
+      "title": "Your workspaces",
+      "description": "Choose which workspace is active for the current session and which one should be the default next time you sign in.",
+      "settingsLabel": "Active workspace",
+      "settingsDescription": "Switch your current workspace or save a different default without leaving your signed-in session.",
+      "currentTenantLabel": "Current workspace:",
+      "noActiveTenant": "No active tenant or workspace",
+      "activeRoleLabel": "Role: {{role}}",
+      "platformWorkspace": "Platform",
+      "loadError": "Failed to load workspaces.",
+      "empty": "No workspaces found.",
+      "columns": {
+        "tenant": "Workspace",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "badges": {
+        "active": "Active",
+        "default": "Default"
+      },
+      "actions": {
+        "open": "Manage workspaces",
+        "switch": "Switch",
+        "active": "Active",
+        "setDefault": "Set default",
+        "default": "Default",
+        "backToSettings": "Back to settings"
+      },
+      "notifications": {
+        "switchSuccess": "Workspace switched successfully.",
+        "switchError": "Failed to switch workspace.",
+        "defaultSuccess": "Default workspace updated successfully.",
+        "defaultError": "Failed to update the default workspace."
+      }
+    },
     "loginPage": {
       "titlePrompt": "Sign in to your account",
       "identifier": {
@@ -190,47 +258,8 @@
       },
       "submitButton": "Sign in",
       "submitButtonLoading": "Signing in...",
-      "registrationPrompt": "Don't have an account?",
-      "registrationLinkText": "Sign up",
       "notifications": {
         "submitError": "We can't find that email, username, or password. Try again."
-      }
-    },
-    "registrationPage": {
-      "titlePrompt": "Create your account",
-      "email": {
-        "label": "Email",
-        "placeholder": "Enter your email"
-      },
-      "confirmationCode": {
-        "label": "Confirmation Code",
-        "placeholder": "Enter the confirmation code",
-        "sendCodeButton": "Send confirmation code",
-        "sendCodeButtonRe": "Resend in {{secondsLeft}} s",
-        "sendCodeButtonLoading": "Sending code..."
-      },
-      "password": {
-        "label": "Password",
-        "placeholder": "Enter your password",
-        "showPasswordLabel": "Show password"
-      },
-      "confirmPassword": {
-        "label": "Confirm Password",
-        "placeholder": "Confirm your password"
-      },
-      "submitButton": "Sign up",
-      "submitButtonLoading": "Creating account...",
-      "loginPrompt": "Already have an account?",
-      "loginLinkText": "Sign in",
-      "validation": {
-        "invalidEmail": "Invalid email address",
-        "passwordsMismatch": "Passwords do not match"
-      },
-      "notifications": {
-        "submitSuccess": "New account created successfully.",
-        "submitError": "Registration failed. Please try again.",
-        "codeSentSuccess": "Code sent to your email.",
-        "codeSentError": "Failed to send code."
       }
     },
     "accountSetup": {
@@ -252,6 +281,7 @@
         "label": "Confirmation Code",
         "placeholder": "Enter the reset code",
         "sendCodeButton": "Send reset code",
+        "sendCodeButtonRe": "Resend in {{secondsLeft}} s",
         "sendCodeButtonLoading": "Sending code..."
       },
       "password": {
@@ -267,6 +297,10 @@
       "submitButtonLoading": "Resetting...",
       "loginPrompt": "Remembered your password?",
       "loginLinkText": "Sign in",
+      "validation": {
+        "invalidEmail": "Invalid email address",
+        "passwordsMismatch": "Passwords do not match"
+      },
       "notifications": {
         "submitSuccess": "Password reset successfully.",
         "submitError": "Reset password failed. Please try again.",

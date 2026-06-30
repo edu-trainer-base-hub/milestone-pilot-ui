@@ -1,21 +1,21 @@
-import { Outlet, Route, Routes } from "react-router";
-
 import CommonLayout from "@/layout/CommonLayout.tsx";
-import RegistrationPage from "@/pages/login/RegistrationPage.tsx";
 import DefaultLayout from "@/layout/DefaultLayout.tsx";
 import ResetPasswordPage from "@/pages/login/ResetPasswordPage.tsx";
 import LoginPage from "@/pages/login/LoginPage.tsx";
 import PrivateRoute from "@/components/PrivateRoute.tsx";
 import WebLayout from "./layout/WebLayout.tsx";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import SettingsPage from "@/pages/SettingsPage.tsx";
 import SubscriptionPage from "@/pages/subscriptions/SubscriptionPage.tsx";
 import AuthorityRoute from "@/components/AuthorityRoute.tsx";
 import { Authority } from "@/contexts/AuthContext.tsx";
-import SecondaryProfilesPage from "@/pages/profiles/SecondaryProfilesPage.tsx";
-import CreateSecondaryProfilePage from "@/pages/profiles/CreateSecondaryProfilePage.tsx";
-import EditSecondaryProfilePage from "@/pages/profiles/EditSecondaryProfilePage.tsx";
-import { TenantsPage, TenantUsersPage } from "@/features/tenants/pages";
+import {
+  PlatformUserUpsertPage,
+  PlatformUsersPage,
+  TenantMembershipsPage,
+  TenantsPage,
+  TenantUsersPage,
+} from "@/features/tenants/pages";
 
 import { usePageTitle } from "@/hooks/usePageTitle.ts";
 
@@ -23,14 +23,6 @@ export default function App() {
   usePageTitle();
   return (
     <Routes>
-      <Route
-        path="register"
-        element={
-          <DefaultLayout>
-            <RegistrationPage />
-          </DefaultLayout>
-        }
-      />
       <Route
         path="password/reset"
         element={
@@ -65,36 +57,72 @@ export default function App() {
         <Route path="/" element={<div className="p-8 text-2xl font-bold">Вітаємо у Milestone Pilot!</div>} />
 
         <Route element={<PrivateRoute />}>
+          <Route path="settings/tenants" element={<TenantMembershipsPage />} />
+
           <Route element={<AuthorityRoute authority={Authority.MANAGE_SUBSCRIPTIONS} />}>
             <Route path="subscriptions" element={<SubscriptionPage />} />
           </Route>
 
-          <Route element={<AuthorityRoute authority={Authority.MANAGE_PROFILES} />}>
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="settings/profiles" element={<SecondaryProfilesPage />} />
-            <Route path="settings/profiles/create" element={<CreateSecondaryProfilePage />} />
-            <Route path="settings/profiles/:id/edit" element={<EditSecondaryProfilePage />} />
-          </Route>
-
           <Route
-            element={<AuthorityRoute authority={[Authority.ROLE_PLATFORM_ADMIN, Authority.ROLE_PLATFORM_MANAGER]} />}
+            element={<AuthorityRoute authority={[Authority.MANAGE_PROFILES, Authority.UI_TENANT_SETTINGS_VIEW]} />}
           >
-            <Route path="tenants" element={<TenantsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
           <Route
             element={
               <AuthorityRoute
-                authority={[
-                  Authority.ROLE_PLATFORM_ADMIN,
-                  Authority.ROLE_PLATFORM_MANAGER,
-                  Authority.ROLE_TENANT_ADMIN,
-                  Authority.ROLE_TENANT_MANAGER,
-                ]}
+                authority={[Authority.PLATFORM_TENANTS_READ]}
+                allAuthorities={[Authority.UI_PLATFORM_TENANTS_VIEW]}
               />
             }
           >
-            <Route path="tenants/:tenantId/users" element={<TenantUsersPage />} />
+            <Route path="platform/tenants" element={<TenantsPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.PLATFORM_ADMINS_READ, Authority.PLATFORM_MANAGERS_READ]}
+                allAuthorities={[Authority.UI_PLATFORM_USERS_VIEW]}
+              />
+            }
+          >
+            <Route path="platform/users" element={<PlatformUsersPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.PLATFORM_ADMINS_CREATE, Authority.PLATFORM_MANAGERS_CREATE]}
+                allAuthorities={[Authority.UI_PLATFORM_USERS_VIEW]}
+              />
+            }
+          >
+            <Route path="platform/users/new" element={<PlatformUserUpsertPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.PLATFORM_ADMINS_READ, Authority.PLATFORM_MANAGERS_READ]}
+                allAuthorities={[Authority.UI_PLATFORM_USERS_VIEW]}
+              />
+            }
+          >
+            <Route path="platform/users/:userId/edit" element={<PlatformUserUpsertPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.TENANT_ADMINS_READ, Authority.TENANT_MANAGERS_READ, Authority.TENANT_USERS_READ]}
+                allAuthorities={[Authority.UI_TENANT_USERS_VIEW]}
+              />
+            }
+          >
+            <Route path="tenant/users" element={<TenantUsersPage />} />
+            <Route path="platform/tenants/:tenantId/users" element={<TenantUsersPage />} />
           </Route>
         </Route>
       </Route>

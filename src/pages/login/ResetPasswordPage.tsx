@@ -1,10 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import GenericRegistrationForm from "@/pages/login/GenericRegistrationForm.tsx";
-import { FormMode } from "@/hooks/use-registration-form.ts";
+import PasswordResetForm from "@/pages/login/PasswordResetForm.tsx";
 
-console.log("ResetPasswordPage rendered");
 const ResetPasswordPage: React.FC = () => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
@@ -15,8 +13,7 @@ const ResetPasswordPage: React.FC = () => {
   const isAccountSetup = mode === "tenant-account-setup";
 
   return (
-    <GenericRegistrationForm
-      formMode={FormMode.PASSWORD_RESET}
+    <PasswordResetForm
       initialEmail={email}
       initialCode={code}
       emailReadOnly={isAccountSetup}

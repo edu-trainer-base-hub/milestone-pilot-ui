@@ -8,21 +8,13 @@ import { notifier } from "@/services/NotificationService.ts";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-interface UseRegistrationFormProps {
-  mode: FormMode;
+interface UsePasswordResetFormProps {
   initialEmail?: string;
   initialCode?: string;
   submitSuccessMessage?: string;
 }
 
-export const FormMode = {
-  REGISTRATION: "REGISTRATION",
-  PASSWORD_RESET: "PASSWORD_RESET",
-} as const;
-
-export type FormMode = (typeof FormMode)[keyof typeof FormMode];
-
-interface UseVerificationFormReturn {
+interface UsePasswordResetFormReturn {
   email: string;
   emailError: string | null;
   codeSent: boolean;
@@ -45,12 +37,11 @@ interface UseVerificationFormReturn {
   handleSubmit: (e: FormEvent) => Promise<void>;
 }
 
-export function useRegistrationForm({
-  mode,
+export function usePasswordResetForm({
   initialEmail,
   initialCode,
   submitSuccessMessage,
-}: UseRegistrationFormProps): UseVerificationFormReturn {
+}: UsePasswordResetFormProps): UsePasswordResetFormReturn {
   const { t } = useTranslation();
 
   const [email, setEmail] = useState(initialEmail || "");
@@ -72,7 +63,7 @@ export function useRegistrationForm({
   const [secondsLeft, setSecondsLeft] = useState(0);
 
   const navigate = useNavigate();
-  const { sendConfirmationCode, doRegister, doResetPassword } = useAuth();
+  const { sendConfirmationCode, doResetPassword } = useAuth();
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -99,7 +90,7 @@ export function useRegistrationForm({
     if (!value) {
       setEmailError(null);
     } else if (!emailRegex.test(value)) {
-      setEmailError(t("pages.registrationPage.validation.invalidEmail"));
+      setEmailError(t("pages.resetPasswordPage.validation.invalidEmail"));
     } else {
       setEmailError(null);
     }
@@ -118,17 +109,15 @@ export function useRegistrationForm({
     setCodeError(null);
 
     try {
-      const type =
-        FormMode.PASSWORD_RESET === mode
-          ? EmailVerificationType.PASSWORD_RESET_EMAIL_VERIFICATION_CODE_WEB
-          : EmailVerificationType.EMAIL_VERIFICATION_CODE_WEB;
-      await sendConfirmationCode(email, type);
+      await sendConfirmationCode(email, EmailVerificationType.PASSWORD_RESET_EMAIL_VERIFICATION_CODE_WEB);
       setCodeSent(true);
-      notifier.success(t("pages.registrationPage.notifications.codeSentSuccess"));
+      notifier.success(t("pages.resetPasswordPage.notifications.codeSentSuccess"));
       setSecondsLeft(60);
     } catch (error: unknown) {
       const errorCode = extractErrorCode(error);
-      const messageKey = errorCode ? `errors.codes.${errorCode}` : "pages.registrationPage.notifications.codeSentError";
+      const messageKey = errorCode
+        ? `errors.codes.${errorCode}`
+        : "pages.resetPasswordPage.notifications.codeSentError";
       const message = t(messageKey, {
         defaultValue: t("errors.codes.UNKNOWN"),
       });
@@ -150,7 +139,7 @@ export function useRegistrationForm({
     setPassword(value);
     setPasswordErrors(validatePassword(value));
     if (confirmPassword && value !== confirmPassword) {
-      setConfirmError(t("pages.registrationPage.validation.passwordsMismatch"));
+      setConfirmError(t("pages.resetPasswordPage.validation.passwordsMismatch"));
     } else {
       setConfirmError(null);
     }
@@ -160,7 +149,7 @@ export function useRegistrationForm({
     const value = e.target.value;
     setConfirmPassword(value);
     if (password && password !== value) {
-      setConfirmError(t("pages.registrationPage.validation.passwordsMismatch"));
+      setConfirmError(t("pages.resetPasswordPage.validation.passwordsMismatch"));
     } else {
       setConfirmError(null);
     }
@@ -178,23 +167,12 @@ export function useRegistrationForm({
     }
 
     try {
-      if (FormMode.PASSWORD_RESET === mode) {
-        await doResetPassword(trimmedEmail, password, confirmPassword, confirmationCode);
-        notifier.success(submitSuccessMessage || t("pages.resetPasswordPage.notifications.submitSuccess"));
-        navigate("/login", { replace: true });
-      } else {
-        await doRegister(trimmedEmail, password, confirmPassword, confirmationCode);
-        notifier.success(submitSuccessMessage || t("pages.registrationPage.notifications.submitSuccess"));
-        navigate("/", { replace: true });
-      }
+      await doResetPassword(trimmedEmail, password, confirmPassword, confirmationCode);
+      notifier.success(submitSuccessMessage || t("pages.resetPasswordPage.notifications.submitSuccess"));
+      navigate("/login", { replace: true });
     } catch (error: unknown) {
-      const defaultMessageKey =
-        FormMode.PASSWORD_RESET === mode
-          ? t("pages.resetPasswordPage.notifications.submitError")
-          : t("pages.registrationPage.notifications.submitError");
-
       const errorCode = extractErrorCode(error);
-      const messageKey = errorCode ? `errors.codes.${errorCode}` : defaultMessageKey;
+      const messageKey = errorCode ? `errors.codes.${errorCode}` : "pages.resetPasswordPage.notifications.submitError";
       const message = t(messageKey, {
         defaultValue: t("errors.codes.UNKNOWN"),
       });

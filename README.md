@@ -4,11 +4,11 @@ Frontend UI for **MilestonePilot** — a construction lifecycle management platf
 
 ## Tech Stack
 
-* React
-* TypeScript
-* Vite
-* ESLint
-* Prettier
+- React
+- TypeScript
+- Vite
+- ESLint
+- Prettier
 
 ## Prerequisites
 
@@ -74,4 +74,4 @@ npm run format:all
 
 ## Documentation
 
-* [Troubleshooting](./docs/TROUBLESHOOTING.md)
+- [Troubleshooting](./docs/TROUBLESHOOTING.md)

@@ -2,6 +2,14 @@ import { createContext, type ReactNode, useContext, useEffect, useRef, useState 
 import { post, registerLogoutFn, registerRefreshFn } from "@/services/ApiService.ts";
 import { type LoginResponse, logout as apiLogout, logoutTelegram } from "@/services/AuthService.ts";
 import { getMe, type UserProfileDto } from "@/services/ProfileService.ts";
+import {
+  type Workspace,
+  type WorkspaceContextType,
+  WorkspaceContextType as WorkspaceContextTypeValue,
+  getWorkspaceLabel,
+  getWorkspaceTenantUuid,
+} from "@/features/tenants/types";
+import { switchWorkspace as switchWorkspaceRequest } from "@/features/tenants/api";
 import WebApp from "@twa-dev/sdk";
 import { jwtDecode } from "jwt-decode";
 
@@ -9,10 +17,28 @@ export const Authority = {
   MANAGE_PROFILES: "MANAGE_PROFILES",
   MANAGE_SUBSCRIPTIONS: "MANAGE_SUBSCRIPTIONS",
   VIEW_REPORTS: "VIEW_REPORTS",
-  ROLE_PLATFORM_ADMIN: "ROLE_PLATFORM_ADMIN",
-  ROLE_PLATFORM_MANAGER: "ROLE_PLATFORM_MANAGER",
-  ROLE_TENANT_ADMIN: "ROLE_TENANT_ADMIN",
-  ROLE_TENANT_MANAGER: "ROLE_TENANT_MANAGER",
+  UI_PLATFORM_TENANTS_VIEW: "UI_PLATFORM_TENANTS_VIEW",
+  UI_PLATFORM_USERS_VIEW: "UI_PLATFORM_USERS_VIEW",
+  UI_TENANT_USERS_VIEW: "UI_TENANT_USERS_VIEW",
+  UI_TENANT_SETTINGS_VIEW: "UI_TENANT_SETTINGS_VIEW",
+  PLATFORM_TENANTS_CREATE: "PLATFORM_TENANTS_CREATE",
+  PLATFORM_TENANTS_READ: "PLATFORM_TENANTS_READ",
+  PLATFORM_TENANTS_UPDATE: "PLATFORM_TENANTS_UPDATE",
+  PLATFORM_ADMINS_CREATE: "PLATFORM_ADMINS_CREATE",
+  PLATFORM_ADMINS_READ: "PLATFORM_ADMINS_READ",
+  PLATFORM_ADMINS_UPDATE: "PLATFORM_ADMINS_UPDATE",
+  PLATFORM_MANAGERS_CREATE: "PLATFORM_MANAGERS_CREATE",
+  PLATFORM_MANAGERS_READ: "PLATFORM_MANAGERS_READ",
+  PLATFORM_MANAGERS_UPDATE: "PLATFORM_MANAGERS_UPDATE",
+  TENANT_ADMINS_CREATE: "TENANT_ADMINS_CREATE",
+  TENANT_ADMINS_READ: "TENANT_ADMINS_READ",
+  TENANT_ADMINS_UPDATE: "TENANT_ADMINS_UPDATE",
+  TENANT_MANAGERS_CREATE: "TENANT_MANAGERS_CREATE",
+  TENANT_MANAGERS_READ: "TENANT_MANAGERS_READ",
+  TENANT_MANAGERS_UPDATE: "TENANT_MANAGERS_UPDATE",
+  TENANT_USERS_CREATE: "TENANT_USERS_CREATE",
+  TENANT_USERS_READ: "TENANT_USERS_READ",
+  TENANT_USERS_UPDATE: "TENANT_USERS_UPDATE",
 } as const;
 
 export type Authority = (typeof Authority)[keyof typeof Authority];
@@ -23,7 +49,7 @@ const toAuthorities = (arr: string[] | undefined | null): Authority[] => {
   return arr.filter((a): a is Authority => allowed.has(a as Authority));
 };
 
-interface Principal {
+export interface Principal {
   id: string;
   authorities: Authority[];
   username: string;
@@ -31,6 +57,11 @@ interface Principal {
   lastName: string | null;
   email: string | null;
   profileType: "PRIMARY" | "SECONDARY";
+  contextType: WorkspaceContextType;
+  activeTenantUuid: string | null;
+  activeRole: string | null;
+  activeWorkspaceName: string | null;
+  availableWorkspaces: Workspace[];
 }
 
 export const EmailVerificationType = {
@@ -46,7 +77,6 @@ interface AuthContextType {
   principal: Principal | null;
   isTelegram: boolean;
   sendConfirmationCode: (email: string, verificationCodeType: EmailVerificationType) => Promise<void>;
-  doRegister: (email: string, password: string, confirmPassword: string, confirmationCode: string) => Promise<void>;
   doResetPassword: (
     email: string,
     password: string,
@@ -56,10 +86,27 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   loginWithTelegram: () => Promise<string>;
   doRefresh: () => Promise<string>;
+  switchWorkspace: (contextType: WorkspaceContextType, tenantUuid?: string | null) => Promise<void>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+interface DecodedAccessToken {
+  sub: string;
+  authorities?: string[];
+  contextType?: WorkspaceContextType;
+  activeTenantUuid?: string;
+  activeRole?: string;
+}
+
+interface WorkspaceSessionState {
+  contextType: WorkspaceContextType;
+  activeTenantUuid: string | null;
+  activeRole: string | null;
+  activeWorkspaceName: string | null;
+  availableWorkspaces: Workspace[];
+}
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const didInit = useRef(false);
@@ -88,14 +135,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("token");
   };
 
+  const applyAuthenticatedSession = async (session: LoginResponse): Promise<Principal> => {
+    const { accessToken } = session;
+
+    setToken(accessToken);
+    localStorage.setItem("token", accessToken);
+
+    const newPrincipal = await fetchPrincipalData(accessToken, session);
+    setPrincipal(newPrincipal);
+
+    return newPrincipal;
+  };
+
   const refresh = async (): Promise<string> => {
     try {
-      const { accessToken } = await post<LoginResponse>("/auth/refresh", undefined, { withCredentials: true });
-      setToken(accessToken);
-      localStorage.setItem("token", accessToken);
-      const newPrincipal = await fetchPrincipalData(accessToken);
-      setPrincipal(newPrincipal);
-      return accessToken;
+      const session = await post<LoginResponse>("/auth/refresh", undefined, { withCredentials: true });
+      await applyAuthenticatedSession(session);
+      return session.accessToken;
     } catch (e) {
       console.error("AuthProvider Refresh - error", e);
       throw e;
@@ -108,25 +164,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       verificationCodeType,
       initData: telegramInitDataString,
     });
-  };
-
-  const doRegister = async (
-    email: string,
-    password: string,
-    confirmPassword: string,
-    confirmationCode: string
-  ): Promise<void> => {
-    const { accessToken } = await post<LoginResponse>("/auth/registration", {
-      email,
-      emailVerificationCode: confirmationCode,
-      password,
-      confirmPassword,
-      initData: telegramInitDataString,
-    });
-    setToken(accessToken);
-    localStorage.setItem("token", accessToken);
-    const newPrincipal = await fetchPrincipalData(accessToken);
-    setPrincipal(newPrincipal);
   };
 
   const doResetPassword = async (
@@ -145,27 +182,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const login = async (email: string, password: string): Promise<void> => {
-    const { accessToken } = await post<LoginResponse>("/auth/login", {
+    const session = await post<LoginResponse>("/auth/login", {
       username: email,
       password,
       initData: telegramInitDataString,
     });
-    setToken(accessToken);
-    localStorage.setItem("token", accessToken);
-    const newPrincipal = await fetchPrincipalData(accessToken);
-    setPrincipal(newPrincipal);
+    await applyAuthenticatedSession(session);
   };
 
   const loginWithTelegram = async (initDataParam?: string | null): Promise<string> => {
     const initData = initDataParam ?? telegramInitDataString;
-    const { accessToken } = await post<LoginResponse>("/auth/login/telegram", {
+    const session = await post<LoginResponse>("/auth/login/telegram", {
       initData: initData,
     });
-    setToken(accessToken);
-    localStorage.setItem("token", accessToken);
-    const newPrincipal = await fetchPrincipalData(accessToken);
-    setPrincipal(newPrincipal);
-    return accessToken;
+    await applyAuthenticatedSession(session);
+    return session.accessToken;
+  };
+
+  const switchWorkspace = async (contextType: WorkspaceContextType, tenantUuid?: string | null): Promise<void> => {
+    const session = await switchWorkspaceRequest({ contextType, tenantUuid });
+    await applyAuthenticatedSession(session);
   };
 
   const logout = () => {
@@ -195,13 +231,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         WebApp.ready();
       }
 
-      let token = null;
       if (WebApp?.initData) {
         const initDataString = WebApp.initData;
         if (initDataString) {
           setTelegramInitDataString(initDataString);
           try {
-            token = await loginWithTelegram(initDataString);
+            await loginWithTelegram(initDataString);
           } catch (e) {
             console.error("AuthProvider useEffect - loginWithTelegram - error", e);
           }
@@ -210,18 +245,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const savedJwt = localStorage.getItem("token");
         if (savedJwt) {
           try {
-            token = await refresh();
+            await refresh();
           } catch (e) {
             console.error("AuthProvider useEffect - refresh savedJwt - error", e);
           }
-        }
-      }
-      if (token) {
-        try {
-          const newPrincipal = await fetchPrincipalData(token);
-          setPrincipal(newPrincipal);
-        } catch (e) {
-          console.error("AuthProvider useEffect - fetchPrincipalData - error", e);
         }
       }
       setInitDone(true);
@@ -241,11 +268,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         principal,
         isTelegram: Boolean(telegramInitDataString),
         sendConfirmationCode,
-        doRegister,
         doResetPassword,
         login,
         loginWithTelegram,
         doRefresh: refreshFn,
+        switchWorkspace,
         logout,
       }}
     >
@@ -254,23 +281,60 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const fetchPrincipalData = async (token: string): Promise<Principal> => {
-  // We still decode token for authorities if they are not in the profile response or if we prefer token source of truth for authz
-  const { sub, authorities } = jwtDecode<{
-    sub: string;
-    authorities: string[];
-  }>(token);
-
+const fetchPrincipalData = async (token: string, session?: LoginResponse): Promise<Principal> => {
+  const claims = jwtDecode<DecodedAccessToken>(token);
   const profile: UserProfileDto = await getMe();
+  const workspaceSession = resolveWorkspaceSession(session, claims);
 
   return {
-    id: sub,
+    id: claims.sub,
     username: profile.username,
     firstName: profile.firstName,
     lastName: profile.lastName,
     email: profile.email,
     profileType: profile.profileType,
-    authorities: toAuthorities(authorities),
+    authorities: toAuthorities(claims.authorities),
+    contextType: workspaceSession.contextType,
+    activeTenantUuid: workspaceSession.activeTenantUuid,
+    activeRole: workspaceSession.activeRole,
+    activeWorkspaceName: workspaceSession.activeWorkspaceName,
+    availableWorkspaces: workspaceSession.availableWorkspaces,
+  };
+};
+
+const resolveWorkspaceSession = (
+  session: LoginResponse | undefined,
+  claims: DecodedAccessToken
+): WorkspaceSessionState => normalizeWorkspaceSession(session, claims);
+
+const normalizeWorkspaceSession = (
+  session: LoginResponse | undefined,
+  claims: DecodedAccessToken
+): WorkspaceSessionState => {
+  const availableWorkspaces = (session?.availableWorkspaces ?? []).map((workspace) => ({
+    ...workspace,
+    tenantUuid: getWorkspaceTenantUuid(workspace),
+    tenantId: workspace.tenantId ?? workspace.tenantUuid ?? null,
+    tenantName: getWorkspaceLabel(workspace),
+    isActive: workspace.isActive ?? workspace.activeWorkspace ?? false,
+    isDefault: workspace.isDefault ?? workspace.defaultWorkspace ?? workspace.defaultTenant ?? false,
+  }));
+
+  const contextType = session?.contextType ?? claims.contextType ?? WorkspaceContextTypeValue.PLATFORM;
+  const activeTenantUuid = session?.activeTenantUuid ?? claims.activeTenantUuid ?? null;
+  const activeWorkspace =
+    availableWorkspaces.find((workspace) =>
+      workspace.contextType === WorkspaceContextTypeValue.PLATFORM
+        ? contextType === WorkspaceContextTypeValue.PLATFORM
+        : workspace.tenantUuid === activeTenantUuid
+    ) ?? null;
+
+  return {
+    contextType,
+    activeTenantUuid,
+    activeRole: session?.activeRole ?? claims.activeRole ?? activeWorkspace?.role ?? null,
+    activeWorkspaceName: activeWorkspace?.tenantName ?? null,
+    availableWorkspaces,
   };
 };
 

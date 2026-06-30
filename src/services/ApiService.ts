@@ -107,11 +107,7 @@ apiClient.interceptors.response.use(
         navigateFn?.("login", { replace: true });
         return Promise.reject(error);
       }
-      if (
-        originalConfig.url?.endsWith("/auth/login") ||
-        originalConfig.url?.endsWith("/auth/login/telegram") ||
-        originalConfig.url?.endsWith("/auth/registration")
-      ) {
+      if (originalConfig.url?.endsWith("/auth/login") || originalConfig.url?.endsWith("/auth/login/telegram")) {
         logoutFn?.();
         return Promise.reject(error);
       }

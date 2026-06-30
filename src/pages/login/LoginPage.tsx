@@ -113,12 +113,6 @@ export const LoginPage: React.FC = () => {
               {loading ? t("pages.loginPage.submitButtonLoading") : t("pages.loginPage.submitButton")}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
-            {t("pages.loginPage.registrationPrompt")}{" "}
-            <Link to="/register" className="text-primary hover:underline">
-              {t("pages.loginPage.registrationLinkText")}
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>

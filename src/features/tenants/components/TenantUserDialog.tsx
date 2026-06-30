@@ -1,91 +1,118 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TenantRole } from "../types";
-import type { TenantUserRequest } from "../types";
+import {
+  type CreateTenantUserRequest,
+  type TenantUserResponse,
+  type UpdateTenantUserRequest,
+  type UserRoleOption,
+} from "../types";
+import { UserFormFields, type UserFormValues } from "./UserFormFields";
 
 interface TenantUserDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: TenantUserRequest) => Promise<void>;
+  onSubmit: (data: CreateTenantUserRequest | UpdateTenantUserRequest) => Promise<void>;
+  user?: TenantUserResponse | null;
   loading?: boolean;
+  roleOptions: readonly UserRoleOption[];
+  defaultRole?: string | null;
 }
 
-export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({ open, onOpenChange, onSubmit, loading }) => {
+const emptyValues = (role: string): UserFormValues => ({
+  email: "",
+  firstName: "",
+  lastName: "",
+  role,
+});
+
+export const TenantUserDialog: React.FC<TenantUserDialogProps> = ({
+  open,
+  onOpenChange,
+  onSubmit,
+  user,
+  loading,
+  roleOptions,
+  defaultRole,
+}) => {
   const { t } = useTranslation();
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState<string>(TenantRole.ROLE_TENANT_MANAGER);
+  const fallbackRole = defaultRole ?? roleOptions[0]?.value ?? "";
+  const isEdit = Boolean(user);
+  const [values, setValues] = useState<UserFormValues>(emptyValues(fallbackRole));
+  const hasAllowedRole = roleOptions.some((roleOption) => roleOption.value === values.role);
+
+  const defaultValues = useMemo<UserFormValues>(
+    () =>
+      user
+        ? {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: roleOptions.some((roleOption) => roleOption.value === user.role) ? user.role : fallbackRole,
+          }
+        : emptyValues(fallbackRole),
+    [fallbackRole, roleOptions, user]
+  );
+
+  useEffect(() => {
+    if (open) {
+      setValues(defaultValues);
+    }
+  }, [defaultValues, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ email, firstName, lastName, role });
-    // Reset form after successful submit if needed, or handle in parent
+    if (!hasAllowedRole) {
+      return;
+    }
+
+    if (isEdit) {
+      await onSubmit({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        role: values.role,
+      });
+      return;
+    }
+
+    await onSubmit({
+      email: values.email,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      role: values.role,
+    });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("tenants.users.create")}</DialogTitle>
+          <DialogTitle>{user ? t("tenants.users.edit") : t("tenants.users.create")}</DialogTitle>
+          <DialogDescription>{t("tenants.dialog.roleLabel")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("tenants.dialog.emailLabel")}</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("tenants.dialog.emailPlaceholder")}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="firstName">{t("tenants.dialog.firstNameLabel")}</Label>
-            <Input
-              id="firstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder={t("tenants.dialog.firstNamePlaceholder")}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lastName">{t("tenants.dialog.lastNameLabel")}</Label>
-            <Input
-              id="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder={t("tenants.dialog.lastNamePlaceholder")}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="role">{t("tenants.dialog.roleLabel")}</Label>
-            <Select value={role} onValueChange={setRole}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(TenantRole).map((r) => (
-                  <SelectItem key={r} value={r}>
-                    {r.replace("ROLE_", "").replace("_", " ")}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <UserFormFields
+            values={values}
+            onChange={setValues}
+            roleOptions={roleOptions}
+            emailLabel={t("users.form.emailLabel")}
+            emailPlaceholder={t("users.form.emailPlaceholder")}
+            emailReadOnly={isEdit}
+            roleDisabled={roleOptions.length === 0}
+          />
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || !hasAllowedRole}>
               {loading ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>

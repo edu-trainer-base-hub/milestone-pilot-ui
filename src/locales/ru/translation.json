@@ -26,6 +26,7 @@
       "subscriptions": "Подписки",
       "account": "Аккаунт",
       "settings": "Настройки",
+      "tenants": "Управлять рабочими пространствами",
       "billing": "Оплата",
       "notifications": "Уведомления",
       "profiles": "Профили",
@@ -50,6 +51,14 @@
       }
     }
   },
+  "users": {
+    "backToList": "Назад к пользователям",
+    "form": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "Введите email",
+      "rolePlaceholder": "Выберите роль"
+    }
+  },
   "tenants": {
     "title": "Арендаторы",
     "create": "Создать арендатора",
@@ -65,6 +74,7 @@
     "users": {
       "title": "Пользователи арендатора",
       "create": "Добавить пользователя",
+      "edit": "Редактировать пользователя",
       "empty": "Пользователей не найдено.",
       "columns": {
         "email": "Email",
@@ -102,7 +112,29 @@
       "updateSuccess": "Арендатор успешно обновлен",
       "updateError": "Не удалось обновить арендатора",
       "createUserSuccess": "Пользователь успешно добавлен",
-      "createUserError": "Не удалось добавить пользователя"
+      "createUserError": "Не удалось добавить пользователя",
+      "updateUserSuccess": "Пользователь успешно обновлен",
+      "updateUserError": "Не удалось обновить пользователя"
+    }
+  },
+  "platformUsers": {
+    "title": "Пользователи платформы",
+    "create": "Создать пользователя платформы",
+    "edit": "Редактировать пользователя платформы",
+    "empty": "Пользователи платформы не найдены.",
+    "loadError": "Не удалось загрузить пользователей платформы.",
+    "notFound": "Пользователь платформы не найден.",
+    "columns": {
+      "email": "Email",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "role": "Роль"
+    },
+    "notifications": {
+      "createSuccess": "Пользователь платформы успешно создан",
+      "createError": "Не удалось создать пользователя платформы",
+      "updateSuccess": "Пользователь платформы успешно обновлен",
+      "updateError": "Не удалось обновить пользователя платформы"
     }
   },
   "pages": {
@@ -176,6 +208,42 @@
         "saveSuccess": "Настройки успешно сохранены."
       }
     },
+    "tenantMemberships": {
+      "title": "Ваши рабочие пространства",
+      "description": "Выберите, какое рабочее пространство будет активным в текущей сессии и какое станет пространством по умолчанию при следующем входе.",
+      "settingsLabel": "Активное рабочее пространство",
+      "settingsDescription": "Переключайте текущее рабочее пространство или сохраняйте другое по умолчанию, не выходя из аккаунта.",
+      "currentTenantLabel": "Текущее рабочее пространство:",
+      "noActiveTenant": "Нет активного тенанта или рабочего пространства",
+      "activeRoleLabel": "Роль: {{role}}",
+      "platformWorkspace": "Платформа",
+      "loadError": "Не удалось загрузить рабочие пространства.",
+      "empty": "Рабочие пространства не найдены.",
+      "columns": {
+        "tenant": "Рабочее пространство",
+        "role": "Роль",
+        "status": "Статус",
+        "actions": "Действия"
+      },
+      "badges": {
+        "active": "Активный",
+        "default": "По умолчанию"
+      },
+      "actions": {
+        "open": "Управлять рабочими пространствами",
+        "switch": "Переключить",
+        "active": "Активный",
+        "setDefault": "Сделать по умолчанию",
+        "default": "По умолчанию",
+        "backToSettings": "Назад к настройкам"
+      },
+      "notifications": {
+        "switchSuccess": "Рабочее пространство успешно переключено.",
+        "switchError": "Не удалось переключить рабочее пространство.",
+        "defaultSuccess": "Рабочее пространство по умолчанию успешно обновлено.",
+        "defaultError": "Не удалось обновить рабочее пространство по умолчанию."
+      }
+    },
     "loginPage": {
       "titlePrompt": "Войдите в свой аккаунт",
       "identifier": {
@@ -190,47 +258,8 @@
       },
       "submitButton": "Войти",
       "submitButtonLoading": "Выполняется вход...",
-      "registrationPrompt": "Нет аккаунта?",
-      "registrationLinkText": "Зарегистрироваться",
       "notifications": {
         "submitError": "Мы не можем найти этот email, имя пользователя или пароль. Попробуйте снова."
-      }
-    },
-    "registrationPage": {
-      "titlePrompt": "Регистрация",
-      "email": {
-        "label": "Email",
-        "placeholder": "Введите вашу электронную почту"
-      },
-      "confirmationCode": {
-        "label": "Код подтверждения",
-        "placeholder": "Введите код подтверждения",
-        "sendCodeButton": "Отправить код подтверждения",
-        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
-        "sendCodeButtonLoading": "Отправляем код..."
-      },
-      "password": {
-        "label": "Пароль",
-        "placeholder": "Введите ваш пароль",
-        "showPasswordLabel": "Показать пароль"
-      },
-      "confirmPassword": {
-        "label": "Подтвердите пароль",
-        "placeholder": "Подтвердите ваш пароль"
-      },
-      "submitButton": "Зарегистрироваться",
-      "submitButtonLoading": "Создание аккаунта...",
-      "loginPrompt": "Уже есть аккаунт?",
-      "loginLinkText": "Войти",
-      "validation": {
-        "invalidEmail": "Неверный адрес электронной почты",
-        "passwordsMismatch": "Пароли не совпадают"
-      },
-      "notifications": {
-        "submitSuccess": "Новый аккаунт успешно создан.",
-        "submitError": "Не удалось зарегистрироваться. Пожалуйста, попробуйте снова.",
-        "codeSentSuccess": "Код отправлен на вашу электронную почту.",
-        "codeSentError": "Не удалось отправить код."
       }
     },
     "accountSetup": {
@@ -252,6 +281,7 @@
         "label": "Код сброса",
         "placeholder": "Введите код сброса",
         "sendCodeButton": "Отправить код сброса пароля",
+        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
         "sendCodeButtonLoading": "Отправляем код..."
       },
       "password": {
@@ -267,6 +297,10 @@
       "submitButtonLoading": "Сброс...",
       "loginPrompt": "Вспомнили пароль?",
       "loginLinkText": "Войти",
+      "validation": {
+        "invalidEmail": "Неверный адрес электронной почты",
+        "passwordsMismatch": "Пароли не совпадают"
+      },
       "notifications": {
         "submitSuccess": "Пароль успешно сброшен.",
         "submitError": "Не удалось сбросить пароль. Пожалуйста, попробуйте снова.",

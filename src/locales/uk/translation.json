@@ -26,6 +26,7 @@
       "subscriptions": "Підписки",
       "account": "Обліковий запис",
       "settings": "Налаштування",
+      "tenants": "Керувати робочими просторами",
       "billing": "Оплата",
       "notifications": "Сповіщення",
       "profiles": "Профілі",
@@ -50,6 +51,14 @@
       }
     }
   },
+  "users": {
+    "backToList": "Назад до користувачів",
+    "form": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "Введіть email",
+      "rolePlaceholder": "Оберіть роль"
+    }
+  },
   "tenants": {
     "title": "Орендарі",
     "create": "Створити орендаря",
@@ -65,6 +74,7 @@
     "users": {
       "title": "Користувачі орендаря",
       "create": "Додати користувача",
+      "edit": "Редагувати користувача",
       "empty": "Користувачів не знайдено.",
       "columns": {
         "email": "Email",
@@ -102,7 +112,29 @@
       "updateSuccess": "Орендаря успішно оновлено",
       "updateError": "Не вдалося оновити орендаря",
       "createUserSuccess": "Користувача успішно додано",
-      "createUserError": "Не вдалося додати користувача"
+      "createUserError": "Не вдалося додати користувача",
+      "updateUserSuccess": "Користувача успішно оновлено",
+      "updateUserError": "Не вдалося оновити користувача"
+    }
+  },
+  "platformUsers": {
+    "title": "Користувачі платформи",
+    "create": "Створити користувача платформи",
+    "edit": "Редагувати користувача платформи",
+    "empty": "Користувачів платформи не знайдено.",
+    "loadError": "Не вдалося завантажити користувачів платформи.",
+    "notFound": "Користувача платформи не знайдено.",
+    "columns": {
+      "email": "Email",
+      "firstName": "Ім'я",
+      "lastName": "Прізвище",
+      "role": "Роль"
+    },
+    "notifications": {
+      "createSuccess": "Користувача платформи успішно створено",
+      "createError": "Не вдалося створити користувача платформи",
+      "updateSuccess": "Користувача платформи успішно оновлено",
+      "updateError": "Не вдалося оновити користувача платформи"
     }
   },
   "pages": {
@@ -176,6 +208,42 @@
         "saveSuccess": "Налаштування збережено."
       }
     },
+    "tenantMemberships": {
+      "title": "Ваші робочі простори",
+      "description": "Оберіть, який робочий простір буде активним у поточній сесії, а який стане типовим для наступного входу.",
+      "settingsLabel": "Активний робочий простір",
+      "settingsDescription": "Перемикайте поточний робочий простір або зберігайте інший типовий, не виходячи з облікового запису.",
+      "currentTenantLabel": "Поточний робочий простір:",
+      "noActiveTenant": "Немає активного тенанта або робочого простору",
+      "activeRoleLabel": "Роль: {{role}}",
+      "platformWorkspace": "Платформа",
+      "loadError": "Не вдалося завантажити робочі простори.",
+      "empty": "Робочих просторів не знайдено.",
+      "columns": {
+        "tenant": "Робочий простір",
+        "role": "Роль",
+        "status": "Статус",
+        "actions": "Дії"
+      },
+      "badges": {
+        "active": "Активний",
+        "default": "Типовий"
+      },
+      "actions": {
+        "open": "Керувати робочими просторами",
+        "switch": "Перемкнути",
+        "active": "Активний",
+        "setDefault": "Зробити типовим",
+        "default": "Типовий",
+        "backToSettings": "Назад до налаштувань"
+      },
+      "notifications": {
+        "switchSuccess": "Робочий простір успішно змінено.",
+        "switchError": "Не вдалося змінити робочий простір.",
+        "defaultSuccess": "Типовий робочий простір успішно оновлено.",
+        "defaultError": "Не вдалося оновити типовий робочий простір."
+      }
+    },
     "loginPage": {
       "titlePrompt": "Вхід до акаунту",
       "identifier": {
@@ -190,47 +258,8 @@
       },
       "submitButton": "Увійти",
       "submitButtonLoading": "Вхід до облікового запису в процесі...",
-      "registrationPrompt": "Не маєте облікового запису?",
-      "registrationLinkText": "Зареєструватися",
       "notifications": {
         "submitError": "Ми не можемо знайти цей емейл, ім'я користувача або пароль. Спробуйте ще раз."
-      }
-    },
-    "registrationPage": {
-      "titlePrompt": "Реєстрація",
-      "email": {
-        "label": "Email",
-        "placeholder": "Введіть вашу електронну пошту"
-      },
-      "confirmationCode": {
-        "label": "Код підтвердження",
-        "placeholder": "Введіть код підтвердження",
-        "sendCodeButton": "Надіслати код підтвердження",
-        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
-        "sendCodeButtonLoading": "Надсилаємо код..."
-      },
-      "password": {
-        "label": "Пароль",
-        "placeholder": "Введіть ваш пароль",
-        "showPasswordLabel": "Показати пароль"
-      },
-      "confirmPassword": {
-        "label": "Підтвердьте пароль",
-        "placeholder": "Підтвердіть ваш пароль"
-      },
-      "submitButton": "Зареєструватися",
-      "submitButtonLoading": "Створення облікового запису...",
-      "loginPrompt": "Вже є обліковий запис?",
-      "loginLinkText": "Увійти",
-      "validation": {
-        "invalidEmail": "Невірна електронна адреса",
-        "passwordsMismatch": "Паролі не співпадають"
-      },
-      "notifications": {
-        "submitSuccess": "Новий обліковий запис успішно створено.",
-        "submitError": "Не вдалося зареєструватися. Будь ласка, спробуйте ще раз.",
-        "codeSentSuccess": "Код надіслано на вашу електронну пошту.",
-        "codeSentError": "Не вдалося надіслати код."
       }
     },
     "accountSetup": {
@@ -252,6 +281,7 @@
         "label": "Код оновлення",
         "placeholder": "Введіть код оновлення",
         "sendCodeButton": "Надіслати код оновлення паролю",
+        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
         "sendCodeButtonLoading": "Надсилаємо код..."
       },
       "password": {
@@ -267,6 +297,10 @@
       "submitButtonLoading": "Оновлення...",
       "loginPrompt": "Згадали пароль?",
       "loginLinkText": "Увійти",
+      "validation": {
+        "invalidEmail": "Невірна електронна адреса",
+        "passwordsMismatch": "Паролі не співпадають"
+      },
       "notifications": {
         "submitSuccess": "Пароль успішно оновлено.",
         "submitError": "Не вдалося оновити пароль. Будь ласка, спробуйте ще раз.",

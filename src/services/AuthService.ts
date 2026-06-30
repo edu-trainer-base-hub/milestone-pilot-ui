@@ -1,7 +1,12 @@
+import type { Workspace, WorkspaceContextType } from "@/features/tenants/types";
 import { post } from "./ApiService";
 
 export interface LoginResponse {
   accessToken: string;
+  contextType: WorkspaceContextType;
+  activeTenantUuid?: string | null;
+  activeRole?: string | null;
+  availableWorkspaces?: Workspace[] | null;
 }
 
 export interface LoginRequest {
