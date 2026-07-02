@@ -8,8 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { notifier } from "@/services/NotificationService";
 import { createTenant, getAllTenants, updateTenant } from "../api/tenants";
 import { canCreatePlatformTenants, canReadPlatformTenants, canUpdatePlatformTenants } from "../model/access-policy";
-import { getTenantIdForPlatformOps } from "../model/helpers";
-import type { CreateTenantRequest, TenantResponse, UpdateTenantRequest } from "../model/types";
+import { getTenantUuidForPlatformOps } from "../model/helpers";
+import type { TenantRequest, TenantResponse, TenantUpdateRequest } from "../model/types";
 import { TenantDialog } from "../components/TenantDialog";
 
 export const TenantsPage: React.FC = () => {
@@ -34,10 +34,10 @@ export const TenantsPage: React.FC = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: CreateTenantRequest | UpdateTenantRequest) =>
+    mutationFn: (data: TenantRequest | TenantUpdateRequest) =>
       selectedTenant
-        ? updateTenant(getTenantIdForPlatformOps(selectedTenant), data as UpdateTenantRequest)
-        : createTenant(data as CreateTenantRequest),
+        ? updateTenant(getTenantUuidForPlatformOps(selectedTenant), data as TenantUpdateRequest)
+        : createTenant(data as TenantRequest),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
       setDialogOpen(false);

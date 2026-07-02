@@ -97,9 +97,19 @@
       "timezonePlaceholder": "Select timezone",
       "currentTimeLabel": "Current time",
       "localeLabel": "Locale",
-      "localePlaceholder": "Enter locale (e.g. en, uk)",
+      "localePlaceholder": "Select locale",
+      "localeOptions": {
+        "en": "English",
+        "uk": "Українська",
+        "ru": "Русский"
+      },
       "statusLabel": "Status",
-      "statusPlaceholder": "Enter status",
+      "statusPlaceholder": "Select status",
+      "statusOptions": {
+        "ACTIVE": "Active",
+        "SUSPENDED": "Suspended",
+        "ARCHIVED": "Archived"
+      },
       "firstNameLabel": "First Name",
       "firstNamePlaceholder": "Enter first name",
       "lastNameLabel": "Last Name",

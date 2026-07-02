@@ -11,16 +11,31 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { CreateTenantRequest, TenantResponse, UpdateTenantRequest } from "../model/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { TenantRequest, TenantResponse, TenantUpdateRequest } from "../model/types";
 import { TimezoneSelector } from "./TimezoneSelector";
 
 interface TenantDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: CreateTenantRequest | UpdateTenantRequest) => Promise<void>;
+  onSubmit: (data: TenantRequest | TenantUpdateRequest) => Promise<void>;
   tenant?: TenantResponse | null;
   loading?: boolean;
 }
+
+const LOCALE_OPTIONS = [
+  { value: "en", label: "English" },
+  { value: "uk", label: "Українська" },
+  { value: "ru", label: "Русский" },
+];
+
+const STATUS_OPTIONS = ["ACTIVE", "SUSPENDED", "ARCHIVED"] as const;
 
 const getDefaultTimezone = () => {
   try {
@@ -39,7 +54,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
   const [address, setAddress] = useState("");
   const [timezone, setTimezone] = useState(getDefaultTimezone);
   const [locale, setLocale] = useState("en");
-  const [status, setStatus] = useState("ACTIVE");
+  const [status, setStatus] = useState<"ACTIVE" | "SUSPENDED" | "ARCHIVED">("ACTIVE");
 
   useEffect(() => {
     if (tenant) {
@@ -48,7 +63,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       setAddress(tenant.address || "");
       setTimezone(tenant.timezone || "UTC");
       setLocale(tenant.locale || "en");
-      setStatus(tenant.status || "ACTIVE");
+      setStatus((tenant.status as "ACTIVE" | "SUSPENDED" | "ARCHIVED") || "ACTIVE");
     } else {
       setName("");
       setEmail("");
@@ -66,6 +81,9 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       await onSubmit({
         name,
         address,
+        timezone,
+        locale,
+        status,
       });
       return;
     }
@@ -76,7 +94,6 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       address,
       timezone,
       locale,
-      status,
     });
   };
 
@@ -136,23 +153,40 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
 
           <div className="space-y-2">
             <Label htmlFor="locale">{t("tenants.dialog.localeLabel")}</Label>
-            <Input
-              id="locale"
-              value={locale}
-              onChange={(e) => setLocale(e.target.value)}
-              placeholder={t("tenants.dialog.localePlaceholder")}
-            />
+            <Select value={locale} onValueChange={setLocale}>
+              <SelectTrigger id="locale">
+                <SelectValue placeholder={t("tenants.dialog.localePlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                {LOCALE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {t(`tenants.dialog.localeOptions.${option.value}`, option.label)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="status">{t("tenants.dialog.statusLabel")}</Label>
-            <Input
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              placeholder={t("tenants.dialog.statusPlaceholder")}
-            />
-          </div>
+          {isEdit && (
+            <div className="space-y-2">
+              <Label htmlFor="status">{t("tenants.dialog.statusLabel")}</Label>
+              <Select
+                value={status}
+                onValueChange={(value) => setStatus(value as "ACTIVE" | "SUSPENDED" | "ARCHIVED")}
+              >
+                <SelectTrigger id="status">
+                  <SelectValue placeholder={t("tenants.dialog.statusPlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {STATUS_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {t(`tenants.dialog.statusOptions.${option}`, option)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

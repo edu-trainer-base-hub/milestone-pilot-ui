@@ -110,7 +110,7 @@ describe("TenantsPage", () => {
           email: "beta@example.com",
           address: "Tenant address",
           locale: "en",
-          status: "ACTIVE",
+          timezone: expect.any(String),
         })
       )
     );
@@ -143,7 +143,7 @@ describe("TenantsPage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
     expect(screen.getByLabelText("Admin's Email")).toHaveAttribute("readonly");
-    expect(screen.getByRole("combobox")).toBeEnabled();
+    expect(screen.getByLabelText("Timezone")).toBeEnabled();
     expect(screen.getByLabelText("Locale")).not.toHaveAttribute("readonly");
     expect(screen.getByLabelText("Status")).not.toHaveAttribute("readonly");
     fireEvent.change(screen.getByLabelText("Locale"), { target: { value: "uk" } });
@@ -154,10 +154,13 @@ describe("TenantsPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
-      expect(apiMock.updateTenant).toHaveBeenCalledWith("1", {
-        name: "Alpha Updated",
-        address: "Main street",
-      })
+      expect(apiMock.updateTenant).toHaveBeenCalledWith(
+        "tenant-uuid-1",
+        expect.objectContaining({
+          name: "Alpha Updated",
+          address: "Main street",
+        })
+      )
     );
     expect(notifierMock.success).toHaveBeenCalled();
   });

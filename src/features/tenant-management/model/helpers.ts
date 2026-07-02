@@ -1,3 +1,3 @@
 import type { TenantResponse } from "./types";
 
-export const getTenantIdForPlatformOps = (tenant: Pick<TenantResponse, "id">): string => String(tenant.id);
+export const getTenantUuidForPlatformOps = (tenant: Pick<TenantResponse, "uuid">): string => String(tenant.uuid);

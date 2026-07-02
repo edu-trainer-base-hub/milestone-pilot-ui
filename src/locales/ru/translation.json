@@ -97,9 +97,19 @@
       "timezonePlaceholder": "Выберите часовой пояс",
       "currentTimeLabel": "Текущее время",
       "localeLabel": "Локаль",
-      "localePlaceholder": "Введите локаль (напр. en, uk, ru)",
+      "localePlaceholder": "Выберите локаль",
+      "localeOptions": {
+        "en": "English",
+        "uk": "Українська",
+        "ru": "Русский"
+      },
       "statusLabel": "Статус",
-      "statusPlaceholder": "Введите статус",
+      "statusPlaceholder": "Выберите статус",
+      "statusOptions": {
+        "ACTIVE": "Активен",
+        "SUSPENDED": "Приостановлен",
+        "ARCHIVED": "Архивирован"
+      },
       "firstNameLabel": "Имя",
       "firstNamePlaceholder": "Введите имя",
       "lastNameLabel": "Фамилия",
