@@ -11,31 +11,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import type { TenantRequest, TenantResponse, TenantUpdateRequest } from "../model/types";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { CreateTenantRequest, TenantResponse, UpdateTenantRequest } from "../model/types";
+import { TenantStatus, TENANT_STATUS_OPTIONS } from "../model/types";
 import { TimezoneSelector } from "./TimezoneSelector";
+import { SUPPORTED_LANGUAGES } from "@/constants/locales";
 
 interface TenantDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: TenantRequest | TenantUpdateRequest) => Promise<void>;
+  onSubmit: (data: CreateTenantRequest | UpdateTenantRequest) => Promise<void>;
   tenant?: TenantResponse | null;
   loading?: boolean;
 }
-
-const LOCALE_OPTIONS = [
-  { value: "en", label: "English" },
-  { value: "uk", label: "Українська" },
-  { value: "ru", label: "Русский" },
-];
-
-const STATUS_OPTIONS = ["ACTIVE", "SUSPENDED", "ARCHIVED"] as const;
 
 const getDefaultTimezone = () => {
   try {
@@ -54,7 +42,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
   const [address, setAddress] = useState("");
   const [timezone, setTimezone] = useState(getDefaultTimezone);
   const [locale, setLocale] = useState("en");
-  const [status, setStatus] = useState<"ACTIVE" | "SUSPENDED" | "ARCHIVED">("ACTIVE");
+  const [status, setStatus] = useState<TenantStatus>(TenantStatus.ACTIVE);
 
   useEffect(() => {
     if (tenant) {
@@ -63,14 +51,14 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       setAddress(tenant.address || "");
       setTimezone(tenant.timezone || "UTC");
       setLocale(tenant.locale || "en");
-      setStatus((tenant.status as "ACTIVE" | "SUSPENDED" | "ARCHIVED") || "ACTIVE");
+      setStatus(tenant.status || TenantStatus.ACTIVE);
     } else {
       setName("");
       setEmail("");
       setAddress("");
       setTimezone(getDefaultTimezone());
       setLocale("en");
-      setStatus("ACTIVE");
+      setStatus(TenantStatus.ACTIVE);
     }
   }, [tenant, open]);
 
@@ -158,9 +146,9 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
                 <SelectValue placeholder={t("tenants.dialog.localePlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                {LOCALE_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {t(`tenants.dialog.localeOptions.${option.value}`, option.label)}
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <SelectItem key={lang} value={lang}>
+                    {t(`lang.name.${lang}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -170,15 +158,12 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
           {isEdit && (
             <div className="space-y-2">
               <Label htmlFor="status">{t("tenants.dialog.statusLabel")}</Label>
-              <Select
-                value={status}
-                onValueChange={(value) => setStatus(value as "ACTIVE" | "SUSPENDED" | "ARCHIVED")}
-              >
+              <Select value={status} onValueChange={(value) => setStatus(value as TenantStatus)}>
                 <SelectTrigger id="status">
                   <SelectValue placeholder={t("tenants.dialog.statusPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {STATUS_OPTIONS.map((option) => (
+                  {TENANT_STATUS_OPTIONS.map((option) => (
                     <SelectItem key={option} value={option}>
                       {t(`tenants.dialog.statusOptions.${option}`, option)}
                     </SelectItem>

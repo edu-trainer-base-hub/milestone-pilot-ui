@@ -9,7 +9,7 @@ import { notifier } from "@/services/NotificationService";
 import { createTenant, getAllTenants, updateTenant } from "../api/tenants";
 import { canCreatePlatformTenants, canReadPlatformTenants, canUpdatePlatformTenants } from "../model/access-policy";
 import { getTenantUuidForPlatformOps } from "../model/helpers";
-import type { TenantRequest, TenantResponse, TenantUpdateRequest } from "../model/types";
+import type { CreateTenantRequest, TenantResponse, UpdateTenantRequest } from "../model/types";
 import { TenantDialog } from "../components/TenantDialog";
 
 export const TenantsPage: React.FC = () => {
@@ -34,10 +34,10 @@ export const TenantsPage: React.FC = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: TenantRequest | TenantUpdateRequest) =>
+    mutationFn: (data: CreateTenantRequest | UpdateTenantRequest) =>
       selectedTenant
-        ? updateTenant(getTenantUuidForPlatformOps(selectedTenant), data as TenantUpdateRequest)
-        : createTenant(data as TenantRequest),
+        ? updateTenant(getTenantUuidForPlatformOps(selectedTenant), data as UpdateTenantRequest)
+        : createTenant(data as CreateTenantRequest),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
       setDialogOpen(false);

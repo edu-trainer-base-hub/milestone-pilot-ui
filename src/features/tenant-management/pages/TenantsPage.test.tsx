@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TenantsPage } from "./TenantsPage";
+import { TenantStatus } from "../model/types";
 
 const apiMock = vi.hoisted(() => ({
   getAllTenants: vi.fn(),
@@ -84,7 +85,7 @@ describe("TenantsPage", () => {
         address: "Main street",
         timezone: "UTC",
         locale: "en",
-        status: "ACTIVE",
+        status: TenantStatus.ACTIVE,
       },
     ]);
     apiMock.createTenant.mockResolvedValue({
@@ -129,7 +130,7 @@ describe("TenantsPage", () => {
         address: "Main street",
         timezone: "UTC",
         locale: "en",
-        status: "ACTIVE",
+        status: TenantStatus.ACTIVE,
       },
     ]);
     apiMock.updateTenant.mockResolvedValue({
@@ -176,7 +177,7 @@ describe("TenantsPage", () => {
         address: "Main street",
         timezone: "UTC",
         locale: "en",
-        status: "ACTIVE",
+        status: TenantStatus.ACTIVE,
       },
     ]);
 

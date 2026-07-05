@@ -9,6 +9,11 @@
       "en": "En",
       "uk": "Ук",
       "ru": "Ру"
+    },
+    "name": {
+      "en": "English",
+      "uk": "Українська",
+      "ru": "Русский"
     }
   },
   "menu": {
@@ -98,11 +103,6 @@
       "currentTimeLabel": "Current time",
       "localeLabel": "Locale",
       "localePlaceholder": "Select locale",
-      "localeOptions": {
-        "en": "English",
-        "uk": "Українська",
-        "ru": "Русский"
-      },
       "statusLabel": "Status",
       "statusPlaceholder": "Select status",
       "statusOptions": {

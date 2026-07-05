@@ -1,8 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
-
-const SUPPORTED_LANGUAGES: readonly string[] = ["en", "uk", "ru"];
+import { SUPPORTED_LANGUAGES } from "@/constants/locales";
 
 const LanguageSelectorBase: React.FC = () => {
   const { t, i18n } = useTranslation();

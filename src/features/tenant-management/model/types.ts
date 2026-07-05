@@ -1,4 +1,14 @@
-export interface TenantRequest {
+export const TenantStatus = {
+    ACTIVE: "ACTIVE",
+    SUSPENDED: "SUSPENDED",
+    ARCHIVED: "ARCHIVED",
+} as const;
+
+export type TenantStatus = (typeof TenantStatus)[keyof typeof TenantStatus];
+
+export const TENANT_STATUS_OPTIONS: TenantStatus[] = Object.values(TenantStatus);
+
+export interface CreateTenantRequest {
   name: string;
   email: string;
   address: string;
@@ -6,12 +16,12 @@ export interface TenantRequest {
   locale?: string;
 }
 
-export interface TenantUpdateRequest {
+export interface UpdateTenantRequest {
   name: string;
   address: string;
   timezone: string;
   locale?: string;
-  status: "ACTIVE" | "SUSPENDED" | "ARCHIVED";
+  status: TenantStatus;
 }
 
 export interface TenantResponse {
@@ -22,7 +32,7 @@ export interface TenantResponse {
   address: string;
   timezone: string;
   locale?: string;
-  status?: string;
+  status?: TenantStatus;
   createdAt?: string;
   updatedAt?: string;
 }
