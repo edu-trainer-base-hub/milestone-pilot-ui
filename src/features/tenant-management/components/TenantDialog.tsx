@@ -11,8 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { CreateTenantRequest, TenantResponse, UpdateTenantRequest } from "../model/types";
+import { TenantStatus, TENANT_STATUS_OPTIONS } from "../model/types";
 import { TimezoneSelector } from "./TimezoneSelector";
+import { SUPPORTED_LANGUAGES } from "@/constants/locales";
 
 interface TenantDialogProps {
   open: boolean;
@@ -39,7 +42,7 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
   const [address, setAddress] = useState("");
   const [timezone, setTimezone] = useState(getDefaultTimezone);
   const [locale, setLocale] = useState("en");
-  const [status, setStatus] = useState("ACTIVE");
+  const [status, setStatus] = useState<TenantStatus>(TenantStatus.ACTIVE);
 
   useEffect(() => {
     if (tenant) {
@@ -48,14 +51,14 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       setAddress(tenant.address || "");
       setTimezone(tenant.timezone || "UTC");
       setLocale(tenant.locale || "en");
-      setStatus(tenant.status || "ACTIVE");
+      setStatus(tenant.status || TenantStatus.ACTIVE);
     } else {
       setName("");
       setEmail("");
       setAddress("");
       setTimezone(getDefaultTimezone());
       setLocale("en");
-      setStatus("ACTIVE");
+      setStatus(TenantStatus.ACTIVE);
     }
   }, [tenant, open]);
 
@@ -66,6 +69,9 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       await onSubmit({
         name,
         address,
+        timezone,
+        locale,
+        status,
       });
       return;
     }
@@ -76,7 +82,6 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
       address,
       timezone,
       locale,
-      status,
     });
   };
 
@@ -136,23 +141,37 @@ export const TenantDialog: React.FC<TenantDialogProps> = ({ open, onOpenChange, 
 
           <div className="space-y-2">
             <Label htmlFor="locale">{t("tenants.dialog.localeLabel")}</Label>
-            <Input
-              id="locale"
-              value={locale}
-              onChange={(e) => setLocale(e.target.value)}
-              placeholder={t("tenants.dialog.localePlaceholder")}
-            />
+            <Select value={locale} onValueChange={setLocale}>
+              <SelectTrigger id="locale">
+                <SelectValue placeholder={t("tenants.dialog.localePlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <SelectItem key={lang} value={lang}>
+                    {t(`lang.name.${lang}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="status">{t("tenants.dialog.statusLabel")}</Label>
-            <Input
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              placeholder={t("tenants.dialog.statusPlaceholder")}
-            />
-          </div>
+          {isEdit && (
+            <div className="space-y-2">
+              <Label htmlFor="status">{t("tenants.dialog.statusLabel")}</Label>
+              <Select value={status} onValueChange={(value) => setStatus(value as TenantStatus)}>
+                <SelectTrigger id="status">
+                  <SelectValue placeholder={t("tenants.dialog.statusPlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {TENANT_STATUS_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {t(`tenants.dialog.statusOptions.${option}`, option)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TenantsPage } from "./TenantsPage";
+import { TenantStatus } from "../model/types";
 
 const apiMock = vi.hoisted(() => ({
   getAllTenants: vi.fn(),
@@ -84,7 +85,7 @@ describe("TenantsPage", () => {
         address: "Main street",
         timezone: "UTC",
         locale: "en",
-        status: "ACTIVE",
+        status: TenantStatus.ACTIVE,
       },
     ]);
     apiMock.createTenant.mockResolvedValue({
@@ -110,7 +111,7 @@ describe("TenantsPage", () => {
           email: "beta@example.com",
           address: "Tenant address",
           locale: "en",
-          status: "ACTIVE",
+          timezone: expect.any(String),
         })
       )
     );
@@ -129,7 +130,7 @@ describe("TenantsPage", () => {
         address: "Main street",
         timezone: "UTC",
         locale: "en",
-        status: "ACTIVE",
+        status: TenantStatus.ACTIVE,
       },
     ]);
     apiMock.updateTenant.mockResolvedValue({
@@ -143,7 +144,7 @@ describe("TenantsPage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
     expect(screen.getByLabelText("Admin's Email")).toHaveAttribute("readonly");
-    expect(screen.getByRole("combobox")).toBeEnabled();
+    expect(screen.getByLabelText("Timezone")).toBeEnabled();
     expect(screen.getByLabelText("Locale")).not.toHaveAttribute("readonly");
     expect(screen.getByLabelText("Status")).not.toHaveAttribute("readonly");
     fireEvent.change(screen.getByLabelText("Locale"), { target: { value: "uk" } });
@@ -154,10 +155,13 @@ describe("TenantsPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     await waitFor(() =>
-      expect(apiMock.updateTenant).toHaveBeenCalledWith("1", {
-        name: "Alpha Updated",
-        address: "Main street",
-      })
+      expect(apiMock.updateTenant).toHaveBeenCalledWith(
+        "tenant-uuid-1",
+        expect.objectContaining({
+          name: "Alpha Updated",
+          address: "Main street",
+        })
+      )
     );
     expect(notifierMock.success).toHaveBeenCalled();
   });
@@ -173,7 +177,7 @@ describe("TenantsPage", () => {
         address: "Main street",
         timezone: "UTC",
         locale: "en",
-        status: "ACTIVE",
+        status: TenantStatus.ACTIVE,
       },
     ]);
 

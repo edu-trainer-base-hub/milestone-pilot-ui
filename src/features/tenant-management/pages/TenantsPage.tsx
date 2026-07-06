@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { notifier } from "@/services/NotificationService";
 import { createTenant, getAllTenants, updateTenant } from "../api/tenants";
 import { canCreatePlatformTenants, canReadPlatformTenants, canUpdatePlatformTenants } from "../model/access-policy";
-import { getTenantIdForPlatformOps } from "../model/helpers";
+import { getTenantUuidForPlatformOps } from "../model/helpers";
 import type { CreateTenantRequest, TenantResponse, UpdateTenantRequest } from "../model/types";
 import { TenantDialog } from "../components/TenantDialog";
 
@@ -36,7 +36,7 @@ export const TenantsPage: React.FC = () => {
   const mutation = useMutation({
     mutationFn: (data: CreateTenantRequest | UpdateTenantRequest) =>
       selectedTenant
-        ? updateTenant(getTenantIdForPlatformOps(selectedTenant), data as UpdateTenantRequest)
+        ? updateTenant(getTenantUuidForPlatformOps(selectedTenant), data as UpdateTenantRequest)
         : createTenant(data as CreateTenantRequest),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenants"] });

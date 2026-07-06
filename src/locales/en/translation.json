@@ -9,6 +9,11 @@
       "en": "En",
       "uk": "Ук",
       "ru": "Ру"
+    },
+    "name": {
+      "en": "English",
+      "uk": "Українська",
+      "ru": "Русский"
     }
   },
   "menu": {
@@ -97,9 +102,14 @@
       "timezonePlaceholder": "Select timezone",
       "currentTimeLabel": "Current time",
       "localeLabel": "Locale",
-      "localePlaceholder": "Enter locale (e.g. en, uk)",
+      "localePlaceholder": "Select locale",
       "statusLabel": "Status",
-      "statusPlaceholder": "Enter status",
+      "statusPlaceholder": "Select status",
+      "statusOptions": {
+        "ACTIVE": "Active",
+        "SUSPENDED": "Suspended",
+        "ARCHIVED": "Archived"
+      },
       "firstNameLabel": "First Name",
       "firstNamePlaceholder": "Enter first name",
       "lastNameLabel": "Last Name",

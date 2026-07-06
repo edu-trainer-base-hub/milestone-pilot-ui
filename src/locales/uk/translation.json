@@ -9,6 +9,11 @@
       "en": "En",
       "uk": "Ук",
       "ru": "Ру"
+    },
+    "name": {
+      "en": "English",
+      "uk": "Українська",
+      "ru": "Русский"
     }
   },
   "menu": {
@@ -97,9 +102,14 @@
       "timezonePlaceholder": "Оберіть часовий пояс",
       "currentTimeLabel": "Поточний час",
       "localeLabel": "Локаль",
-      "localePlaceholder": "Введіть локаль (напр. en, uk)",
+      "localePlaceholder": "Оберіть локаль",
       "statusLabel": "Статус",
-      "statusPlaceholder": "Введіть статус",
+      "statusPlaceholder": "Оберіть статус",
+      "statusOptions": {
+        "ACTIVE": "Активний",
+        "SUSPENDED": "Призупинений",
+        "ARCHIVED": "Архівований"
+      },
       "firstNameLabel": "Ім'я",
       "firstNamePlaceholder": "Введіть ім'я",
       "lastNameLabel": "Прізвище",

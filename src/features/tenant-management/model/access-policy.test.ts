@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Authority } from "@/contexts/AuthContext";
 import { canCreatePlatformTenants, canReadPlatformTenants, canUpdatePlatformTenants } from "./access-policy";
-import { getTenantIdForPlatformOps } from "./helpers";
+import { getTenantUuidForPlatformOps } from "./helpers";
 
 describe("tenant management access policy", () => {
   it("checks platform tenant CRUD authorities", () => {
@@ -17,6 +17,6 @@ describe("tenant management access policy", () => {
   });
 
   it("uses the platform tenant identifier helper for tenant CRUD APIs", () => {
-    expect(getTenantIdForPlatformOps({ id: 12 })).toBe("12");
+    expect(getTenantUuidForPlatformOps({ uuid: "tenant-uuid-12" })).toBe("tenant-uuid-12");
   });
 });

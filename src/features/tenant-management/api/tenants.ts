@@ -8,5 +8,5 @@ export const createTenant = (request: CreateTenantRequest): Promise<TenantRespon
 
 export const getAllTenants = (): Promise<TenantResponse[]> => get<TenantResponse[]>(PLATFORM_TENANTS_BASE_URL);
 
-export const updateTenant = (id: string, request: UpdateTenantRequest): Promise<TenantResponse> =>
-  put<TenantResponse>(`${PLATFORM_TENANTS_BASE_URL}/${id}`, request);
+export const updateTenant = (tenantUuid: string, request: UpdateTenantRequest): Promise<TenantResponse> =>
+  put<TenantResponse>(`${PLATFORM_TENANTS_BASE_URL}/${tenantUuid}`, request);
