@@ -55,20 +55,44 @@ export async function waitForMessage(
 }
 
 /**
- * Waits for the newest email to `recipient` and extracts the verification code
- * from its HTML body.
+ * Polls until an email to `recipient` containing a verification code arrives
+ * and returns the code. Emails without a code (e.g. the account-setup mail,
+ * whose code div is empty) are skipped, so the code email may arrive later
+ * than others.
  */
-export async function getVerificationCode(recipient: string, options?: WaitOptions): Promise<string> {
-  const message = await waitForMessage(recipient, options);
+export async function getVerificationCode(
+  recipient: string,
+  { timeoutMs = 15_000, pollIntervalMs = 500 }: WaitOptions = {}
+): Promise<string> {
+  const deadline = Date.now() + timeoutMs;
+  const seenSubjects = new Set<string>();
 
-  const match = message.HTML.match(CONFIRMATION_CODE_PATTERN);
-  if (!match) {
-    throw new Error(
-      `Email for ${recipient} (subject: "${message.Subject}") contains no ` +
-        `<div class="confirmation-code"> element — template changed? See ${MAILPIT_BASE_URL}`
+  while (Date.now() < deadline) {
+    const searchResponse = await fetch(
+      `${MAILPIT_BASE_URL}/api/v1/search?query=${encodeURIComponent(`to:${recipient}`)}`
     );
+    const { messages } = (await searchResponse.json()) as { messages: MailpitSearchMessage[] | null };
+
+    // Newest first; only the few most recent are relevant
+    for (const summary of (messages ?? []).slice(0, 5)) {
+      const messageResponse = await fetch(`${MAILPIT_BASE_URL}/api/v1/message/${summary.ID}`);
+      const message = (await messageResponse.json()) as MailpitMessage;
+      seenSubjects.add(message.Subject);
+
+      const match = message.HTML.match(CONFIRMATION_CODE_PATTERN);
+      if (match) {
+        return match[1];
+      }
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
   }
-  return match[1];
+
+  const seen = seenSubjects.size > 0 ? `Emails without a code arrived: ${[...seenSubjects].join(", ")}. ` : "";
+  throw new Error(
+    `No verification-code email arrived for ${recipient} within ${timeoutMs}ms. ${seen}` +
+      `Is the backend running with the e2e profile? Inspect the mailbox at ${MAILPIT_BASE_URL}`
+  );
 }
 
 /**
