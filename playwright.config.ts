@@ -17,15 +17,9 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
-    // Programmatic API login per identity; writes e2e/.auth/*.json storage states
-    {
-      name: "setup",
-      testMatch: /.*\.setup\.ts/,
-    },
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
-      dependencies: ["setup"],
     },
   ],
   webServer: {

@@ -109,8 +109,11 @@ let uniqueCounter = 0;
 /**
  * Unique, unroutable recipient address per call (reserved .test TLD) —
  * keeps tests independent of leftover data and of each other.
+ * Worker index guards against same-millisecond collisions across the
+ * parallel worker processes.
  */
 export function uniqueTestEmail(prefix = "user"): string {
   uniqueCounter += 1;
-  return `${prefix}-${Date.now()}-${uniqueCounter}@e2e.test`;
+  const worker = process.env.TEST_PARALLEL_INDEX ?? "0";
+  return `${prefix}-w${worker}-${Date.now()}-${uniqueCounter}@e2e.test`;
 }
