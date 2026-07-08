@@ -1,0 +1,336 @@
+{
+  "app": {
+    "tab": {
+      "title": "Milestone Pilot"
+    }
+  },
+  "lang": {
+    "code": {
+      "en": "En",
+      "uk": "Ук",
+      "ru": "Ру"
+    },
+    "name": {
+      "en": "English",
+      "uk": "Українська",
+      "ru": "Русский"
+    }
+  },
+  "menu": {
+    "home": "Home",
+    "mainMenuLabel": "Main Menu",
+    "title": "Milestone Pilot",
+    "sidebarLabel": "Games",
+    "userManagement": "User Management",
+    "categories": {
+      "title": "Categories",
+      "administration": "Administration"
+    },
+    "user": {
+      "upgrade": "Upgrade to Pro",
+      "subscriptions": "Subscriptions",
+      "account": "Account",
+      "settings": "Settings",
+      "tenants": "Manage workspaces",
+      "billing": "Billing",
+      "notifications": "Notifications",
+      "profiles": "Profiles",
+      "logout": "Log out",
+      "login": "Log in",
+      "loginDesc": "Access your account"
+    }
+  },
+  "common": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving...",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "list": {
+      "actions": "Actions",
+      "input": {
+        "keywordSearch": {
+          "placeholder": "Search..."
+        }
+      }
+    }
+  },
+  "users": {
+    "backToList": "Back to users",
+    "form": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter email",
+      "rolePlaceholder": "Select a role"
+    }
+  },
+  "tenants": {
+    "title": "Tenants",
+    "create": "Create Tenant",
+    "edit": "Edit Tenant",
+    "empty": "No tenants found.",
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "timezone": "Timezone",
+      "status": "Status",
+      "createdAt": "Created At"
+    },
+    "users": {
+      "title": "Tenant Users",
+      "create": "Add User",
+      "edit": "Edit User",
+      "empty": "No users found in this tenant.",
+      "columns": {
+        "email": "Email",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "role": "Role"
+      }
+    },
+    "dialog": {
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter tenant name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter tenant description",
+      "emailLabel": "Admin's Email",
+      "emailPlaceholder": "Enter admin's email",
+      "addressLabel": "Address",
+      "addressPlaceholder": "Enter address",
+      "timezoneLabel": "Timezone",
+      "timezoneSearchPlaceholder": "Search timezone...",
+      "timezonePlaceholder": "Select timezone",
+      "currentTimeLabel": "Current time",
+      "localeLabel": "Locale",
+      "localePlaceholder": "Select locale",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Select status",
+      "statusOptions": {
+        "ACTIVE": "Active",
+        "SUSPENDED": "Suspended",
+        "ARCHIVED": "Archived"
+      },
+      "firstNameLabel": "First Name",
+      "firstNamePlaceholder": "Enter first name",
+      "lastNameLabel": "Last Name",
+      "lastNamePlaceholder": "Enter last name",
+      "roleLabel": "Role"
+    },
+    "notifications": {
+      "createSuccess": "Tenant created successfully",
+      "createError": "Failed to create tenant",
+      "updateSuccess": "Tenant updated successfully",
+      "updateError": "Failed to update tenant",
+      "createUserSuccess": "User added successfully",
+      "createUserError": "Failed to add user",
+      "updateUserSuccess": "User updated successfully",
+      "updateUserError": "Failed to update user"
+    }
+  },
+  "platformUsers": {
+    "title": "Platform Users",
+    "create": "Create Platform User",
+    "edit": "Edit Platform User",
+    "empty": "No platform users found.",
+    "loadError": "Failed to load platform users.",
+    "notFound": "Platform user not found.",
+    "columns": {
+      "email": "Email",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "role": "Role"
+    },
+    "notifications": {
+      "createSuccess": "Platform user created successfully",
+      "createError": "Failed to create platform user",
+      "updateSuccess": "Platform user updated successfully",
+      "updateError": "Failed to update platform user"
+    }
+  },
+  "pages": {
+    "settings": {
+      "title": "Settings",
+      "telegramLanguage": {
+        "label": "Telegram Bot Language"
+      },
+      "webLanguage": {
+        "label": "Website Language"
+      },
+      "themeMode": {
+        "label": "Theme Mode"
+      },
+      "notifications": {
+        "updateFail": "Failed to update settings.",
+        "fetchFail": "Failed to fetch settings from server.",
+        "saveSuccess": "Settings saved successfully."
+      }
+    },
+    "workspaceMemberships": {
+      "title": "Your workspaces",
+      "description": "Choose which workspace is active for the current session and which one should be the default next time you sign in.",
+      "settingsLabel": "Active workspace",
+      "settingsDescription": "Switch your current workspace or save a different default without leaving your signed-in session.",
+      "currentWorkspaceLabel": "Current workspace:",
+      "noActiveWorkspace": "No active workspace",
+      "activeRoleLabel": "Role: {{role}}",
+      "platformWorkspace": "Platform",
+      "loadError": "Failed to load workspaces.",
+      "empty": "No workspaces found.",
+      "columns": {
+        "workspace": "Workspace",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "badges": {
+        "active": "Active",
+        "default": "Default"
+      },
+      "actions": {
+        "open": "Manage workspaces",
+        "switch": "Switch",
+        "active": "Active",
+        "setDefault": "Set default",
+        "default": "Default",
+        "backToSettings": "Back to settings"
+      },
+      "notifications": {
+        "switchSuccess": "Workspace switched successfully.",
+        "switchError": "Failed to switch workspace.",
+        "defaultSuccess": "Default workspace updated successfully.",
+        "defaultError": "Failed to update the default workspace."
+      }
+    },
+    "loginPage": {
+      "titlePrompt": "Sign in to your account",
+      "identifier": {
+        "label": "Email or Username",
+        "placeholder": "Enter your email or username"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "forgotPasswordLinkText": "Forgot password?",
+        "showPasswordLabel": "Show password"
+      },
+      "submitButton": "Sign in",
+      "submitButtonLoading": "Signing in...",
+      "notifications": {
+        "submitError": "We can't find that email, username, or password. Try again."
+      }
+    },
+    "accountSetup": {
+      "titlePrompt": "Set your password",
+      "loginPrompt": "Already have an account?",
+      "submitButton": "Set Password",
+      "submitButtonLoading": "Setting password...",
+      "notifications": {
+        "submitSuccess": "Password set successfully."
+      }
+    },
+    "resetPasswordPage": {
+      "titlePrompt": "Reset your password",
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+      },
+      "confirmationCode": {
+        "label": "Confirmation Code",
+        "placeholder": "Enter the reset code",
+        "sendCodeButton": "Send reset code",
+        "sendCodeButtonRe": "Resend in {{secondsLeft}} s",
+        "sendCodeButtonLoading": "Sending code..."
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "showPasswordLabel": "Show password"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your password"
+      },
+      "submitButton": "Reset Password",
+      "submitButtonLoading": "Resetting...",
+      "loginPrompt": "Remembered your password?",
+      "loginLinkText": "Sign in",
+      "validation": {
+        "invalidEmail": "Invalid email address",
+        "passwordsMismatch": "Passwords do not match"
+      },
+      "notifications": {
+        "submitSuccess": "Password reset successfully.",
+        "submitError": "Reset password failed. Please try again.",
+        "codeSentSuccess": "Code sent to your email.",
+        "codeSentError": "Failed to send code."
+      }
+    },
+    "subscriptionPage": {
+      "title": "Subscription",
+      "plan": {
+        "names": {
+          "FREE_TIER": "Free",
+          "BETA_TEST_TIER": "Beta Test",
+          "TIER_1": "Plus"
+        }
+      },
+      "info": {
+        "loading": "Loading subscription…",
+        "currentPlan": "Current plan",
+        "activeUntilLocal": "Active until",
+        "activeUntilUTC": "Active until (UTC)",
+        "inactiveHint": "You don’t have an active Beta Access. Use a promo code to activate.",
+        "none": "None",
+        "noDate": "—"
+      },
+      "inputs": {
+        "promoCode": {
+          "label": "Promo code",
+          "placeholder": "Enter Promo Code from email"
+        }
+      },
+      "buttons": {
+        "generate": {
+          "default": "Request Promo Code",
+          "loading": "Requesting…"
+        },
+        "redeem": {
+          "default": "Redeem",
+          "loading": "Redeeming…"
+        }
+      },
+      "notifications": {
+        "generate": {
+          "success": "Promo code requested.",
+          "infoEmail": "Check your email for the promo code.",
+          "error": "Could not request a promo code."
+        },
+        "redeem": {
+          "success": "Promo code applied. Your access is active until {{until}}.",
+          "activated": "Beta Access activated.",
+          "error": "Promo code invalid or expired."
+        }
+      }
+    }
+  },
+  "errors": {
+    "codes": {
+      "TECHNICAL_ERROR": "A technical error occurred. Please try again.",
+      "UNKNOWN": "Oops, something went wrong. Please try again.",
+      "INTERNAL_SERVER_ERROR": "Oops, something went wrong. Please try again.",
+      "INVALID_CREDENTIALS": "We can't find that email or password. Try again.",
+      "INVALID_VERIFICATION_CODE": "Invalid verification code. Please try again.",
+      "PROFILE_NOT_FOUND": "We can't find that profile.",
+      "EMAIL_ALREADY_EXISTS": "Email already exists.",
+      "USERNAME_ALREADY_EXISTS": "Username already exists.",
+      "PROFILE_OWNERSHIP_VIOLATION": "Profile ownership violation.",
+      "RATE_LIMIT_EXCEEDED": "Too many attempts. Try again later.",
+      "USER_BLOCKED": "User blocked.",
+      "AUTHENTICATION_FAILED": "Authentication failed.",
+      "TOKEN_NOT_VALID": "Token not valid.",
+      "MISSING_COOKIE": "Invalid or absent cookie.",
+      "INVALID_PROMO_CODE": "Invalid or expired promo code.",
+      "NOT_ACTIVE_PROLONGATION_WINDOW": "Not active prolongation window."
+    }
+  }
+}

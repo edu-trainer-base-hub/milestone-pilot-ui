@@ -1,0 +1,336 @@
+{
+  "app": {
+    "tab": {
+      "title": "Milestone Pilot"
+    }
+  },
+  "lang": {
+    "code": {
+      "en": "En",
+      "uk": "Ук",
+      "ru": "Ру"
+    },
+    "name": {
+      "en": "English",
+      "uk": "Українська",
+      "ru": "Русский"
+    }
+  },
+  "menu": {
+    "home": "Головна",
+    "mainMenuLabel": "Головне меню",
+    "title": "Milestone Pilot",
+    "sidebarLabel": "Ігри",
+    "userManagement": "Керування користувачами",
+    "categories": {
+      "title": "Категорії",
+      "administration": "Адміністрування"
+    },
+    "user": {
+      "upgrade": "Покращити до Pro",
+      "subscriptions": "Підписки",
+      "account": "Обліковий запис",
+      "settings": "Налаштування",
+      "tenants": "Керувати робочими просторами",
+      "billing": "Оплата",
+      "notifications": "Сповіщення",
+      "profiles": "Профілі",
+      "logout": "Вийти",
+      "login": "Увійти",
+      "loginDesc": "Доступ до вашого облікового запису"
+    }
+  },
+  "common": {
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "save": "Зберегти",
+    "saving": "Збереження...",
+    "loading": "Завантаження...",
+    "cancel": "Скасувати",
+    "list": {
+      "actions": "Дії",
+      "input": {
+        "keywordSearch": {
+          "placeholder": "Пошук..."
+        }
+      }
+    }
+  },
+  "users": {
+    "backToList": "Назад до користувачів",
+    "form": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "Введіть email",
+      "rolePlaceholder": "Оберіть роль"
+    }
+  },
+  "tenants": {
+    "title": "Орендарі",
+    "create": "Створити орендаря",
+    "edit": "Редагувати орендаря",
+    "empty": "Орендарів не знайдено.",
+    "columns": {
+      "name": "Назва",
+      "description": "Опис",
+      "timezone": "Часовий пояс",
+      "status": "Статус",
+      "createdAt": "Створено"
+    },
+    "users": {
+      "title": "Користувачі орендаря",
+      "create": "Додати користувача",
+      "edit": "Редагувати користувача",
+      "empty": "Користувачів не знайдено.",
+      "columns": {
+        "email": "Email",
+        "firstName": "Ім'я",
+        "lastName": "Прізвище",
+        "role": "Роль"
+      }
+    },
+    "dialog": {
+      "nameLabel": "Назва",
+      "namePlaceholder": "Введіть назву",
+      "descriptionLabel": "Опис",
+      "descriptionPlaceholder": "Введіть опис",
+      "emailLabel": "Email адміна",
+      "emailPlaceholder": "Введіть email",
+      "addressLabel": "Адреса",
+      "addressPlaceholder": "Введіть адресу",
+      "timezoneLabel": "Часовий пояс",
+      "timezoneSearchPlaceholder": "Пошук часового поясу...",
+      "timezonePlaceholder": "Оберіть часовий пояс",
+      "currentTimeLabel": "Поточний час",
+      "localeLabel": "Локаль",
+      "localePlaceholder": "Оберіть локаль",
+      "statusLabel": "Статус",
+      "statusPlaceholder": "Оберіть статус",
+      "statusOptions": {
+        "ACTIVE": "Активний",
+        "SUSPENDED": "Призупинений",
+        "ARCHIVED": "Архівований"
+      },
+      "firstNameLabel": "Ім'я",
+      "firstNamePlaceholder": "Введіть ім'я",
+      "lastNameLabel": "Прізвище",
+      "lastNamePlaceholder": "Введіть прізвище",
+      "roleLabel": "Роль"
+    },
+    "notifications": {
+      "createSuccess": "Орендаря успішно створено",
+      "createError": "Не вдалося створити орендаря",
+      "updateSuccess": "Орендаря успішно оновлено",
+      "updateError": "Не вдалося оновити орендаря",
+      "createUserSuccess": "Користувача успішно додано",
+      "createUserError": "Не вдалося додати користувача",
+      "updateUserSuccess": "Користувача успішно оновлено",
+      "updateUserError": "Не вдалося оновити користувача"
+    }
+  },
+  "platformUsers": {
+    "title": "Користувачі платформи",
+    "create": "Створити користувача платформи",
+    "edit": "Редагувати користувача платформи",
+    "empty": "Користувачів платформи не знайдено.",
+    "loadError": "Не вдалося завантажити користувачів платформи.",
+    "notFound": "Користувача платформи не знайдено.",
+    "columns": {
+      "email": "Email",
+      "firstName": "Ім'я",
+      "lastName": "Прізвище",
+      "role": "Роль"
+    },
+    "notifications": {
+      "createSuccess": "Користувача платформи успішно створено",
+      "createError": "Не вдалося створити користувача платформи",
+      "updateSuccess": "Користувача платформи успішно оновлено",
+      "updateError": "Не вдалося оновити користувача платформи"
+    }
+  },
+  "pages": {
+    "settings": {
+      "title": "Налаштування",
+      "telegramLanguage": {
+        "label": "Мова Telegram-бота"
+      },
+      "webLanguage": {
+        "label": "Мова веб-сайту"
+      },
+      "themeMode": {
+        "label": "Тема"
+      },
+      "notifications": {
+        "updateFail": "Не вдалося оновити налаштування.",
+        "fetchFail": "Не вдалося завантажити налаштування.",
+        "saveSuccess": "Налаштування збережено."
+      }
+    },
+    "workspaceMemberships": {
+      "title": "Ваші робочі простори",
+      "description": "Оберіть, який робочий простір буде активним у поточній сесії, а який стане типовим для наступного входу.",
+      "settingsLabel": "Активний робочий простір",
+      "settingsDescription": "Перемикайте поточний робочий простір або зберігайте інший типовий, не виходячи з облікового запису.",
+      "currentWorkspaceLabel": "Поточний робочий простір:",
+      "noActiveWorkspace": "Немає активного робочого простору",
+      "activeRoleLabel": "Роль: {{role}}",
+      "platformWorkspace": "Платформа",
+      "loadError": "Не вдалося завантажити робочі простори.",
+      "empty": "Робочих просторів не знайдено.",
+      "columns": {
+        "workspace": "Робочий простір",
+        "role": "Роль",
+        "status": "Статус",
+        "actions": "Дії"
+      },
+      "badges": {
+        "active": "Активний",
+        "default": "Типовий"
+      },
+      "actions": {
+        "open": "Керувати робочими просторами",
+        "switch": "Перемкнути",
+        "active": "Активний",
+        "setDefault": "Зробити типовим",
+        "default": "Типовий",
+        "backToSettings": "Назад до налаштувань"
+      },
+      "notifications": {
+        "switchSuccess": "Робочий простір успішно змінено.",
+        "switchError": "Не вдалося змінити робочий простір.",
+        "defaultSuccess": "Типовий робочий простір успішно оновлено.",
+        "defaultError": "Не вдалося оновити типовий робочий простір."
+      }
+    },
+    "loginPage": {
+      "titlePrompt": "Вхід до акаунту",
+      "identifier": {
+        "label": "Email або Ім'я користувача",
+        "placeholder": "Введіть ваш email або ім'я користувача"
+      },
+      "password": {
+        "label": "Пароль",
+        "placeholder": "Введіть ваш пароль",
+        "forgotPasswordLinkText": "Забули пароль?",
+        "showPasswordLabel": "Показати пароль"
+      },
+      "submitButton": "Увійти",
+      "submitButtonLoading": "Вхід до облікового запису в процесі...",
+      "notifications": {
+        "submitError": "Ми не можемо знайти цей емейл, ім'я користувача або пароль. Спробуйте ще раз."
+      }
+    },
+    "accountSetup": {
+      "titlePrompt": "Встановіть пароль",
+      "loginPrompt": "Вже маєте аккаунт?",
+      "submitButton": "Встановити пароль",
+      "submitButtonLoading": "Встановлення паролю...",
+      "notifications": {
+        "submitSuccess": "Пароль успішно встановлено."
+      }
+    },
+    "resetPasswordPage": {
+      "titlePrompt": "Відновіть пароль",
+      "email": {
+        "label": "Електронна пошта",
+        "placeholder": "Введіть вашу електронну пошту"
+      },
+      "confirmationCode": {
+        "label": "Код оновлення",
+        "placeholder": "Введіть код оновлення",
+        "sendCodeButton": "Надіслати код оновлення паролю",
+        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
+        "sendCodeButtonLoading": "Надсилаємо код..."
+      },
+      "password": {
+        "label": "Пароль",
+        "placeholder": "Введіть ваш пароль",
+        "showPasswordLabel": "Показати пароль"
+      },
+      "confirmPassword": {
+        "label": "Підтвердьте пароль",
+        "placeholder": "Підтвердіть ваш пароль"
+      },
+      "submitButton": "Оновити пароль",
+      "submitButtonLoading": "Оновлення...",
+      "loginPrompt": "Згадали пароль?",
+      "loginLinkText": "Увійти",
+      "validation": {
+        "invalidEmail": "Невірна електронна адреса",
+        "passwordsMismatch": "Паролі не співпадають"
+      },
+      "notifications": {
+        "submitSuccess": "Пароль успішно оновлено.",
+        "submitError": "Не вдалося оновити пароль. Будь ласка, спробуйте ще раз.",
+        "codeSentSuccess": "Код надіслано на вашу електронну пошту.",
+        "codeSentError": "Не вдалося надіслати код."
+      }
+    },
+    "subscriptionPage": {
+      "title": "Підписка",
+      "plan": {
+        "names": {
+          "FREE_TIER": "Free",
+          "BETA_TEST_TIER": "Beta Test",
+          "TIER_1": "Plus"
+        }
+      },
+      "info": {
+        "loading": "Завантаження деталей підписки...",
+        "currentPlan": "Поточний план",
+        "activeUntilLocal": "Активний до",
+        "activeUntilUTC": "Активний до (UTC)",
+        "inactiveHint": "Немає активної підписки. Застосуйте промокод для активації.",
+        "none": "None",
+        "noDate": "—"
+      },
+      "inputs": {
+        "promoCode": {
+          "label": "Промокод",
+          "placeholder": "Введіть промокод з email"
+        }
+      },
+      "buttons": {
+        "generate": {
+          "default": "Знайти промокод",
+          "loading": "Пошук…"
+        },
+        "redeem": {
+          "default": "Активувати",
+          "loading": "Активація…"
+        }
+      },
+      "notifications": {
+        "generate": {
+          "success": "Промокод надіслано.",
+          "infoEmail": "Перевірте email з промокодом.",
+          "error": "Виникла помилка з надсиланням промокоду."
+        },
+        "redeem": {
+          "success": "Промокод активовано. Ваш доступ активний до {{until}}.",
+          "activated": "Доступ активовано.",
+          "error": "Невірний, використаний або застарілий промокод."
+        }
+      }
+    }
+  },
+  "errors": {
+    "codes": {
+      "TECHNICAL_ERROR": "Сталася технічна помилка. Будь ласка, спробуйте ще раз.",
+      "UNKNOWN": "На жаль, щось пішло не так. Будь ласка, спробуйте ще раз.",
+      "INTERNAL_SERVER_ERROR": "На жаль, щось пішло не так. Будь ласка, спробуйте ще раз.",
+      "INVALID_CREDENTIALS": "Ми не можемо знайти цей емейл або пароль. Спробуйте ще раз.",
+      "INVALID_VERIFICATION_CODE": "Невірний код перевірки. Будь ласка, спробуйте ще раз.",
+      "PROFILE_NOT_FOUND": "Ми не можемо знайти цей аккаунт.",
+      "EMAIL_ALREADY_EXISTS": "Email вже зареєстровано.",
+      "USERNAME_ALREADY_EXISTS": "Username вже зареєстровано.",
+      "PROFILE_OWNERSHIP_VIOLATION": "Нарушение владения профилем.",
+      "RATE_LIMIT_EXCEEDED": "Забагато спроб. Спробуйте пізніше.",
+      "USER_BLOCKED": "Користувача заблоковано.",
+      "AUTHENTICATION_FAILED": "Помилка автентифікації.",
+      "TOKEN_NOT_VALID": "Недійсний токен.",
+      "MISSING_COOKIE": "Недійсний або відсутній cookie.",
+      "INVALID_PROMO_CODE": "Невірний, використаний або застарілий промокод.",
+      "NOT_ACTIVE_PROLONGATION_WINDOW": "Не активний період продовження підписки."
+    }
+  }
+}

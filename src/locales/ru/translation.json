@@ -1,0 +1,336 @@
+{
+  "app": {
+    "tab": {
+      "title": "Milestone Pilot"
+    }
+  },
+  "lang": {
+    "code": {
+      "en": "En",
+      "uk": "Ук",
+      "ru": "Ру"
+    },
+    "name": {
+      "en": "English",
+      "uk": "Українська",
+      "ru": "Русский"
+    }
+  },
+  "menu": {
+    "home": "Главная",
+    "mainMenuLabel": "Главное меню",
+    "title": "Milestone Pilot",
+    "sidebarLabel": "Игры",
+    "userManagement": "Управление пользователями",
+    "categories": {
+      "title": "Категории",
+      "administration": "Администрирование"
+    },
+    "user": {
+      "upgrade": "Улучшить до Pro",
+      "subscriptions": "Подписки",
+      "account": "Аккаунт",
+      "settings": "Настройки",
+      "tenants": "Управлять рабочими пространствами",
+      "billing": "Оплата",
+      "notifications": "Уведомления",
+      "profiles": "Профили",
+      "logout": "Выйти",
+      "login": "Войти",
+      "loginDesc": "Доступ к вашему аккаунту"
+    }
+  },
+  "common": {
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "save": "Сохранить",
+    "saving": "Сохранение...",
+    "loading": "Загрузка...",
+    "cancel": "Отмена",
+    "list": {
+      "actions": "Действия",
+      "input": {
+        "keywordSearch": {
+          "placeholder": "Поиск..."
+        }
+      }
+    }
+  },
+  "users": {
+    "backToList": "Назад к пользователям",
+    "form": {
+      "emailLabel": "Email",
+      "emailPlaceholder": "Введите email",
+      "rolePlaceholder": "Выберите роль"
+    }
+  },
+  "tenants": {
+    "title": "Арендаторы",
+    "create": "Создать арендатора",
+    "edit": "Редактировать арендатора",
+    "empty": "Арендаторов не найдено.",
+    "columns": {
+      "name": "Название",
+      "description": "Описание",
+      "timezone": "Часовой пояс",
+      "status": "Статус",
+      "createdAt": "Создан"
+    },
+    "users": {
+      "title": "Пользователи арендатора",
+      "create": "Добавить пользователя",
+      "edit": "Редактировать пользователя",
+      "empty": "Пользователей не найдено.",
+      "columns": {
+        "email": "Email",
+        "firstName": "Имя",
+        "lastName": "Фамилия",
+        "role": "Роль"
+      }
+    },
+    "dialog": {
+      "nameLabel": "Название",
+      "namePlaceholder": "Введите название",
+      "descriptionLabel": "Описание",
+      "descriptionPlaceholder": "Введите описание",
+      "emailLabel": "Email админа",
+      "emailPlaceholder": "Введите email",
+      "addressLabel": "Адрес",
+      "addressPlaceholder": "Введите адрес",
+      "timezoneLabel": "Часовой пояс",
+      "timezoneSearchPlaceholder": "Поиск часового пояса...",
+      "timezonePlaceholder": "Выберите часовой пояс",
+      "currentTimeLabel": "Текущее время",
+      "localeLabel": "Локаль",
+      "localePlaceholder": "Выберите локаль",
+      "statusLabel": "Статус",
+      "statusPlaceholder": "Выберите статус",
+      "statusOptions": {
+        "ACTIVE": "Активен",
+        "SUSPENDED": "Приостановлен",
+        "ARCHIVED": "Архивирован"
+      },
+      "firstNameLabel": "Имя",
+      "firstNamePlaceholder": "Введите имя",
+      "lastNameLabel": "Фамилия",
+      "lastNamePlaceholder": "Введите фамилию",
+      "roleLabel": "Роль"
+    },
+    "notifications": {
+      "createSuccess": "Арендатор успешно создан",
+      "createError": "Не удалось создать арендатора",
+      "updateSuccess": "Арендатор успешно обновлен",
+      "updateError": "Не удалось обновить арендатора",
+      "createUserSuccess": "Пользователь успешно добавлен",
+      "createUserError": "Не удалось добавить пользователя",
+      "updateUserSuccess": "Пользователь успешно обновлен",
+      "updateUserError": "Не удалось обновить пользователя"
+    }
+  },
+  "platformUsers": {
+    "title": "Пользователи платформы",
+    "create": "Создать пользователя платформы",
+    "edit": "Редактировать пользователя платформы",
+    "empty": "Пользователи платформы не найдены.",
+    "loadError": "Не удалось загрузить пользователей платформы.",
+    "notFound": "Пользователь платформы не найден.",
+    "columns": {
+      "email": "Email",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "role": "Роль"
+    },
+    "notifications": {
+      "createSuccess": "Пользователь платформы успешно создан",
+      "createError": "Не удалось создать пользователя платформы",
+      "updateSuccess": "Пользователь платформы успешно обновлен",
+      "updateError": "Не удалось обновить пользователя платформы"
+    }
+  },
+  "pages": {
+    "settings": {
+      "title": "Настройки",
+      "telegramLanguage": {
+        "label": "Язык Telegram-бота"
+      },
+      "webLanguage": {
+        "label": "Язык веб-сайта"
+      },
+      "themeMode": {
+        "label": "Тема"
+      },
+      "notifications": {
+        "updateFail": "Не удалось обновить настройки.",
+        "fetchFail": "Не удалось загрузить настройки.",
+        "saveSuccess": "Настройки успешно сохранены."
+      }
+    },
+    "workspaceMemberships": {
+      "title": "Ваши рабочие пространства",
+      "description": "Выберите, какое рабочее пространство будет активным в текущей сессии и какое станет пространством по умолчанию при следующем входе.",
+      "settingsLabel": "Активное рабочее пространство",
+      "settingsDescription": "Переключайте текущее рабочее пространство или сохраняйте другое по умолчанию, не выходя из аккаунта.",
+      "currentWorkspaceLabel": "Текущее рабочее пространство:",
+      "noActiveWorkspace": "Нет активного рабочего пространства",
+      "activeRoleLabel": "Роль: {{role}}",
+      "platformWorkspace": "Платформа",
+      "loadError": "Не удалось загрузить рабочие пространства.",
+      "empty": "Рабочие пространства не найдены.",
+      "columns": {
+        "workspace": "Рабочее пространство",
+        "role": "Роль",
+        "status": "Статус",
+        "actions": "Действия"
+      },
+      "badges": {
+        "active": "Активный",
+        "default": "По умолчанию"
+      },
+      "actions": {
+        "open": "Управлять рабочими пространствами",
+        "switch": "Переключить",
+        "active": "Активный",
+        "setDefault": "Сделать по умолчанию",
+        "default": "По умолчанию",
+        "backToSettings": "Назад к настройкам"
+      },
+      "notifications": {
+        "switchSuccess": "Рабочее пространство успешно переключено.",
+        "switchError": "Не удалось переключить рабочее пространство.",
+        "defaultSuccess": "Рабочее пространство по умолчанию успешно обновлено.",
+        "defaultError": "Не удалось обновить рабочее пространство по умолчанию."
+      }
+    },
+    "loginPage": {
+      "titlePrompt": "Войдите в свой аккаунт",
+      "identifier": {
+        "label": "Email или Имя пользователя",
+        "placeholder": "Введите ваш email или имя пользователя"
+      },
+      "password": {
+        "label": "Пароль",
+        "placeholder": "Введите ваш пароль",
+        "forgotPasswordLinkText": "Забыли пароль?",
+        "showPasswordLabel": "Показать пароль"
+      },
+      "submitButton": "Войти",
+      "submitButtonLoading": "Выполняется вход...",
+      "notifications": {
+        "submitError": "Мы не можем найти этот email, имя пользователя или пароль. Попробуйте снова."
+      }
+    },
+    "accountSetup": {
+      "titlePrompt": "Установите пароль",
+      "loginPrompt": "Уже есть аккаунт?",
+      "submitButton": "Установить пароль",
+      "submitButtonLoading": "Установка пароля...",
+      "notifications": {
+        "submitSuccess": "Пароль успешно установлен."
+      }
+    },
+    "resetPasswordPage": {
+      "titlePrompt": "Сбросьте пароль",
+      "email": {
+        "label": "Электронная почта",
+        "placeholder": "Введите вашу электронную почту"
+      },
+      "confirmationCode": {
+        "label": "Код сброса",
+        "placeholder": "Введите код сброса",
+        "sendCodeButton": "Отправить код сброса пароля",
+        "sendCodeButtonRe": "Повторно через {{secondsLeft}} с",
+        "sendCodeButtonLoading": "Отправляем код..."
+      },
+      "password": {
+        "label": "Пароль",
+        "placeholder": "Введите ваш пароль",
+        "showPasswordLabel": "Показать пароль"
+      },
+      "confirmPassword": {
+        "label": "Подтвердите пароль",
+        "placeholder": "Подтвердите ваш пароль"
+      },
+      "submitButton": "Сбросить пароль",
+      "submitButtonLoading": "Сброс...",
+      "loginPrompt": "Вспомнили пароль?",
+      "loginLinkText": "Войти",
+      "validation": {
+        "invalidEmail": "Неверный адрес электронной почты",
+        "passwordsMismatch": "Пароли не совпадают"
+      },
+      "notifications": {
+        "submitSuccess": "Пароль успешно сброшен.",
+        "submitError": "Не удалось сбросить пароль. Пожалуйста, попробуйте снова.",
+        "codeSentSuccess": "Код отправлен на вашу электронную почту.",
+        "codeSentError": "Не удалось отправить код."
+      }
+    },
+    "subscriptionPage": {
+      "title": "Подписка",
+      "plan": {
+        "names": {
+          "FREE_TIER": "Free",
+          "BETA_TEST_TIER": "Beta Test",
+          "TIER_1": "Plus"
+        }
+      },
+      "info": {
+        "loading": "Загрузка деталей…",
+        "currentPlan": "Текущий план",
+        "activeUntilLocal": "Активный до",
+        "activeUntilUTC": "Активный до (UTC)",
+        "inactiveHint": "Нет активной подписки. Используйте промокод для активации.",
+        "none": "None",
+        "noDate": "—"
+      },
+      "inputs": {
+        "promoCode": {
+          "label": "Промокод",
+          "placeholder": "Введите промокод из email"
+        }
+      },
+      "buttons": {
+        "generate": {
+          "default": "Запросить промокод",
+          "loading": "Отправка…"
+        },
+        "redeem": {
+          "default": "Активировать",
+          "loading": "Активация…"
+        }
+      },
+      "notifications": {
+        "generate": {
+          "success": "Промокод отправлен.",
+          "infoEmail": "Проверьте email с промокодом.",
+          "error": "Произошла ошибка при отправке промокода."
+        },
+        "redeem": {
+          "success": "Промокод активирован. Ваш доступ активен до {{until}}.",
+          "activated": "Доступ активирован.",
+          "error": "Неверный, использованный или устаревший промокод."
+        }
+      }
+    }
+  },
+  "errors": {
+    "codes": {
+      "TECHNICAL_ERROR": "Случилась техническая ошибка. Пожалуйста, попробуйте ещё раз.",
+      "UNKNOWN": "Увы, что-то пошло не так. Пожалуйста, попробуйте ещё раз.",
+      "INTERNAL_SERVER_ERROR": "Увы, что-то пошло не так. Пожалуйста, попробуйте ещё раз.",
+      "INVALID_CREDENTIALS": "Не удаётся найти этот email или пароль. Попробуйте снова.",
+      "INVALID_VERIFICATION_CODE": "Неверный код подтверждения. Пожалуйста, попробуйте ещё раз.",
+      "PROFILE_NOT_FOUND": "Не удаётся найти этот аккаунт.",
+      "EMAIL_ALREADY_EXISTS": "Email уже зарегистрирован.",
+      "USERNAME_ALREADY_EXISTS": "Username уже зарегистрирован.",
+      "PROFILE_OWNERSHIP_VIOLATION": "Нарушение владения профилем.",
+      "RATE_LIMIT_EXCEEDED": "Слишком много попыток. Попробуйте позже.",
+      "USER_BLOCKED": "Пользователь заблокирован.",
+      "AUTHENTICATION_FAILED": "Ошибка аутентификации.",
+      "TOKEN_NOT_VALID": "Недействительный токен.",
+      "MISSING_COOKIE": "Недействительный или отсутствующий файл cookie.",
+      "INVALID_PROMO_CODE": "Неверный, использованный или устаревший промокод.",
+      "NOT_ACTIVE_PROLONGATION_WINDOW": "Не активный период продления подписки."
+    }
+  }
+}
