@@ -39,6 +39,25 @@ Use TypeScript with 2-space indentation, semicolons, double quotes, trailing com
 
 Vitest runs in a `jsdom` environment with Testing Library setup from `src/setupTests.ts`. Keep tests near the code they cover using `*.test.ts` or `*.test.tsx`; examples already exist in `src/hooks`, `src/lib`, `src/pages`, and `src/features/*/tests`. Prefer the smallest useful test set: first one successful case with all enabled or non-nullable inputs, then one case with only required inputs, then one case per error path only when needed. Focus on production code first; expand coverage only when the user explicitly asks for broader test coverage or when tests are needed to prove correctness.
 
+### End-to-End Tests (Playwright)
+
+E2E tests live in `e2e/` and run with Playwright against the production build talking to the real backend (`milestonepilot-api`, sibling repo, `e2e` Spring profile) — nothing is mocked. The environment contract is `milestonepilot-api/docs/E2E.md`; the "how to run" summary is in `README.md`.
+
+Non-negotiable rules when touching `e2e/`:
+
+- Authenticate via the `identity` fixture from `e2e/fixtures.ts`, never through the login form and never with shared storage-state files (backend refresh tokens are single-use). Exactly one test (`login.spec.ts`) exercises the real login form.
+- Create uniquely-named test data (`uniqueTestEmail()`), assert only on data the test created or on the seeded fixed-UUID entities, and never rely on a clean database — tests must pass with `--repeat-each=3` in parallel.
+- No sleeps: auto-waiting assertions only; a test needing `waitForTimeout` is wrong.
+- Keep the suite small: critical user journeys only. Component behavior belongs in Vitest; API edge cases belong in backend tests.
+
+Detailed, task-specific guidance lives in versioned skills, identical for every assistant (Claude Code: `.claude/skills/`, Junie: `.junie/skills/`, Codex: `.codex/skills/`):
+
+- `playwright-write-test` — writing new E2E journeys, including how to analyze the backend REST API from controller sources (there is no OpenAPI).
+- `playwright-debug-test` — debugging failing/flaky E2E tests, with the catalog of known root causes in this stack.
+- `e2e-environment` — starting, resetting, verifying, and troubleshooting the Dockerized e2e environment.
+
+Claude Code additionally provides the `playwright-test-engineer` subagent (`.claude/agents/`) preloaded with these skills for delegated E2E work.
+
 ## Commit & Pull Request Guidelines
 
 Match the current commit style, for example `feat: GH-30 - Add User Manager API` or `ci: GH-31 - Update pipeline`. Use the format `<type>: GH-<issue> - <short imperative summary>`. PRs should include purpose, linked GitHub issue, test evidence, screenshots for UI changes, and API examples when a contract changes.
