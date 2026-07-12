@@ -339,7 +339,8 @@
       "EMAIL_ATTACHMENT_TOO_LARGE": "Вложение слишком большое для загрузки.",
       "GOOGLE_RATE_LIMITED": "Превышен лимит запросов Google. Попробуйте позже.",
       "GOOGLE_UPSTREAM_ERROR": "Google временно недоступен. Попробуйте позже.",
-      "EMAIL_CONNECTOR_UNAVAILABLE": "Почтовый коннектор временно недоступен."
+      "EMAIL_CONNECTOR_UNAVAILABLE": "Почтовый коннектор временно недоступен.",
+      "FEATURE_DISABLED": "Эта функция не включена для вашего рабочего пространства."
     }
   },
   "tenantIntegrations": {
@@ -387,6 +388,103 @@
       "disableSuccess": "Коннектор отключён.",
       "deleteSuccess": "Коннектор удалён.",
       "actionError": "Действие не выполнено. Попробуйте ещё раз."
+    }
+  },
+  "emailParsingLab": {
+    "title": "Лаборатория разбора писем",
+    "subtitle": "Лаборатория разработчика: ищите письма и тестируйте промпты ИИ-разбора",
+    "connector": "Почтовый ящик",
+    "connectorPlaceholder": "Выберите почтовый ящик",
+    "noConnectors": "Нет активных почтовых подключений. Сначала подключите Gmail на странице интеграций.",
+    "loadError": "У вас нет доступа к разбору писем",
+    "search": {
+      "from": "От",
+      "subject": "Тема",
+      "subjectPlaceholder": "счёт",
+      "query": "Gmail-запрос",
+      "after": "После",
+      "before": "До",
+      "maxResults": "Макс. результатов",
+      "unreadOnly": "Только непрочитанные",
+      "submit": "Поиск",
+      "noResults": "Письма не найдены. Измените фильтры и попробуйте снова.",
+      "notSearchedYet": "Выполните поиск, чтобы загрузить письма."
+    },
+    "emails": {
+      "from": "От",
+      "to": "Кому",
+      "subject": "Тема",
+      "date": "Дата",
+      "loadedCount": "Загружено писем: {{count}}",
+      "pageLabel": "Страница {{page}}",
+      "estimatedTotal": "~{{count}} всего (оценка)"
+    },
+    "pagination": {
+      "previous": "Предыдущая страница",
+      "next": "Следующая страница"
+    },
+    "detail": {
+      "body": "Текст письма",
+      "emptyBody": "(без текстового содержимого)",
+      "truncated": "Текст обрезан"
+    },
+    "parse": {
+      "title": "Разобрать с помощью ИИ",
+      "button": "Разобрать с помощью ИИ",
+      "inProgress": "Разбор…",
+      "systemPromptLabel": "Системный промпт (необязательно)",
+      "systemPromptPlaceholder": "напр. Определи заявку и её общую сумму",
+      "expectedSchemaLabel": "Ожидаемая JSON-схема (необязательно)",
+      "expectedSchemaHint": "Оставьте пустым, чтобы использовать схему, настроенную на сервере. Эта схема будет отправлена с запросом разбора.",
+      "expectedExampleLabel": "Ожидаемый пример JSON (только локально)",
+      "expectedExampleHint": "Используйте пример, чтобы создать редактируемую начальную схему. Пример никогда не отправляется на сервер.",
+      "formatValidate": "Форматировать и проверить",
+      "generateSchema": "Создать схему",
+      "invalidJson": "Введите корректный JSON.",
+      "schemaRootError": "Корень схемы должен быть объектом с type \"object\".",
+      "modelLabel": "Модель ИИ",
+      "modelDefault": "По умолчанию",
+      "modelDefaultNamed": "По умолчанию ({{model}})"
+    },
+    "result": {
+      "status": "Статус",
+      "source": "Источник",
+      "createdAt": "Создано",
+      "attachments": "вложения: {{processed}} обработано, {{skipped}} пропущено",
+      "empty": "(пустой ответ)",
+      "differentEmailHint": "Этот результат относится к другому письму: {{subject}} — {{from}}"
+    },
+    "history": {
+      "title": "История разборов",
+      "empty": "Пока нет результатов. Выберите письмо выше и разберите его с помощью ИИ.",
+      "showingRange": "Показано {{from}}–{{to}} из {{total}}",
+      "filters": {
+        "status": "Статус",
+        "source": "Источник",
+        "from": "От",
+        "subject": "Тема",
+        "createdAfter": "Создано после",
+        "createdBefore": "Создано до",
+        "onlySelected": "Только выбранное письмо",
+        "onlySelectedHint": "(сначала выберите письмо в результатах поиска)",
+        "clear": "Сбросить фильтры",
+        "all": "Все"
+      }
+    },
+    "status": {
+      "PENDING": "В обработке",
+      "COMPLETED": "Завершено",
+      "FAILED": "Ошибка"
+    },
+    "source": {
+      "SCHEDULER": "Планировщик",
+      "MANUAL": "Вручную"
+    },
+    "notifications": {
+      "searchError": "Не удалось выполнить поиск писем",
+      "parseSuccess": "Письмо успешно разобрано",
+      "parseFailed": "Разбор завершился с ошибкой — см. панель результата",
+      "parseError": "Не удалось разобрать письмо"
     }
   }
 }

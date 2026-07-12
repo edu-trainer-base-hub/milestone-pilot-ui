@@ -1,5 +1,16 @@
 import * as React from "react";
-import { Command, LifeBuoy, Mail, Send, SquareTerminal, LogIn, Building2, UserCog, Users } from "lucide-react";
+import {
+  Command,
+  LifeBuoy,
+  Mail,
+  Send,
+  Sparkles,
+  SquareTerminal,
+  LogIn,
+  Building2,
+  UserCog,
+  Users,
+} from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user.tsx";
 import {
   Sidebar,
@@ -18,6 +29,8 @@ import { Link } from "react-router-dom";
 import { NavSecondary } from "@/components/sidebar/nav-secondary";
 import { useTranslation } from "react-i18next";
 import { WorkspaceContextType } from "@/features/workspaces/model/types";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+import { FeatureFlag } from "@/services/FeatureFlagService";
 
 const navSecondaryData = [
   {
@@ -36,10 +49,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation();
   const { principal } = useAuth();
   const { sidebarContent } = useSidebarContext();
+  const { isFeatureEnabled } = useFeatureFlags();
   const canViewPlatformUsers = principal?.authorities?.includes(Authority.UI_PLATFORM_USERS_VIEW);
   const canViewPlatformTenants = principal?.authorities?.includes(Authority.UI_PLATFORM_TENANTS_VIEW);
   const canViewTenantUsers = principal?.authorities?.includes(Authority.UI_TENANT_USERS_VIEW);
   const canViewTenantIntegrations = principal?.authorities?.includes(Authority.UI_TENANT_INTEGRATIONS_VIEW);
+  const emailParsingLabEnabled = isFeatureEnabled(FeatureFlag.EMAIL_PARSING_LAB);
 
   const user = React.useMemo(() => {
     if (!principal) return null;
@@ -144,6 +159,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              {emailParsingLabEnabled && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild tooltip={t("emailParsingLab.title")}>
+                    <Link to="/tenant/integrations/email-parsing-lab">
+                      <Sparkles />
+                      <span>{t("emailParsingLab.title")}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroup>
         )}

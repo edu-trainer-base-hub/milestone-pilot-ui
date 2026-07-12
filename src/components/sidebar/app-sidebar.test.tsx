@@ -36,6 +36,13 @@ vi.mock("@/components/sidebar/nav-user.tsx", () => ({
   NavUser: () => <div>Nav User</div>,
 }));
 
+vi.mock("@/hooks/useFeatureFlags", () => ({
+  useFeatureFlags: () => ({
+    isFeatureEnabled: () => false,
+    isLoading: false,
+  }),
+}));
+
 const renderSidebar = (authorities: string[]) => {
   authMock.state.principal = {
     username: "platform-user",

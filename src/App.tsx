@@ -14,6 +14,9 @@ import { PlatformUsersPage } from "@/features/platform-users/pages/PlatformUsers
 import { TenantsPage } from "@/features/tenant-management/pages/TenantsPage";
 import { TenantUsersPage } from "@/features/tenant-users/pages/TenantUsersPage";
 import { EmailIntegrationsPage } from "@/features/tenant-email-connectors/pages/EmailIntegrationsPage";
+import { EmailParsingLabPage } from "@/features/email-parsing-lab/pages/EmailParsingLabPage";
+import FeatureFlagRoute from "@/components/FeatureFlagRoute";
+import { FeatureFlag } from "@/services/FeatureFlagService";
 import { WorkspaceMembershipsPage } from "@/features/workspaces/pages/WorkspaceMembershipsPage";
 
 import { usePageTitle } from "@/hooks/usePageTitle.ts";
@@ -133,6 +136,9 @@ export default function App() {
             }
           >
             <Route path="tenant/integrations/email" element={<EmailIntegrationsPage />} />
+            <Route element={<FeatureFlagRoute flag={FeatureFlag.EMAIL_PARSING_LAB} />}>
+              <Route path="tenant/integrations/email-parsing-lab" element={<EmailParsingLabPage />} />
+            </Route>
           </Route>
         </Route>
       </Route>

@@ -339,7 +339,8 @@
       "EMAIL_ATTACHMENT_TOO_LARGE": "Вкладення завелике для завантаження.",
       "GOOGLE_RATE_LIMITED": "Перевищено ліміт запитів Google. Спробуйте пізніше.",
       "GOOGLE_UPSTREAM_ERROR": "Google тимчасово недоступний. Спробуйте пізніше.",
-      "EMAIL_CONNECTOR_UNAVAILABLE": "Поштовий конектор тимчасово недоступний."
+      "EMAIL_CONNECTOR_UNAVAILABLE": "Поштовий конектор тимчасово недоступний.",
+      "FEATURE_DISABLED": "Ця функція не увімкнена для вашого робочого простору."
     }
   },
   "tenantIntegrations": {
@@ -387,6 +388,103 @@
       "disableSuccess": "Конектор вимкнено.",
       "deleteSuccess": "Конектор видалено.",
       "actionError": "Дія не виконана. Спробуйте ще раз."
+    }
+  },
+  "emailParsingLab": {
+    "title": "Лабораторія розбору листів",
+    "subtitle": "Лабораторія розробника: шукайте листи та тестуйте промпти ШІ-розбору",
+    "connector": "Поштова скринька",
+    "connectorPlaceholder": "Оберіть поштову скриньку",
+    "noConnectors": "Немає активних поштових підключень. Спершу підключіть Gmail на сторінці інтеграцій.",
+    "loadError": "У вас немає доступу до розбору листів",
+    "search": {
+      "from": "Від",
+      "subject": "Тема",
+      "subjectPlaceholder": "рахунок",
+      "query": "Gmail-запит",
+      "after": "Після",
+      "before": "До",
+      "maxResults": "Макс. результатів",
+      "unreadOnly": "Лише непрочитані",
+      "submit": "Пошук",
+      "noResults": "Листів не знайдено. Змініть фільтри та спробуйте ще раз.",
+      "notSearchedYet": "Виконайте пошук, щоб завантажити листи."
+    },
+    "emails": {
+      "from": "Від",
+      "to": "Кому",
+      "subject": "Тема",
+      "date": "Дата",
+      "loadedCount": "Завантажено листів: {{count}}",
+      "pageLabel": "Сторінка {{page}}",
+      "estimatedTotal": "~{{count}} всього (оцінка)"
+    },
+    "pagination": {
+      "previous": "Попередня сторінка",
+      "next": "Наступна сторінка"
+    },
+    "detail": {
+      "body": "Текст листа",
+      "emptyBody": "(без текстового вмісту)",
+      "truncated": "Текст обрізано"
+    },
+    "parse": {
+      "title": "Розібрати за допомогою ШІ",
+      "button": "Розібрати за допомогою ШІ",
+      "inProgress": "Розбір…",
+      "systemPromptLabel": "Системний промпт (необов'язково)",
+      "systemPromptPlaceholder": "напр. Визнач заявку та її загальну суму",
+      "expectedSchemaLabel": "Очікувана JSON-схема (необов'язково)",
+      "expectedSchemaHint": "Залиште порожнім, щоб використати схему, налаштовану на сервері. Цю схему буде надіслано із запитом на розбір.",
+      "expectedExampleLabel": "Очікуваний приклад JSON (лише локально)",
+      "expectedExampleHint": "Використайте приклад, щоб створити редаговану початкову схему. Приклад ніколи не надсилається на сервер.",
+      "formatValidate": "Форматувати й перевірити",
+      "generateSchema": "Створити схему",
+      "invalidJson": "Введіть дійсний JSON.",
+      "schemaRootError": "Корінь схеми має бути об’єктом із type \"object\".",
+      "modelLabel": "Модель ШІ",
+      "modelDefault": "За замовчуванням",
+      "modelDefaultNamed": "За замовчуванням ({{model}})"
+    },
+    "result": {
+      "status": "Статус",
+      "source": "Джерело",
+      "createdAt": "Створено",
+      "attachments": "вкладення: {{processed}} опрацьовано, {{skipped}} пропущено",
+      "empty": "(порожня відповідь)",
+      "differentEmailHint": "Цей результат належить іншому листу: {{subject}} — {{from}}"
+    },
+    "history": {
+      "title": "Історія розборів",
+      "empty": "Ще немає результатів. Оберіть лист вище та розберіть його за допомогою ШІ.",
+      "showingRange": "Показано {{from}}–{{to}} з {{total}}",
+      "filters": {
+        "status": "Статус",
+        "source": "Джерело",
+        "from": "Від",
+        "subject": "Тема",
+        "createdAfter": "Створено після",
+        "createdBefore": "Створено до",
+        "onlySelected": "Лише обраний лист",
+        "onlySelectedHint": "(спершу оберіть лист у результатах пошуку)",
+        "clear": "Скинути фільтри",
+        "all": "Усі"
+      }
+    },
+    "status": {
+      "PENDING": "В обробці",
+      "COMPLETED": "Завершено",
+      "FAILED": "Помилка"
+    },
+    "source": {
+      "SCHEDULER": "Планувальник",
+      "MANUAL": "Вручну"
+    },
+    "notifications": {
+      "searchError": "Не вдалося виконати пошук листів",
+      "parseSuccess": "Лист успішно розібрано",
+      "parseFailed": "Розбір завершився з помилкою — див. панель результату",
+      "parseError": "Не вдалося розібрати лист"
     }
   }
 }

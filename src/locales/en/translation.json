@@ -339,7 +339,8 @@
       "EMAIL_ATTACHMENT_TOO_LARGE": "The attachment is too large to download.",
       "GOOGLE_RATE_LIMITED": "Google rate limit exceeded. Please try again later.",
       "GOOGLE_UPSTREAM_ERROR": "Google is temporarily unavailable. Please try again later.",
-      "EMAIL_CONNECTOR_UNAVAILABLE": "The email connector is temporarily unavailable."
+      "EMAIL_CONNECTOR_UNAVAILABLE": "The email connector is temporarily unavailable.",
+      "FEATURE_DISABLED": "This feature is not enabled for your workspace."
     }
   },
   "tenantIntegrations": {
@@ -387,6 +388,103 @@
       "disableSuccess": "Connector disabled.",
       "deleteSuccess": "Connector deleted.",
       "actionError": "Action failed. Please try again."
+    }
+  },
+  "emailParsingLab": {
+    "title": "Email Parsing Lab",
+    "subtitle": "Developer lab: search emails and test AI parsing prompts",
+    "connector": "Mailbox",
+    "connectorPlaceholder": "Select a mailbox",
+    "noConnectors": "No active email connectors. Connect a Gmail account on the Email Integrations page first.",
+    "loadError": "You do not have access to email parsing",
+    "search": {
+      "from": "From",
+      "subject": "Subject",
+      "subjectPlaceholder": "invoice",
+      "query": "Gmail query",
+      "after": "After",
+      "before": "Before",
+      "maxResults": "Max results",
+      "unreadOnly": "Unread only",
+      "submit": "Search",
+      "noResults": "No emails found. Adjust the filters and search again.",
+      "notSearchedYet": "Run a search to load emails."
+    },
+    "emails": {
+      "from": "From",
+      "to": "To",
+      "subject": "Subject",
+      "date": "Date",
+      "loadedCount": "{{count}} emails loaded",
+      "pageLabel": "Page {{page}}",
+      "estimatedTotal": "~{{count}} total (estimate)"
+    },
+    "pagination": {
+      "previous": "Previous page",
+      "next": "Next page"
+    },
+    "detail": {
+      "body": "Body",
+      "emptyBody": "(no text content)",
+      "truncated": "Body truncated"
+    },
+    "parse": {
+      "title": "Parse with AI",
+      "button": "Parse with AI",
+      "inProgress": "Parsing…",
+      "systemPromptLabel": "System prompt (optional)",
+      "systemPromptPlaceholder": "e.g. Extract the bid and its total amount",
+      "expectedSchemaLabel": "Expected JSON schema (optional)",
+      "expectedSchemaHint": "Leave empty to use the server-configured schema. This schema is sent with the parse request.",
+      "expectedExampleLabel": "Expected JSON example (local only)",
+      "expectedExampleHint": "Use an example to generate an editable starting schema. The example is never sent to the server.",
+      "formatValidate": "Format & validate",
+      "generateSchema": "Generate schema",
+      "invalidJson": "Enter valid JSON.",
+      "schemaRootError": "The schema root must be an object with type \"object\".",
+      "modelLabel": "AI model",
+      "modelDefault": "Default",
+      "modelDefaultNamed": "Default ({{model}})"
+    },
+    "result": {
+      "status": "Status",
+      "source": "Source",
+      "createdAt": "Created",
+      "attachments": "attachments: {{processed}} processed, {{skipped}} skipped",
+      "empty": "(empty reply)",
+      "differentEmailHint": "This result belongs to a different email: {{subject}} — {{from}}"
+    },
+    "history": {
+      "title": "Parse history",
+      "empty": "No parse results yet. Select an email above and parse it with AI.",
+      "showingRange": "Showing {{from}}–{{to}} of {{total}}",
+      "filters": {
+        "status": "Status",
+        "source": "Source",
+        "from": "From",
+        "subject": "Subject",
+        "createdAfter": "Created after",
+        "createdBefore": "Created before",
+        "onlySelected": "Only selected email",
+        "onlySelectedHint": "(select an email in the search results first)",
+        "clear": "Clear filters",
+        "all": "All"
+      }
+    },
+    "status": {
+      "PENDING": "Pending",
+      "COMPLETED": "Completed",
+      "FAILED": "Failed"
+    },
+    "source": {
+      "SCHEDULER": "Scheduler",
+      "MANUAL": "Manual"
+    },
+    "notifications": {
+      "searchError": "Email search failed",
+      "parseSuccess": "Email parsed successfully",
+      "parseFailed": "Parsing finished with an error — see the result panel",
+      "parseError": "Failed to parse the email"
     }
   }
 }
