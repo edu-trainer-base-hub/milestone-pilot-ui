@@ -62,6 +62,11 @@ build** of this app talking to the **real backend** — nothing is mocked.
 The test code is TypeScript, but a failing API, database, or email flow
 fails the test.
 
+New to E2E testing, or to this suite? Start with the walkthrough in
+[`docs/E2E-GUIDE.md`](./docs/E2E-GUIDE.md) — what these tests are, how to run and
+read them, why every test logs in for itself, and how to match backend log lines
+to the test that caused them.
+
 ### Prerequisites
 
 The backend (`milestonepilot-api`) must be running with its `e2e` profile:

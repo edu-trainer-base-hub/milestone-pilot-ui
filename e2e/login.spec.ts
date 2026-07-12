@@ -2,7 +2,8 @@ import { test, expect } from "@playwright/test";
 import { PLATFORM_ADMIN } from "./helpers/auth";
 
 // The ONE test that exercises the real login UI end-to-end.
-// All other tests authenticate programmatically via storageState (auth.setup.ts).
+// All other tests authenticate programmatically via the identity fixture
+// (e2e/fixtures.ts) — one fresh API login per test, never a shared session.
 test("user can sign in through the login form", async ({ page }) => {
   await page.goto("/login");
 
