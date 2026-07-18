@@ -1,7 +1,7 @@
 export const TenantStatus = {
-    ACTIVE: "ACTIVE",
-    SUSPENDED: "SUSPENDED",
-    ARCHIVED: "ARCHIVED",
+  ACTIVE: "ACTIVE",
+  SUSPENDED: "SUSPENDED",
+  ARCHIVED: "ARCHIVED",
 } as const;
 
 export type TenantStatus = (typeof TenantStatus)[keyof typeof TenantStatus];

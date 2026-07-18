@@ -330,7 +330,63 @@
       "TOKEN_NOT_VALID": "Token not valid.",
       "MISSING_COOKIE": "Invalid or absent cookie.",
       "INVALID_PROMO_CODE": "Invalid or expired promo code.",
-      "NOT_ACTIVE_PROLONGATION_WINDOW": "Not active prolongation window."
+      "NOT_ACTIVE_PROLONGATION_WINDOW": "Not active prolongation window.",
+      "OAUTH_STATE_INVALID": "The connection attempt expired or is invalid. Please try again.",
+      "OAUTH_CALLBACK_ERROR": "Google authorization failed. Please try again.",
+      "EMAIL_CONNECTOR_NOT_FOUND": "Email connector not found.",
+      "EMAIL_CONNECTOR_SCOPE_INSUFFICIENT": "This connector is read-only. Reconnect with read & modify access.",
+      "EMAIL_CONNECTOR_RECONNECT_REQUIRED": "The connector authorization is no longer valid. Please reconnect.",
+      "EMAIL_ATTACHMENT_TOO_LARGE": "The attachment is too large to download.",
+      "GOOGLE_RATE_LIMITED": "Google rate limit exceeded. Please try again later.",
+      "GOOGLE_UPSTREAM_ERROR": "Google is temporarily unavailable. Please try again later.",
+      "EMAIL_CONNECTOR_UNAVAILABLE": "The email connector is temporarily unavailable."
+    }
+  },
+  "tenantIntegrations": {
+    "title": "Email Integrations",
+    "subtitle": "Connect Gmail accounts for your company",
+    "connectGmail": "Connect Gmail",
+    "empty": "No email connectors yet. Connect a Gmail account to get started.",
+    "loadError": "Failed to load email connectors.",
+    "reconnectRequired": "Reconnect required",
+    "columns": {
+      "emailAddress": "Email",
+      "scopeMode": "Access",
+      "status": "Status",
+      "default": "Default",
+      "lastSuccessAt": "Last success",
+      "lastError": "Last error"
+    },
+    "scopeModes": {
+      "GMAIL_READONLY": "Read-only",
+      "GMAIL_MODIFY": "Read & modify"
+    },
+    "statuses": {
+      "ACTIVE": "Active",
+      "REVOKED": "Revoked",
+      "ERROR": "Error",
+      "DISABLED": "Disabled"
+    },
+    "actions": {
+      "setDefault": "Set as default",
+      "disable": "Disable"
+    },
+    "connectDialog": {
+      "title": "Connect Gmail",
+      "description": "Choose which permissions this connector should have.",
+      "readonlyTitle": "Read emails only",
+      "readonlyDescription": "List and read emails and attachments. Cannot change labels or read status.",
+      "modifyTitle": "Read and update emails",
+      "modifyDescription": "Everything in read-only, plus managing labels and marking emails read/unread.",
+      "connect": "Continue to Google"
+    },
+    "notifications": {
+      "connectSuccess": "Gmail account connected.",
+      "connectError": "Failed to start Gmail connection.",
+      "setDefaultSuccess": "Default connector updated.",
+      "disableSuccess": "Connector disabled.",
+      "deleteSuccess": "Connector deleted.",
+      "actionError": "Action failed. Please try again."
     }
   }
 }

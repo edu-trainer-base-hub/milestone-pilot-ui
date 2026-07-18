@@ -330,7 +330,63 @@
       "TOKEN_NOT_VALID": "Недійсний токен.",
       "MISSING_COOKIE": "Недійсний або відсутній cookie.",
       "INVALID_PROMO_CODE": "Невірний, використаний або застарілий промокод.",
-      "NOT_ACTIVE_PROLONGATION_WINDOW": "Не активний період продовження підписки."
+      "NOT_ACTIVE_PROLONGATION_WINDOW": "Не активний період продовження підписки.",
+      "OAUTH_STATE_INVALID": "Спроба підключення прострочена або недійсна. Спробуйте ще раз.",
+      "OAUTH_CALLBACK_ERROR": "Авторизація Google не вдалася. Спробуйте ще раз.",
+      "EMAIL_CONNECTOR_NOT_FOUND": "Поштовий конектор не знайдено.",
+      "EMAIL_CONNECTOR_SCOPE_INSUFFICIENT": "Цей конектор лише для читання. Підключіть його повторно з доступом на зміни.",
+      "EMAIL_CONNECTOR_RECONNECT_REQUIRED": "Авторизація конектора більше не дійсна. Підключіть його повторно.",
+      "EMAIL_ATTACHMENT_TOO_LARGE": "Вкладення завелике для завантаження.",
+      "GOOGLE_RATE_LIMITED": "Перевищено ліміт запитів Google. Спробуйте пізніше.",
+      "GOOGLE_UPSTREAM_ERROR": "Google тимчасово недоступний. Спробуйте пізніше.",
+      "EMAIL_CONNECTOR_UNAVAILABLE": "Поштовий конектор тимчасово недоступний."
+    }
+  },
+  "tenantIntegrations": {
+    "title": "Інтеграції пошти",
+    "subtitle": "Підключіть Gmail-акаунти вашої компанії",
+    "connectGmail": "Підключити Gmail",
+    "empty": "Ще немає підключених поштових акаунтів. Підключіть Gmail, щоб почати.",
+    "loadError": "Не вдалося завантажити поштові конектори.",
+    "reconnectRequired": "Потрібне повторне підключення",
+    "columns": {
+      "emailAddress": "Email",
+      "scopeMode": "Доступ",
+      "status": "Статус",
+      "default": "Основний",
+      "lastSuccessAt": "Останній успіх",
+      "lastError": "Остання помилка"
+    },
+    "scopeModes": {
+      "GMAIL_READONLY": "Лише читання",
+      "GMAIL_MODIFY": "Читання та зміни"
+    },
+    "statuses": {
+      "ACTIVE": "Активний",
+      "REVOKED": "Відкликаний",
+      "ERROR": "Помилка",
+      "DISABLED": "Вимкнений"
+    },
+    "actions": {
+      "setDefault": "Зробити основним",
+      "disable": "Вимкнути"
+    },
+    "connectDialog": {
+      "title": "Підключення Gmail",
+      "description": "Оберіть, які дозволи матиме цей конектор.",
+      "readonlyTitle": "Лише читання листів",
+      "readonlyDescription": "Перегляд і читання листів та вкладень. Без зміни міток і статусу прочитання.",
+      "modifyTitle": "Читання та оновлення листів",
+      "modifyDescription": "Усе з режиму читання, а також керування мітками та позначення листів прочитаними/непрочитаними.",
+      "connect": "Продовжити в Google"
+    },
+    "notifications": {
+      "connectSuccess": "Gmail-акаунт підключено.",
+      "connectError": "Не вдалося розпочати підключення Gmail.",
+      "setDefaultSuccess": "Основний конектор оновлено.",
+      "disableSuccess": "Конектор вимкнено.",
+      "deleteSuccess": "Конектор видалено.",
+      "actionError": "Дія не виконана. Спробуйте ще раз."
     }
   }
 }

@@ -330,7 +330,63 @@
       "TOKEN_NOT_VALID": "Недействительный токен.",
       "MISSING_COOKIE": "Недействительный или отсутствующий файл cookie.",
       "INVALID_PROMO_CODE": "Неверный, использованный или устаревший промокод.",
-      "NOT_ACTIVE_PROLONGATION_WINDOW": "Не активный период продления подписки."
+      "NOT_ACTIVE_PROLONGATION_WINDOW": "Не активный период продления подписки.",
+      "OAUTH_STATE_INVALID": "Попытка подключения устарела или недействительна. Попробуйте ещё раз.",
+      "OAUTH_CALLBACK_ERROR": "Авторизация Google не удалась. Попробуйте ещё раз.",
+      "EMAIL_CONNECTOR_NOT_FOUND": "Почтовый коннектор не найден.",
+      "EMAIL_CONNECTOR_SCOPE_INSUFFICIENT": "Этот коннектор доступен только для чтения. Переподключите его с правом изменений.",
+      "EMAIL_CONNECTOR_RECONNECT_REQUIRED": "Авторизация коннектора больше не действительна. Переподключите его.",
+      "EMAIL_ATTACHMENT_TOO_LARGE": "Вложение слишком большое для загрузки.",
+      "GOOGLE_RATE_LIMITED": "Превышен лимит запросов Google. Попробуйте позже.",
+      "GOOGLE_UPSTREAM_ERROR": "Google временно недоступен. Попробуйте позже.",
+      "EMAIL_CONNECTOR_UNAVAILABLE": "Почтовый коннектор временно недоступен."
+    }
+  },
+  "tenantIntegrations": {
+    "title": "Интеграции почты",
+    "subtitle": "Подключите Gmail-аккаунты вашей компании",
+    "connectGmail": "Подключить Gmail",
+    "empty": "Пока нет подключённых почтовых аккаунтов. Подключите Gmail, чтобы начать.",
+    "loadError": "Не удалось загрузить почтовые коннекторы.",
+    "reconnectRequired": "Требуется повторное подключение",
+    "columns": {
+      "emailAddress": "Email",
+      "scopeMode": "Доступ",
+      "status": "Статус",
+      "default": "Основной",
+      "lastSuccessAt": "Последний успех",
+      "lastError": "Последняя ошибка"
+    },
+    "scopeModes": {
+      "GMAIL_READONLY": "Только чтение",
+      "GMAIL_MODIFY": "Чтение и изменения"
+    },
+    "statuses": {
+      "ACTIVE": "Активный",
+      "REVOKED": "Отозван",
+      "ERROR": "Ошибка",
+      "DISABLED": "Отключён"
+    },
+    "actions": {
+      "setDefault": "Сделать основным",
+      "disable": "Отключить"
+    },
+    "connectDialog": {
+      "title": "Подключение Gmail",
+      "description": "Выберите, какие разрешения будет иметь этот коннектор.",
+      "readonlyTitle": "Только чтение писем",
+      "readonlyDescription": "Просмотр и чтение писем и вложений. Без изменения меток и статуса прочтения.",
+      "modifyTitle": "Чтение и обновление писем",
+      "modifyDescription": "Всё из режима чтения, а также управление метками и отметка писем прочитанными/непрочитанными.",
+      "connect": "Продолжить в Google"
+    },
+    "notifications": {
+      "connectSuccess": "Gmail-аккаунт подключён.",
+      "connectError": "Не удалось начать подключение Gmail.",
+      "setDefaultSuccess": "Основной коннектор обновлён.",
+      "disableSuccess": "Коннектор отключён.",
+      "deleteSuccess": "Коннектор удалён.",
+      "actionError": "Действие не выполнено. Попробуйте ещё раз."
     }
   }
 }

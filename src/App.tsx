@@ -13,6 +13,7 @@ import { PlatformUserUpsertPage } from "@/features/platform-users/pages/Platform
 import { PlatformUsersPage } from "@/features/platform-users/pages/PlatformUsersPage";
 import { TenantsPage } from "@/features/tenant-management/pages/TenantsPage";
 import { TenantUsersPage } from "@/features/tenant-users/pages/TenantUsersPage";
+import { EmailIntegrationsPage } from "@/features/tenant-email-connectors/pages/EmailIntegrationsPage";
 import { WorkspaceMembershipsPage } from "@/features/workspaces/pages/WorkspaceMembershipsPage";
 
 import { usePageTitle } from "@/hooks/usePageTitle.ts";
@@ -121,6 +122,17 @@ export default function App() {
           >
             <Route path="tenant/users" element={<TenantUsersPage />} />
             <Route path="platform/tenants/:tenantId/users" element={<TenantUsersPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthorityRoute
+                authority={[Authority.TENANT_INTEGRATIONS_READ]}
+                allAuthorities={[Authority.UI_TENANT_INTEGRATIONS_VIEW]}
+              />
+            }
+          >
+            <Route path="tenant/integrations/email" element={<EmailIntegrationsPage />} />
           </Route>
         </Route>
       </Route>

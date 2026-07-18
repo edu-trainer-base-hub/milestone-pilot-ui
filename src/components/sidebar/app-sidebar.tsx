@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Command, LifeBuoy, Send, SquareTerminal, LogIn, Building2, UserCog, Users } from "lucide-react";
+import { Command, LifeBuoy, Mail, Send, SquareTerminal, LogIn, Building2, UserCog, Users } from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user.tsx";
 import {
   Sidebar,
@@ -39,6 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const canViewPlatformUsers = principal?.authorities?.includes(Authority.UI_PLATFORM_USERS_VIEW);
   const canViewPlatformTenants = principal?.authorities?.includes(Authority.UI_PLATFORM_TENANTS_VIEW);
   const canViewTenantUsers = principal?.authorities?.includes(Authority.UI_TENANT_USERS_VIEW);
+  const canViewTenantIntegrations = principal?.authorities?.includes(Authority.UI_TENANT_INTEGRATIONS_VIEW);
 
   const user = React.useMemo(() => {
     if (!principal) return null;
@@ -125,6 +126,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Link to="/tenant/users">
                     <Users />
                     <span>{t("tenants.users.title")}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+        )}
+
+        {canViewTenantIntegrations && (
+          <SidebarGroup>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={t("tenantIntegrations.title")}>
+                  <Link to="/tenant/integrations/email">
+                    <Mail />
+                    <span>{t("tenantIntegrations.title")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
