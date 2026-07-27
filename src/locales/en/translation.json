@@ -444,7 +444,8 @@
       "schemaRootError": "The schema root must be an object with type \"object\".",
       "modelLabel": "AI model",
       "modelDefault": "Default",
-      "modelDefaultNamed": "Default ({{model}})"
+      "modelDefaultNamed": "Default ({{model}})",
+      "charCount": "{{count}} / {{max}}"
     },
     "result": {
       "status": "Status",

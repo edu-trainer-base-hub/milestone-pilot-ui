@@ -21,6 +21,10 @@ interface ParsePanelProps {
   /** Allowed model overrides; empty hides the picker. */
   aiModels: string[];
   defaultAiModel: string | null;
+  /** Configured max length (chars) for the system prompt override. */
+  maxSystemPromptChars: number;
+  /** Configured max length (chars) for the expected JSON schema override. */
+  maxSchemaChars: number;
   result: EmailParseResultResponse | null;
   onParse: (request: ParseEmailRequest) => void;
 }
@@ -60,6 +64,8 @@ export const ParsePanel: React.FC<ParsePanelProps> = ({
   selectedMessageId,
   aiModels,
   defaultAiModel,
+  maxSystemPromptChars,
+  maxSchemaChars,
   result,
   onParse,
 }) => {
@@ -136,13 +142,16 @@ export const ParsePanel: React.FC<ParsePanelProps> = ({
         <textarea
           id="parse-system-prompt"
           rows={2}
-          maxLength={2000}
+          maxLength={maxSystemPromptChars}
           className={textareaClassName}
           value={systemPrompt}
           onChange={(e) => setSystemPrompt(e.target.value)}
           placeholder={t("emailParsingLab.parse.systemPromptPlaceholder")}
           disabled={!canParse || parsing}
         />
+        <p className="text-xs text-muted-foreground text-right">
+          {t("emailParsingLab.parse.charCount", { count: systemPrompt.length, max: maxSystemPromptChars })}
+        </p>
       </div>
 
       <div className="space-y-2">
@@ -150,13 +159,16 @@ export const ParsePanel: React.FC<ParsePanelProps> = ({
         <textarea
           id="parse-expected-schema"
           rows={6}
-          maxLength={4000}
+          maxLength={maxSchemaChars}
           className={textareaClassName}
           value={expectedJsonSchema}
           onChange={(e) => setExpectedJsonSchema(e.target.value)}
           placeholder={EXPECTED_SCHEMA_PLACEHOLDER}
           disabled={!canParse || parsing}
         />
+        <p className="text-xs text-muted-foreground text-right">
+          {t("emailParsingLab.parse.charCount", { count: expectedJsonSchema.length, max: maxSchemaChars })}
+        </p>
         <Button type="button" variant="outline" size="sm" onClick={formatSchema} disabled={!canParse || parsing}>
           {t("emailParsingLab.parse.formatValidate")}
         </Button>

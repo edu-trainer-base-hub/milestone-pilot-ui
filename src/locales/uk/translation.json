@@ -444,7 +444,8 @@
       "schemaRootError": "Корінь схеми має бути об’єктом із type \"object\".",
       "modelLabel": "Модель ШІ",
       "modelDefault": "За замовчуванням",
-      "modelDefaultNamed": "За замовчуванням ({{model}})"
+      "modelDefaultNamed": "За замовчуванням ({{model}})",
+      "charCount": "{{count}} / {{max}}"
     },
     "result": {
       "status": "Статус",
