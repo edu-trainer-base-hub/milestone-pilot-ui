@@ -91,7 +91,12 @@ beforeEach(() => {
     size: 10,
     totalElements: 1,
   });
-  vi.mocked(getAiModels).mockResolvedValue({ models: [], defaultModel: null });
+  vi.mocked(getAiModels).mockResolvedValue({
+    models: [],
+    defaultModel: null,
+    maxSystemPromptChars: 20000,
+    maxSchemaChars: 20000,
+  });
   vi.mocked(searchEmails).mockImplementation((_uuid: string, request: SearchEmailsRequest) => {
     if (request.pageToken === "tok2") {
       return Promise.resolve({

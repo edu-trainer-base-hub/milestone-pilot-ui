@@ -24,6 +24,10 @@ import { ParseHistoryFiltersBar } from "../components/ParseHistoryFiltersBar";
 import { ParseHistoryTable } from "../components/ParseHistoryTable";
 
 const HISTORY_PAGE_SIZE = 10;
+// Fallback while the /ai-models query (which also carries the configured prompt/schema
+// length limits) is still loading, so the fields aren't briefly unbounded.
+const DEFAULT_MAX_PROMPT_CHARS = 20_000;
+const DEFAULT_MAX_SCHEMA_CHARS = 20_000;
 
 /**
  * Gmail paging is token-based (no absolute page numbers): `tokenStack[i]` is the pageToken
@@ -261,6 +265,8 @@ export const EmailParsingLabPage: React.FC = () => {
               selectedMessageId={selectedMessage?.providerMessageId ?? null}
               aiModels={aiModels?.models ?? []}
               defaultAiModel={aiModels?.defaultModel ?? null}
+              maxSystemPromptChars={aiModels?.maxSystemPromptChars ?? DEFAULT_MAX_PROMPT_CHARS}
+              maxSchemaChars={aiModels?.maxSchemaChars ?? DEFAULT_MAX_SCHEMA_CHARS}
               result={displayedResult}
               onParse={(request) => parseMutation.mutate(request)}
             />

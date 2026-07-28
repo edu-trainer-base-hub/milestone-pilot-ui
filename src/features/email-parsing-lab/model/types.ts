@@ -88,6 +88,10 @@ export interface AiModelsResponse {
   models: string[];
   /** Model used when no override is requested; null when the provider default applies. */
   defaultModel: string | null;
+  /** Configured max length (chars) for a per-parse system prompt override. */
+  maxSystemPromptChars: number;
+  /** Configured max length (chars) for a per-parse expected JSON schema override. */
+  maxSchemaChars: number;
 }
 
 /** Optional parse-history filters — all omitted means the full history for the connector. */

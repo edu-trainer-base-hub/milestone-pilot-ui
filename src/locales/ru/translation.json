@@ -444,7 +444,8 @@
       "schemaRootError": "Корень схемы должен быть объектом с type \"object\".",
       "modelLabel": "Модель ИИ",
       "modelDefault": "По умолчанию",
-      "modelDefaultNamed": "По умолчанию ({{model}})"
+      "modelDefaultNamed": "По умолчанию ({{model}})",
+      "charCount": "{{count}} / {{max}}"
     },
     "result": {
       "status": "Статус",

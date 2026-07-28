@@ -33,6 +33,8 @@ const baseProps = {
   selectedMessageId: "m1" as string | null,
   aiModels: [] as string[],
   defaultAiModel: null as string | null,
+  maxSystemPromptChars: 20000,
+  maxSchemaChars: 20000,
   result: null as EmailParseResultResponse | null,
   onParse: vi.fn(),
 };
@@ -119,5 +121,18 @@ describe("ParsePanel", () => {
 
     expect(screen.queryByText(/This result belongs to a different email/)).not.toBeInTheDocument();
     expect(screen.getByText("Completed")).toBeInTheDocument();
+  });
+
+  it("drives the textarea maxLength and live character count from the configured limits, not a hardcoded number", () => {
+    render(<ParsePanel {...baseProps} maxSystemPromptChars={30000} maxSchemaChars={45000} />);
+
+    expect(screen.getByLabelText("System prompt (optional)")).toHaveAttribute("maxLength", "30000");
+    expect(screen.getByLabelText("Expected JSON schema (optional)")).toHaveAttribute("maxLength", "45000");
+    expect(screen.getByText("0 / 30000")).toBeInTheDocument();
+    expect(screen.getByText("0 / 45000")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("System prompt (optional)"), { target: { value: "Extract the bid" } });
+
+    expect(screen.getByText("15 / 30000")).toBeInTheDocument();
   });
 });
