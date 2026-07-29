@@ -7,6 +7,8 @@ import { get } from "@/services/ApiService";
 export const FeatureFlag = {
   EMAIL_PARSING_LAB: "EMAIL_PARSING_LAB",
   EMAIL_PARSING_LAB_SCHEDULER: "EMAIL_PARSING_LAB_SCHEDULER",
+  BID_MANAGEMENT: "BID_MANAGEMENT",
+  BID_EMAIL_PROCESSING_SCHEDULER: "BID_EMAIL_PROCESSING_SCHEDULER",
 } as const;
 
 export type FeatureFlag = (typeof FeatureFlag)[keyof typeof FeatureFlag];

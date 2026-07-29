@@ -486,6 +486,235 @@
       "parseSuccess": "Email parsed successfully",
       "parseFailed": "Parsing finished with an error — see the result panel",
       "parseError": "Failed to parse the email"
+    },
+    "bidProcessing": {
+      "title": "Production bid processing",
+      "action": "Process bid",
+      "processing": "Processing…",
+      "duplicate": "This message was processed previously.",
+      "viewBid": "View bid",
+      "viewReview": "View review",
+      "viewRun": "View parsing run",
+      "outcomes": {
+        "REGISTERED": "Message registered",
+        "PARSED": "Message parsed",
+        "NOT_A_BID": "No bid opportunity identified",
+        "BID_CREATED": "Bid created",
+        "EXACT_MATCH": "Existing bid matched",
+        "REVIEW_REQUESTED": "Update review created",
+        "SAFE_UPDATES_APPLIED": "Safe updates applied",
+        "AMBIGUOUS_MATCH": "Bid match requires review",
+        "FAILED": "Processing failed"
+      },
+      "notifications": {
+        "REGISTERED": "Message registered",
+        "PARSED": "Bid email parsed",
+        "NOT_A_BID": "No bid identified",
+        "BID_CREATED": "Bid created",
+        "EXACT_MATCH": "Existing bid matched",
+        "REVIEW_REQUESTED": "Review request created",
+        "SAFE_UPDATES_APPLIED": "Safe updates applied",
+        "AMBIGUOUS_MATCH": "Correlation review required",
+        "FAILED": "Bid processing failed",
+        "error": "Failed to process the bid email"
+      }
     }
+  },
+  "bids": {
+    "title": "Bids",
+    "subtitle": "Track opportunities, deadlines, email evidence, and review decisions.",
+    "create": "Create bid",
+    "createDescription": "Create a bid manually. Email-derived bids are created from the parsing lab.",
+    "search": "Search bids",
+    "empty": "No bids match the current filters.",
+    "notFound": "Bid not found.",
+    "noIssuer": "Issuer not specified",
+    "reviewRequests": "Update reviews",
+    "parsingHistory": "Parsing history",
+    "backToBid": "Back to bid",
+    "noTimeline": "No activity yet.",
+    "noEvidence": "No source email evidence yet.",
+    "untitledEmail": "Untitled email",
+    "attachment": "Attachment",
+    "selectTransition": "Select next status",
+    "applyTransition": "Apply transition",
+    "navigation": { "group": "Bid management" },
+    "dashboard": {
+      "open": "Open",
+      "dueSoon": "Due soon",
+      "overdue": "Overdue",
+      "pendingReview": "Pending review",
+      "submitted": "Submitted",
+      "awarded": "Awarded",
+      "parsingFailures": "Parse failures"
+    },
+    "filters": { "allStatuses": "All statuses" },
+    "fields": {
+      "projectName": "Project",
+      "status": "Status",
+      "priority": "Priority",
+      "issuer": "Issuer",
+      "issuerCompanyName": "Issuer",
+      "deadline": "Bid deadline",
+      "bidDueAt": "Bid deadline",
+      "review": "Review",
+      "updated": "Updated",
+      "scope": "Scope summary",
+      "scopeSummary": "Scope summary",
+      "managerNotes": "Manager notes",
+      "projectNumber": "Project number",
+      "solicitation": "Solicitation number",
+      "solicitationNumber": "Solicitation number",
+      "submission": "Submission",
+      "submissionEmail": "Submission email",
+      "submissionUrl": "Submission URL",
+      "submissionMethod": "Submission method",
+      "projectDescription": "Project description",
+      "bidPackage": "Bid package",
+      "trades": "Trades",
+      "externalPlatform": "External platform",
+      "externalOpportunityId": "External opportunity ID",
+      "primaryContactName": "Primary contact",
+      "primaryContactEmail": "Contact email",
+      "primaryContactPhone": "Contact phone",
+      "anticipatedStartDate": "Anticipated start",
+      "anticipatedCompletionDate": "Anticipated completion"
+    },
+    "sections": {
+      "overview": "Accepted bid details",
+      "lifecycle": "Lifecycle",
+      "timeline": "Timeline",
+      "evidence": "Source email evidence",
+      "audit": "Technical audit"
+    },
+    "status": {
+      "NEW": "New",
+      "QUALIFYING": "Qualifying",
+      "PURSUING": "Pursuing",
+      "NOT_PURSUING": "Not pursuing",
+      "PREPARING": "Preparing",
+      "READY_TO_SUBMIT": "Ready to submit",
+      "SUBMITTED": "Submitted",
+      "AWARDED": "Awarded",
+      "LOST": "Lost",
+      "EXPIRED": "Expired",
+      "CANCELLED": "Cancelled",
+      "ARCHIVED": "Archived"
+    },
+    "priority": { "LOW": "Low", "NORMAL": "Normal", "HIGH": "High", "URGENT": "Urgent" },
+    "review": {
+      "NONE": "No review",
+      "REVIEW_REQUIRED": "Review required",
+      "IN_REVIEW": "In review"
+    },
+    "actor": { "USER": "User", "SYSTEM": "System", "UNKNOWN": "Unknown actor" },
+    "sourceType": {
+      "EMAIL_PARSE": "Email parse",
+      "MANAGER_EDIT": "Manager override",
+      "REVIEW_ACCEPTED": "Accepted in review"
+    },
+    "extraction": {
+      "EXTRACTED": "Text extracted",
+      "IMAGE_ATTACHED": "Image analyzed",
+      "UNSUPPORTED": "Unsupported",
+      "TOO_LARGE": "Too large",
+      "EMPTY": "Empty",
+      "FAILED": "Extraction failed",
+      "SKIPPED_LIMIT": "Skipped by limit"
+    },
+    "skipReason": {
+      "ATTACHMENT_TOO_LARGE": "Attachment exceeds the configured size limit",
+      "MIME_TYPE_NOT_ALLOWED": "Attachment type is not supported",
+      "ATTACHMENTS_DISABLED": "Attachments were excluded from this run"
+    },
+    "notifications": {
+      "created": "Bid created",
+      "createError": "Failed to create bid",
+      "updated": "Bid updated",
+      "updateError": "Failed to update bid",
+      "transitioned": "Bid status updated",
+      "stale": "The bid changed. Latest data has been loaded."
+    }
+  },
+  "bidUpdates": {
+    "title": "Bid update reviews",
+    "subtitle": "Review field changes and ambiguous bid correlations proposed from email.",
+    "type": "Type",
+    "correlation": "Correlation",
+    "created": "Created",
+    "reviewTitle": "Review request",
+    "select": "Select a review request",
+    "chooseCandidate": "Choose the bid that this email belongs to.",
+    "current": "Current value",
+    "proposed": "Proposed value",
+    "customValue": "Custom value",
+    "reject": "Reject request",
+    "apply": "Apply resolutions",
+    "status": { "PENDING": "Pending", "APPLIED": "Applied", "REJECTED": "Rejected" },
+    "correlationResult": {
+      "NO_MATCH": "No match",
+      "EXACT_MATCH": "Exact match",
+      "HIGH_CONFIDENCE_MATCH": "High-confidence candidate",
+      "AMBIGUOUS_MATCH": "Ambiguous match"
+    },
+    "resolution": {
+      "ACCEPT_PROPOSED": "Accept proposed",
+      "KEEP_CURRENT": "Keep current",
+      "USE_CUSTOM": "Use custom value"
+    },
+    "requestType": { "FIELD_CHANGES": "Field changes", "CORRELATION": "Correlation review" },
+    "conflict": {
+      "NULL_FILL": "Missing current value",
+      "DIFFERING_VALUE": "Conflicting value",
+      "MANUAL_OVERRIDE": "Manager override",
+      "AMBIGUOUS_TIME": "Ambiguous time zone",
+      "LIFECYCLE_CHANGE": "Lifecycle change",
+      "CORRELATION_REVIEW": "Correlation review"
+    },
+    "notifications": {
+      "stale": "The request changed. Latest data has been loaded.",
+      "error": "Failed to update the review request",
+      "applied": "Review applied",
+      "rejected": "Review rejected",
+      "correlationResolved": "Correlation resolved"
+    }
+  },
+  "bidParsing": {
+    "title": "Bid parsing runs",
+    "subtitle": "Inspect production parsing outcomes, warnings, and normalized results.",
+    "allStatuses": "All statuses",
+    "statusLabel": "Status",
+    "type": "Message type",
+    "model": "Model",
+    "created": "Created",
+    "detail": "Parsing run",
+    "select": "Select a parsing run",
+    "truncated": "Input truncated",
+    "provider": "Provider",
+    "duration": "Duration",
+    "attachments": "Attachments processed / skipped",
+    "retry": "Retry with current configuration",
+    "status": {
+      "PROCESSING": "Processing",
+      "COMPLETED": "Completed",
+      "NOT_A_BID": "Not a bid",
+      "PROVIDER_FAILED": "Provider failed",
+      "SCHEMA_VALIDATION_FAILED": "Schema validation failed",
+      "VALIDATION_FAILED": "Validation failed"
+    },
+    "messageType": {
+      "INITIAL_INVITATION": "Initial invitation",
+      "ADDENDUM": "Addendum",
+      "DEADLINE_CHANGE": "Deadline change",
+      "REMINDER": "Reminder",
+      "CLARIFICATION": "Clarification",
+      "PROPOSAL": "Proposal",
+      "AWARD_NOTICE": "Award notice",
+      "LOSS_NOTICE": "Loss notice",
+      "CANCELLATION": "Cancellation",
+      "OTHER_CORRESPONDENCE": "Other correspondence",
+      "NOT_A_BID": "Not a bid"
+    },
+    "notifications": { "retried": "Parsing retried", "error": "Failed to retry parsing" }
   }
 }

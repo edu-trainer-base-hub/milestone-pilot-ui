@@ -61,6 +61,10 @@ export interface EmailMessageResponse {
   from: string | null;
   to: string | null;
   cc: string | null;
+  replyTo?: string | null;
+  internetMessageId?: string | null;
+  inReplyTo?: string | null;
+  references?: string[];
   subject: string | null;
   dateHeader: string | null;
   snippet: string | null;

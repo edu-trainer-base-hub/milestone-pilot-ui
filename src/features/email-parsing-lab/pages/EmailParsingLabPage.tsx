@@ -22,6 +22,14 @@ import { EmailDetailPanel } from "../components/EmailDetailPanel";
 import { ParsePanel } from "../components/ParsePanel";
 import { ParseHistoryFiltersBar } from "../components/ParseHistoryFiltersBar";
 import { ParseHistoryTable } from "../components/ParseHistoryTable";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
+import { Authority } from "@/contexts/AuthContext";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+import { FeatureFlag } from "@/services/FeatureFlagService";
+import { processBidEmail } from "@/features/bids/api/bidParsing";
+import type { BidEmailProcessingResult } from "@/features/bids/model/parsing-types";
 
 const HISTORY_PAGE_SIZE = 10;
 // Fallback while the /ai-models query (which also carries the configured prompt/schema
@@ -53,11 +61,14 @@ export const EmailParsingLabPage: React.FC = () => {
   const { t } = useTranslation();
   const { principal } = useAuth();
   const queryClient = useQueryClient();
+  const { isFeatureEnabled } = useFeatureFlags();
 
   const tenantId = principal?.activeTenantUuid ?? null;
   const authorities = principal?.authorities ?? [];
   const canView = canViewEmailParsingLab(authorities);
   const canParse = canParseEmails(authorities);
+  const canProcessBid =
+    authorities.includes(Authority.TENANT_BIDS_PROCESS_EMAIL) && isFeatureEnabled(FeatureFlag.BID_MANAGEMENT);
 
   const [connectorUuid, setConnectorUuid] = useState<string | null>(null);
   const [messages, setMessages] = useState<EmailMessageResponse[]>([]);
@@ -67,6 +78,7 @@ export const EmailParsingLabPage: React.FC = () => {
   const [historyPage, setHistoryPage] = useState(0);
   const [historyFilters, setHistoryFilters] = useState<ParseHistoryFilters>({});
   const [onlySelected, setOnlySelected] = useState(false);
+  const [bidProcessingResult, setBidProcessingResult] = useState<BidEmailProcessingResult | null>(null);
 
   const { data: connectors = [] } = useQuery({
     queryKey: ["emailConnectors", tenantId],
@@ -190,12 +202,30 @@ export const EmailParsingLabPage: React.FC = () => {
     },
   });
 
+  const processBidMutation = useMutation({
+    mutationFn: () =>
+      processBidEmail(
+        connectorUuid as string,
+        (selectedMessage as EmailMessageResponse).providerMessageId,
+        "AUTO_SAFE"
+      ),
+    onSuccess: (result) => {
+      setBidProcessingResult(result);
+      notifier.success(t(`emailParsingLab.bidProcessing.notifications.${result.decision}`, result.decision));
+      void queryClient.invalidateQueries({ queryKey: ["bids"] });
+      void queryClient.invalidateQueries({ queryKey: ["bid-update-requests"] });
+      void queryClient.invalidateQueries({ queryKey: ["bid-parsing-runs"] });
+    },
+    onError: () => notifier.error(t("emailParsingLab.bidProcessing.notifications.error")),
+  });
+
   const handleConnectorChange = (uuid: string) => {
     setConnectorUuid(uuid);
     setMessages([]);
     setSearchState(null);
     setSelectedMessage(null);
     setDisplayedResult(null);
+    setBidProcessingResult(null);
     setHistoryPage(0);
     setOnlySelected(false);
   };
@@ -256,6 +286,56 @@ export const EmailParsingLabPage: React.FC = () => {
                 onSelect={handleSelectMessage}
               />
               {selectedMessage && <EmailDetailPanel message={selectedMessage} />}
+              {selectedMessage && canProcessBid && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>{t("emailParsingLab.bidProcessing.title")}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button disabled={processBidMutation.isPending} onClick={() => processBidMutation.mutate()}>
+                      {processBidMutation.isPending
+                        ? t("emailParsingLab.bidProcessing.processing")
+                        : t("emailParsingLab.bidProcessing.action")}
+                    </Button>
+                    {bidProcessingResult && (
+                      <div className="space-y-2 rounded-md border p-3 text-sm">
+                        <div className="font-medium">
+                          {t(
+                            `emailParsingLab.bidProcessing.outcomes.${bidProcessingResult.decision}`,
+                            bidProcessingResult.decision
+                          )}
+                        </div>
+                        {bidProcessingResult.duplicate && (
+                          <div className="text-muted-foreground">{t("emailParsingLab.bidProcessing.duplicate")}</div>
+                        )}
+                        <div className="flex flex-wrap gap-2">
+                          {bidProcessingResult.bidUuid && (
+                            <Button size="sm" variant="outline" asChild>
+                              <Link to={`/tenant/bids/${bidProcessingResult.bidUuid}`}>
+                                {t("emailParsingLab.bidProcessing.viewBid")}
+                              </Link>
+                            </Button>
+                          )}
+                          {bidProcessingResult.updateRequestUuid && (
+                            <Button size="sm" variant="outline" asChild>
+                              <Link
+                                to={`/tenant/bid-update-requests?requestUuid=${bidProcessingResult.updateRequestUuid}`}
+                              >
+                                {t("emailParsingLab.bidProcessing.viewReview")}
+                              </Link>
+                            </Button>
+                          )}
+                          <Button size="sm" variant="outline" asChild>
+                            <Link to={`/tenant/bid-parsing-runs?runUuid=${bidProcessingResult.parsingRunUuid}`}>
+                              {t("emailParsingLab.bidProcessing.viewRun")}
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             <ParsePanel
