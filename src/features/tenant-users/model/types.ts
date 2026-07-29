@@ -25,6 +25,7 @@ export const TenantRole = {
   ROLE_TENANT_ADMIN: "ROLE_TENANT_ADMIN",
   ROLE_TENANT_MANAGER: "ROLE_TENANT_MANAGER",
   ROLE_TENANT_USER: "ROLE_TENANT_USER",
+  ROLE_TENANT_BID_MANAGER: "ROLE_TENANT_BID_MANAGER",
 } as const;
 
 export type TenantRole = (typeof TenantRole)[keyof typeof TenantRole];

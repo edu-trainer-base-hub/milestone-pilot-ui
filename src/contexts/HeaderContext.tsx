@@ -1,11 +1,35 @@
 import React from "react";
 
+export type PageHeaderConfig = {
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  actions?: React.ReactNode;
+};
+
 export type HeaderContextType = {
   setHeader: (node: React.ReactNode | null) => void;
   setHeaderVisible: (visible: boolean) => void;
+  setPageHeader?: (config: PageHeaderConfig | null) => void;
 };
 
 export const HeaderContext = React.createContext<HeaderContextType | undefined>(undefined);
+
+/**
+ * Hook for child pages to publish a title, description and action buttons to the top bar of the web layout.
+ * The config is cleared on unmount. Pass memoized `actions` (or stable `deps`) to avoid re-publishing every render.
+ *
+ * Example usage inside a page component:
+ *   usePageHeader({ title: t("bids.title"), description: t("bids.subtitle"), actions }, [t, actions]);
+ */
+export function usePageHeader(config: PageHeaderConfig, deps: React.DependencyList) {
+  const setPageHeader = React.useContext(HeaderContext)?.setPageHeader;
+
+  React.useEffect(() => {
+    setPageHeader?.(config);
+    return () => setPageHeader?.(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setPageHeader, ...deps]);
+}
 
 /**
  * Hook for child pages to set custom header content and control visibility of the common header.

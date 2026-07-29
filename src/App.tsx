@@ -18,6 +18,10 @@ import { EmailParsingLabPage } from "@/features/email-parsing-lab/pages/EmailPar
 import FeatureFlagRoute from "@/components/FeatureFlagRoute";
 import { FeatureFlag } from "@/services/FeatureFlagService";
 import { WorkspaceMembershipsPage } from "@/features/workspaces/pages/WorkspaceMembershipsPage";
+import { BidsPage } from "@/features/bids/pages/BidsPage";
+import { BidDetailPage } from "@/features/bids/pages/BidDetailPage";
+import { BidUpdateRequestsPage } from "@/features/bid-update-requests/pages/BidUpdateRequestsPage";
+import { BidParsingRunsPage } from "@/features/bids/pages/BidParsingRunsPage";
 
 import { usePageTitle } from "@/hooks/usePageTitle.ts";
 
@@ -138,6 +142,40 @@ export default function App() {
             <Route path="tenant/integrations/email" element={<EmailIntegrationsPage />} />
             <Route element={<FeatureFlagRoute flag={FeatureFlag.EMAIL_PARSING_LAB} />}>
               <Route path="tenant/integrations/email-parsing-lab" element={<EmailParsingLabPage />} />
+            </Route>
+          </Route>
+
+          <Route element={<FeatureFlagRoute flag={FeatureFlag.BID_MANAGEMENT} />}>
+            <Route
+              element={
+                <AuthorityRoute
+                  authority={Authority.TENANT_BIDS_READ}
+                  allAuthorities={[Authority.UI_TENANT_BIDS_VIEW]}
+                />
+              }
+            >
+              <Route path="tenant/bids" element={<BidsPage />} />
+              <Route path="tenant/bids/:bidUuid" element={<BidDetailPage />} />
+            </Route>
+            <Route
+              element={
+                <AuthorityRoute
+                  authority={Authority.TENANT_BIDS_REVIEW_UPDATES}
+                  allAuthorities={[Authority.UI_TENANT_BIDS_VIEW]}
+                />
+              }
+            >
+              <Route path="tenant/bid-update-requests" element={<BidUpdateRequestsPage />} />
+            </Route>
+            <Route
+              element={
+                <AuthorityRoute
+                  authority={Authority.TENANT_BIDS_VIEW_PARSING}
+                  allAuthorities={[Authority.UI_TENANT_BIDS_VIEW]}
+                />
+              }
+            >
+              <Route path="tenant/bid-parsing-runs" element={<BidParsingRunsPage />} />
             </Route>
           </Route>
         </Route>

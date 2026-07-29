@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import LanguageSelector, { LanguageSelectorMode } from "@/components/lang/LanguageSelector.tsx";
 import { ModeToggle } from "@/components/theme/mode-toggle.tsx";
-import { HeaderContext } from "@/contexts/HeaderContext";
+import { HeaderContext, type PageHeaderConfig } from "@/contexts/HeaderContext";
 import { useTelegramHeader } from "@/hooks/useTelegramHeader";
 
 interface LayoutProps {
@@ -20,7 +20,12 @@ const WebLayout: React.FC<LayoutProps> = ({ children }) => {
   const { renderHeaderBlock } = useTelegramHeader();
   const [headerVisible, setHeaderVisible] = React.useState<boolean>(false);
 
-  const ctxValue = React.useMemo(() => ({ setHeader, setHeaderVisible }), [setHeader, setHeaderVisible]);
+  const [pageHeader, setPageHeader] = React.useState<PageHeaderConfig | null>(null);
+
+  const ctxValue = React.useMemo(
+    () => ({ setHeader, setHeaderVisible, setPageHeader }),
+    [setHeader, setHeaderVisible, setPageHeader]
+  );
 
   return (
     <SidebarContextProvider>
@@ -37,21 +42,32 @@ const WebLayout: React.FC<LayoutProps> = ({ children }) => {
           <SidebarProvider className="flex-1 min-h-0">
             <AppSidebar />
             <SidebarInset className="min-h-0">
-              <header className="flex h-16 shrink-0 items-center justify-between px-4">
-                {/* Left: Sidebar trigger + breadcrumb */}
-                <div className="flex items-center gap-2">
-                  <SidebarTrigger className="-ml-1" />
-                  <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+              <header className="flex h-14 shrink-0 items-center justify-between gap-2 px-4">
+                {/* Left: Sidebar trigger + page title */}
+                <div className="flex min-w-0 items-center gap-2">
+                  <SidebarTrigger className="-ml-1 shrink-0" />
+                  <Separator orientation="vertical" className="mr-2 shrink-0 data-[orientation=vertical]:h-4" />
                   {/* <BreadcrumbComponent /> */}
+                  {pageHeader && (
+                    <div className="min-w-0">
+                      <h1 className="truncate text-base leading-tight font-semibold">{pageHeader.title}</h1>
+                      {pageHeader.description && (
+                        <p className="hidden truncate text-xs text-muted-foreground sm:block">
+                          {pageHeader.description}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                {/* Right: Language marker + dropdown */}
-                <div className="flex items-center gap-2">
+                {/* Right: Page actions + Language marker + dropdown */}
+                <div className="flex shrink-0 items-center gap-2">
+                  {pageHeader?.actions}
                   <LanguageSelector mode={LanguageSelectorMode.FULL} />
                   <ModeToggle />
                 </div>
               </header>
-              <main className="flex flex-1 flex-col overflow-auto">{children}</main>
+              <main className="flex min-w-0 flex-1 flex-col overflow-auto">{children}</main>
               <Toaster position="top-center" />
             </SidebarInset>
           </SidebarProvider>

@@ -20,12 +20,18 @@ const ROLE_AUTHORITY_MATRIX: Record<TenantRole, Record<CrudAction, AuthorityValu
     read: Authority.TENANT_USERS_READ,
     update: Authority.TENANT_USERS_UPDATE,
   },
+  [TenantRole.ROLE_TENANT_BID_MANAGER]: {
+    create: Authority.TENANT_USERS_CREATE,
+    read: Authority.TENANT_USERS_READ,
+    update: Authority.TENANT_USERS_UPDATE,
+  },
 };
 
 const TENANT_ROLES = [
   TenantRole.ROLE_TENANT_ADMIN,
   TenantRole.ROLE_TENANT_MANAGER,
   TenantRole.ROLE_TENANT_USER,
+  TenantRole.ROLE_TENANT_BID_MANAGER,
 ] as const;
 
 const canManageRole = (

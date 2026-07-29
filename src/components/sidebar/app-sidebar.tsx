@@ -10,6 +10,9 @@ import {
   Building2,
   UserCog,
   Users,
+  BriefcaseBusiness,
+  ListChecks,
+  ScanSearch,
 } from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user.tsx";
 import {
@@ -55,6 +58,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const canViewTenantUsers = principal?.authorities?.includes(Authority.UI_TENANT_USERS_VIEW);
   const canViewTenantIntegrations = principal?.authorities?.includes(Authority.UI_TENANT_INTEGRATIONS_VIEW);
   const emailParsingLabEnabled = isFeatureEnabled(FeatureFlag.EMAIL_PARSING_LAB);
+  const bidManagementEnabled = isFeatureEnabled(FeatureFlag.BID_MANAGEMENT);
+  const canViewBids =
+    principal?.authorities?.includes(Authority.UI_TENANT_BIDS_VIEW) &&
+    principal.authorities.includes(Authority.TENANT_BIDS_READ);
+  const canReviewBidUpdates = principal?.authorities?.includes(Authority.TENANT_BIDS_REVIEW_UPDATES);
+  const canViewBidParsing = principal?.authorities?.includes(Authority.TENANT_BIDS_VIEW_PARSING);
 
   const user = React.useMemo(() => {
     if (!principal) return null;
@@ -165,6 +174,42 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <Link to="/tenant/integrations/email-parsing-lab">
                       <Sparkles />
                       <span>{t("emailParsingLab.title")}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+            </SidebarMenu>
+          </SidebarGroup>
+        )}
+
+        {bidManagementEnabled && canViewBids && (
+          <SidebarGroup>
+            <SidebarGroupLabel>{t("bids.navigation.group")}</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={t("bids.title")}>
+                  <Link to="/tenant/bids">
+                    <BriefcaseBusiness />
+                    <span>{t("bids.title")}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              {canReviewBidUpdates && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild tooltip={t("bidUpdates.title")}>
+                    <Link to="/tenant/bid-update-requests">
+                      <ListChecks />
+                      <span>{t("bidUpdates.title")}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+              {canViewBidParsing && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild tooltip={t("bidParsing.title")}>
+                    <Link to="/tenant/bid-parsing-runs">
+                      <ScanSearch />
+                      <span>{t("bidParsing.title")}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

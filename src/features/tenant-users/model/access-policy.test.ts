@@ -15,8 +15,12 @@ describe("tenant users access policy", () => {
     expect(getCreatableTenantRoles([Authority.TENANT_MANAGERS_CREATE, Authority.TENANT_USERS_CREATE])).toEqual([
       TenantRole.ROLE_TENANT_MANAGER,
       TenantRole.ROLE_TENANT_USER,
+      TenantRole.ROLE_TENANT_BID_MANAGER,
     ]);
-    expect(getEditableTenantRoles([Authority.TENANT_USERS_UPDATE])).toEqual([TenantRole.ROLE_TENANT_USER]);
+    expect(getEditableTenantRoles([Authority.TENANT_USERS_UPDATE])).toEqual([
+      TenantRole.ROLE_TENANT_USER,
+      TenantRole.ROLE_TENANT_BID_MANAGER,
+    ]);
   });
 
   it("does not treat UI authorities as tenant-user CRUD access", () => {
