@@ -118,12 +118,80 @@ export interface CreateBidInput {
   scopeSummary?: string;
 }
 
-export type UpdateBidInput = Partial<CreateBidInput> & {
+export type ClearableBidField =
+  | "projectDescription"
+  | "bidPackage"
+  | "scopeSummary"
+  | "trades"
+  | "projectNumber"
+  | "solicitationNumber"
+  | "bidPackageNumber"
+  | "externalPlatform"
+  | "externalOpportunityId"
+  | "siteName"
+  | "addressLine1"
+  | "addressLine2"
+  | "city"
+  | "stateProvince"
+  | "postalCode"
+  | "countryCode"
+  | "fullAddress"
+  | "bidDueAt"
+  | "rfiDeadlineAt"
+  | "preBidMeetingAt"
+  | "anticipatedStartDate"
+  | "anticipatedCompletionDate"
+  | "issuerCompanyName"
+  | "primaryContactName"
+  | "primaryContactEmail"
+  | "primaryContactPhone"
+  | "submissionMethod"
+  | "submissionEmail"
+  | "submissionUrl"
+  | "submissionInstructions"
+  | "assignedToUserUuid"
+  | "managerNotes";
+
+export interface UpdateBidInput {
   version: number;
+  projectName?: string;
+  priority?: BidPriority;
+  projectDescription?: string;
+  bidPackage?: string;
+  scopeSummary?: string;
+  trades?: string[];
+  projectNumber?: string;
+  solicitationNumber?: string;
+  bidPackageNumber?: string;
+  externalPlatform?: string;
+  externalOpportunityId?: string;
+  siteName?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  stateProvince?: string;
+  postalCode?: string;
+  countryCode?: string;
+  fullAddress?: string;
+  bidDueAt?: string;
+  rfiDeadlineAt?: string;
+  preBidMeetingAt?: string;
+  anticipatedStartDate?: string;
+  anticipatedCompletionDate?: string;
+  issuerCompanyName?: string;
+  primaryContactName?: string;
+  primaryContactEmail?: string;
+  primaryContactPhone?: string;
+  submissionMethod?: string;
+  submissionEmail?: string;
+  submissionUrl?: string;
+  submissionInstructions?: string;
+  assignedToUserUuid?: string;
   managerNotes?: string;
   autoUpdateEnabled?: boolean;
   requiresReview?: boolean;
-};
+  clearFields?: ClearableBidField[];
+}
 
 export interface BidActivity {
   uuid: string;

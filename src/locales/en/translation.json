@@ -47,6 +47,7 @@
     "saving": "Saving...",
     "loading": "Loading...",
     "cancel": "Cancel",
+    "boolean": { "yes": "Yes", "no": "No" },
     "list": {
       "actions": "Actions",
       "input": {
@@ -565,27 +566,71 @@
       "projectNumber": "Project number",
       "solicitation": "Solicitation number",
       "solicitationNumber": "Solicitation number",
+      "bidPackageNumber": "Bid package number",
       "submission": "Submission",
       "submissionEmail": "Submission email",
       "submissionUrl": "Submission URL",
       "submissionMethod": "Submission method",
+      "submissionInstructions": "Submission instructions",
       "projectDescription": "Project description",
       "bidPackage": "Bid package",
       "trades": "Trades",
       "externalPlatform": "External platform",
       "externalOpportunityId": "External opportunity ID",
+      "siteName": "Site name",
+      "addressLine1": "Address line 1",
+      "addressLine2": "Address line 2",
+      "city": "City",
+      "stateProvince": "State / province",
+      "postalCode": "Postal code",
+      "countryCode": "Country code",
+      "fullAddress": "Full address",
+      "rfiDeadlineAt": "RFI deadline",
+      "preBidMeetingAt": "Pre-bid meeting",
       "primaryContactName": "Primary contact",
       "primaryContactEmail": "Contact email",
       "primaryContactPhone": "Contact phone",
       "anticipatedStartDate": "Anticipated start",
-      "anticipatedCompletionDate": "Anticipated completion"
+      "anticipatedCompletionDate": "Anticipated completion",
+      "awardedAt": "Awarded at",
+      "assignedToUser": "Assigned to",
+      "reviewStatus": "Review status",
+      "autoUpdateEnabled": "Automatic email updates",
+      "requiresReview": "Requires review",
+      "uuid": "Bid UUID",
+      "version": "Record version",
+      "lastSourceEmailUuid": "Latest source email UUID",
+      "lastEmailReceivedAt": "Latest email received",
+      "lastAutoUpdatedAt": "Latest automatic update",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
     },
     "sections": {
       "overview": "Accepted bid details",
+      "project": "Project and scope",
+      "identifiers": "Identifiers and source",
+      "location": "Project location",
+      "schedule": "Schedule and milestones",
+      "contact": "Issuer and primary contact",
+      "submission": "Submission",
+      "ownership": "Ownership and controls",
+      "system": "System record",
       "lifecycle": "Lifecycle",
       "timeline": "Timeline",
       "evidence": "Source email evidence",
       "audit": "Technical audit"
+    },
+    "form": {
+      "tradesHint": "Separate multiple trades with commas.",
+      "unassigned": "Unassigned"
+    },
+    "provenance": {
+      "manualOverride": "Manual override",
+      "sourceEmail": "Source email",
+      "parsingRun": "Parsing run",
+      "updateRequest": "Update request",
+      "acceptedBy": "Accepted by",
+      "acceptedAt": "Accepted at"
     },
     "status": {
       "NEW": "New",
@@ -640,6 +685,7 @@
     "title": "Bid update reviews",
     "subtitle": "Review field changes and ambiguous bid correlations proposed from email.",
     "type": "Type",
+    "statusLabel": "Status",
     "correlation": "Correlation",
     "created": "Created",
     "reviewTitle": "Review request",
@@ -650,7 +696,13 @@
     "customValue": "Custom value",
     "reject": "Reject request",
     "apply": "Apply resolutions",
-    "status": { "PENDING": "Pending", "APPLIED": "Applied", "REJECTED": "Rejected" },
+    "supersededNotice": "This request is read-only because parsing run {{runUuid}} replaced it.",
+    "status": {
+      "PENDING": "Pending",
+      "APPLIED": "Applied",
+      "REJECTED": "Rejected",
+      "SUPERSEDED": "Superseded"
+    },
     "correlationResult": {
       "NO_MATCH": "No match",
       "EXACT_MATCH": "Exact match",
@@ -694,6 +746,11 @@
     "duration": "Duration",
     "attachments": "Attachments processed / skipped",
     "retry": "Retry with current configuration",
+    "reviewChanges": "Review proposed changes",
+    "retryResult": {
+      "changes": "The retry found differences and created a review request.",
+      "noDifferences": "The retry matched the bid with no field differences."
+    },
     "status": {
       "PROCESSING": "Processing",
       "COMPLETED": "Completed",
@@ -715,6 +772,11 @@
       "OTHER_CORRESPONDENCE": "Other correspondence",
       "NOT_A_BID": "Not a bid"
     },
-    "notifications": { "retried": "Parsing retried", "error": "Failed to retry parsing" }
+    "notifications": {
+      "retried": "Parsing retried",
+      "retriedWithChanges": "Parsing retried; proposed changes are ready for review",
+      "retriedNoChanges": "Parsing retried; no bid differences found",
+      "error": "Failed to retry parsing"
+    }
   }
 }

@@ -47,6 +47,7 @@
     "saving": "Збереження...",
     "loading": "Завантаження...",
     "cancel": "Скасувати",
+    "boolean": { "yes": "Так", "no": "Ні" },
     "list": {
       "actions": "Дії",
       "input": {
@@ -565,27 +566,71 @@
       "projectNumber": "Номер проєкту",
       "solicitation": "Номер запиту",
       "solicitationNumber": "Номер запиту",
+      "bidPackageNumber": "Номер тендерного пакета",
       "submission": "Подання",
       "submissionEmail": "Email для подання",
       "submissionUrl": "Посилання для подання",
       "submissionMethod": "Спосіб подання",
+      "submissionInstructions": "Інструкції з подання",
       "projectDescription": "Опис проєкту",
       "bidPackage": "Пакет тендера",
       "trades": "Види робіт",
       "externalPlatform": "Зовнішня платформа",
       "externalOpportunityId": "Зовнішній ідентифікатор",
+      "siteName": "Назва об’єкта",
+      "addressLine1": "Адреса, рядок 1",
+      "addressLine2": "Адреса, рядок 2",
+      "city": "Місто",
+      "stateProvince": "Штат / область",
+      "postalCode": "Поштовий індекс",
+      "countryCode": "Код країни",
+      "fullAddress": "Повна адреса",
+      "rfiDeadlineAt": "Строк запитань RFI",
+      "preBidMeetingAt": "Передтендерна зустріч",
       "primaryContactName": "Контактна особа",
       "primaryContactEmail": "Email контакту",
       "primaryContactPhone": "Телефон контакту",
       "anticipatedStartDate": "Очікуваний початок",
-      "anticipatedCompletionDate": "Очікуване завершення"
+      "anticipatedCompletionDate": "Очікуване завершення",
+      "awardedAt": "Дата присудження",
+      "assignedToUser": "Відповідальний",
+      "reviewStatus": "Статус перевірки",
+      "autoUpdateEnabled": "Автоматичні оновлення з листів",
+      "requiresReview": "Потребує перевірки",
+      "uuid": "UUID тендера",
+      "version": "Версія запису",
+      "lastSourceEmailUuid": "UUID останнього листа-джерела",
+      "lastEmailReceivedAt": "Останній отриманий лист",
+      "lastAutoUpdatedAt": "Останнє автоматичне оновлення",
+      "createdAt": "Створено",
+      "updatedAt": "Оновлено"
     },
     "sections": {
       "overview": "Прийняті дані тендера",
+      "project": "Проєкт і обсяг робіт",
+      "identifiers": "Ідентифікатори та джерело",
+      "location": "Розташування проєкту",
+      "schedule": "Графік і контрольні дати",
+      "contact": "Організатор і контактна особа",
+      "submission": "Подання",
+      "ownership": "Відповідальність і керування",
+      "system": "Системний запис",
       "lifecycle": "Життєвий цикл",
       "timeline": "Хронологія",
       "evidence": "Листи та вкладення",
       "audit": "Технічний аудит"
+    },
+    "form": {
+      "tradesHint": "Розділяйте кілька видів робіт комами.",
+      "unassigned": "Не призначено"
+    },
+    "provenance": {
+      "manualOverride": "Ручна зміна",
+      "sourceEmail": "Лист-джерело",
+      "parsingRun": "Запуск розбору",
+      "updateRequest": "Запит на оновлення",
+      "acceptedBy": "Прийняв",
+      "acceptedAt": "Прийнято"
     },
     "status": {
       "NEW": "Новий",
@@ -636,6 +681,7 @@
     "title": "Перевірки змін тендера",
     "subtitle": "Перевіряйте зміни полів і неоднозначні зіставлення з листів.",
     "type": "Тип",
+    "statusLabel": "Статус",
     "correlation": "Зіставлення",
     "created": "Створено",
     "reviewTitle": "Запит на перевірку",
@@ -646,7 +692,13 @@
     "customValue": "Власне значення",
     "reject": "Відхилити запит",
     "apply": "Застосувати рішення",
-    "status": { "PENDING": "Очікує", "APPLIED": "Застосовано", "REJECTED": "Відхилено" },
+    "supersededNotice": "Цей запит доступний лише для читання, оскільки його замінив запуск розбору {{runUuid}}.",
+    "status": {
+      "PENDING": "Очікує",
+      "APPLIED": "Застосовано",
+      "REJECTED": "Відхилено",
+      "SUPERSEDED": "Замінено"
+    },
     "correlationResult": {
       "NO_MATCH": "Без збігу",
       "EXACT_MATCH": "Точний збіг",
@@ -690,6 +742,11 @@
     "duration": "Тривалість",
     "attachments": "Вкладення оброблено / пропущено",
     "retry": "Повторити з поточними налаштуваннями",
+    "reviewChanges": "Переглянути запропоновані зміни",
+    "retryResult": {
+      "changes": "Повторний розбір виявив відмінності та створив запит на перевірку.",
+      "noDifferences": "Повторний розбір збігся з тендером без відмінностей у полях."
+    },
     "status": {
       "PROCESSING": "Обробка",
       "COMPLETED": "Завершено",
@@ -711,6 +768,11 @@
       "OTHER_CORRESPONDENCE": "Інше листування",
       "NOT_A_BID": "Не тендер"
     },
-    "notifications": { "retried": "Розбір повторено", "error": "Не вдалося повторити розбір" }
+    "notifications": {
+      "retried": "Розбір повторено",
+      "retriedWithChanges": "Розбір повторено; запропоновані зміни готові до перевірки",
+      "retriedNoChanges": "Розбір повторено; відмінностей у тендері не знайдено",
+      "error": "Не вдалося повторити розбір"
+    }
   }
 }

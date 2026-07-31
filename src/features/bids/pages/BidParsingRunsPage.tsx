@@ -9,12 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { notifier } from "@/services/NotificationService";
 import { getBidParsingRun, getBidParsingRuns, retryBidParsingRun } from "../api/bidParsing";
+import type { BidEmailProcessingResult } from "../model/parsing-types";
 
 export function BidParsingRunsPage() {
   const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const queryClient = useQueryClient();
   const [selectedUuid, setSelectedUuid] = useState<string | null>(params.get("runUuid"));
+  const [retryResult, setRetryResult] = useState<BidEmailProcessingResult | null>(null);
   const executionStatus = params.get("executionStatus") ?? undefined;
   const bidUuid = params.get("bidUuid") ?? undefined;
   const runsQuery = useQuery({
@@ -29,9 +31,27 @@ export function BidParsingRunsPage() {
   const retryMutation = useMutation({
     mutationFn: (uuid: string) => retryBidParsingRun(uuid),
     onSuccess: (result) => {
-      notifier.success(t("bidParsing.notifications.retried"));
+      const hasChanges = !!result.updateRequestUuid;
+      const noDifferences =
+        result.executionStatus === "COMPLETED" &&
+        result.parsingOutcome === "BID_IDENTIFIED" &&
+        !result.updateRequestUuid;
+      notifier.success(
+        t(
+          hasChanges
+            ? "bidParsing.notifications.retriedWithChanges"
+            : noDifferences
+              ? "bidParsing.notifications.retriedNoChanges"
+              : "bidParsing.notifications.retried"
+        )
+      );
+      setRetryResult(result);
       setSelectedUuid(result.parsingRunUuid);
+      const next = new URLSearchParams(params);
+      next.set("runUuid", result.parsingRunUuid);
+      setParams(next);
       void queryClient.invalidateQueries({ queryKey: ["bid-parsing-runs"] });
+      void queryClient.invalidateQueries({ queryKey: ["bid-parsing-run", result.parsingRunUuid] });
     },
     onError: () => notifier.error(t("bidParsing.notifications.error")),
   });
@@ -43,6 +63,7 @@ export function BidParsingRunsPage() {
     setParams(next);
   };
   const select = (uuid: string) => {
+    setRetryResult(null);
     setSelectedUuid(uuid);
     const next = new URLSearchParams(params);
     next.set("runUuid", uuid);
@@ -143,6 +164,26 @@ export function BidParsingRunsPage() {
                     {warning}
                   </div>
                 ))}
+                {retryResult?.parsingRunUuid === detailQuery.data.uuid &&
+                  retryResult.executionStatus === "COMPLETED" &&
+                  retryResult.parsingOutcome === "BID_IDENTIFIED" && (
+                    <div className="space-y-3 rounded border p-3 text-sm">
+                      <p>
+                        {t(
+                          retryResult.updateRequestUuid
+                            ? "bidParsing.retryResult.changes"
+                            : "bidParsing.retryResult.noDifferences"
+                        )}
+                      </p>
+                      {retryResult.updateRequestUuid && (
+                        <Button asChild>
+                          <Link to={`/tenant/bid-update-requests?requestUuid=${retryResult.updateRequestUuid}`}>
+                            {t("bidParsing.reviewChanges")}
+                          </Link>
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 <pre className="max-h-[520px] overflow-auto rounded bg-muted p-3 text-xs">
                   {JSON.stringify(detailQuery.data.normalizedResult, null, 2)}
                 </pre>

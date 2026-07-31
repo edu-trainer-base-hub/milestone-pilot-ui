@@ -131,7 +131,7 @@ export function BidUpdateRequestsPage() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {(["PENDING", "APPLIED", "REJECTED"] as UpdateRequestStatus[]).map((value) => (
+            {(["PENDING", "APPLIED", "REJECTED", "SUPERSEDED"] as UpdateRequestStatus[]).map((value) => (
               <SelectItem key={value} value={value}>
                 {t(`bidUpdates.status.${value}`)}
               </SelectItem>
@@ -151,6 +151,7 @@ export function BidUpdateRequestsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("bidUpdates.type")}</TableHead>
+                <TableHead>{t("bidUpdates.statusLabel")}</TableHead>
                 <TableHead>{t("bidUpdates.correlation")}</TableHead>
                 <TableHead>{t("bidUpdates.created")}</TableHead>
               </TableRow>
@@ -165,6 +166,9 @@ export function BidUpdateRequestsPage() {
                   <TableCell>
                     <Badge variant="outline">{t(`bidUpdates.requestType.${item.requestType}`)}</Badge>
                   </TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{t(`bidUpdates.status.${item.status}`)}</Badge>
+                  </TableCell>
                   <TableCell>{t(`bidUpdates.correlationResult.${item.correlationResult}`)}</TableCell>
                   <TableCell>{new Date(item.createdAt).toLocaleString()}</TableCell>
                 </TableRow>
@@ -178,6 +182,14 @@ export function BidUpdateRequestsPage() {
             <CardTitle>{request ? t("bidUpdates.reviewTitle") : t("bidUpdates.select")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
+            {request && <Badge variant="outline">{t(`bidUpdates.status.${request.status}`)}</Badge>}
+            {request?.status === "SUPERSEDED" && (
+              <div className="rounded border p-3 text-sm text-muted-foreground">
+                {t("bidUpdates.supersededNotice", {
+                  runUuid: request.supersededByParsingRunUuid ?? "—",
+                })}
+              </div>
+            )}
             {request?.requestType === "CORRELATION" && (
               <div className="space-y-3">
                 <p className="text-sm text-muted-foreground">{t("bidUpdates.chooseCandidate")}</p>
@@ -186,7 +198,7 @@ export function BidUpdateRequestsPage() {
                     key={candidate}
                     variant="outline"
                     className="w-full justify-start"
-                    disabled={correlationMutation.isPending}
+                    disabled={request.status !== "PENDING" || correlationMutation.isPending}
                     onClick={() => correlationMutation.mutate(candidate)}
                   >
                     {candidate}
@@ -215,7 +227,7 @@ export function BidUpdateRequestsPage() {
                     <ValueBox label={t("bidUpdates.current")} value={change.currentValue} />
                     <ValueBox label={t("bidUpdates.proposed")} value={change.proposedValue} />
                   </div>
-                  {!change.resolution ? (
+                  {request.status === "PENDING" && !change.resolution ? (
                     <>
                       <Select
                         value={choices[change.uuid]?.resolution ?? "KEEP_CURRENT"}
@@ -255,9 +267,9 @@ export function BidUpdateRequestsPage() {
                         </div>
                       )}
                     </>
-                  ) : (
+                  ) : change.resolution ? (
                     <Badge>{t(`bidUpdates.resolution.${change.resolution}`)}</Badge>
-                  )}
+                  ) : null}
                   {change.sourceExcerpt && (
                     <blockquote className="border-l-2 pl-3 text-sm text-muted-foreground">
                       {change.sourceExcerpt}

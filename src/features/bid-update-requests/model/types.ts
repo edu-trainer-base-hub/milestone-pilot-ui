@@ -1,4 +1,4 @@
-export type UpdateRequestStatus = "PENDING" | "APPLIED" | "REJECTED";
+export type UpdateRequestStatus = "PENDING" | "APPLIED" | "REJECTED" | "SUPERSEDED";
 export type CorrelationResult = "NO_MATCH" | "EXACT_MATCH" | "HIGH_CONFIDENCE_MATCH" | "AMBIGUOUS_MATCH";
 export type ChangeResolution = "ACCEPT_PROPOSED" | "KEEP_CURRENT" | "USE_CUSTOM";
 
@@ -22,6 +22,7 @@ export interface BidUpdateRequest {
   bidUuid: string | null;
   sourceEmailUuid: string;
   parsingRunUuid: string;
+  supersededByParsingRunUuid: string | null;
   requestType: "FIELD_CHANGES" | "CORRELATION";
   status: UpdateRequestStatus;
   correlationResult: CorrelationResult;

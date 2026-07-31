@@ -47,6 +47,7 @@
     "saving": "Сохранение...",
     "loading": "Загрузка...",
     "cancel": "Отмена",
+    "boolean": { "yes": "Да", "no": "Нет" },
     "list": {
       "actions": "Действия",
       "input": {
@@ -565,27 +566,71 @@
       "projectNumber": "Номер проекта",
       "solicitation": "Номер запроса",
       "solicitationNumber": "Номер запроса",
+      "bidPackageNumber": "Номер тендерного пакета",
       "submission": "Подача",
       "submissionEmail": "Email для подачи",
       "submissionUrl": "Ссылка для подачи",
       "submissionMethod": "Способ подачи",
+      "submissionInstructions": "Инструкции по подаче",
       "projectDescription": "Описание проекта",
       "bidPackage": "Пакет тендера",
       "trades": "Виды работ",
       "externalPlatform": "Внешняя платформа",
       "externalOpportunityId": "Внешний идентификатор",
+      "siteName": "Название объекта",
+      "addressLine1": "Адрес, строка 1",
+      "addressLine2": "Адрес, строка 2",
+      "city": "Город",
+      "stateProvince": "Штат / область",
+      "postalCode": "Почтовый индекс",
+      "countryCode": "Код страны",
+      "fullAddress": "Полный адрес",
+      "rfiDeadlineAt": "Срок вопросов RFI",
+      "preBidMeetingAt": "Предтендерная встреча",
       "primaryContactName": "Контактное лицо",
       "primaryContactEmail": "Email контакта",
       "primaryContactPhone": "Телефон контакта",
       "anticipatedStartDate": "Ожидаемое начало",
-      "anticipatedCompletionDate": "Ожидаемое завершение"
+      "anticipatedCompletionDate": "Ожидаемое завершение",
+      "awardedAt": "Дата присуждения",
+      "assignedToUser": "Ответственный",
+      "reviewStatus": "Статус проверки",
+      "autoUpdateEnabled": "Автоматические обновления из писем",
+      "requiresReview": "Требует проверки",
+      "uuid": "UUID тендера",
+      "version": "Версия записи",
+      "lastSourceEmailUuid": "UUID последнего письма-источника",
+      "lastEmailReceivedAt": "Последнее полученное письмо",
+      "lastAutoUpdatedAt": "Последнее автоматическое обновление",
+      "createdAt": "Создано",
+      "updatedAt": "Обновлено"
     },
     "sections": {
       "overview": "Принятые данные тендера",
+      "project": "Проект и объем работ",
+      "identifiers": "Идентификаторы и источник",
+      "location": "Расположение проекта",
+      "schedule": "График и контрольные даты",
+      "contact": "Организатор и контактное лицо",
+      "submission": "Подача",
+      "ownership": "Ответственность и управление",
+      "system": "Системная запись",
       "lifecycle": "Жизненный цикл",
       "timeline": "Хронология",
       "evidence": "Письма и вложения",
       "audit": "Технический аудит"
+    },
+    "form": {
+      "tradesHint": "Разделяйте несколько видов работ запятыми.",
+      "unassigned": "Не назначено"
+    },
+    "provenance": {
+      "manualOverride": "Ручное изменение",
+      "sourceEmail": "Письмо-источник",
+      "parsingRun": "Запуск разбора",
+      "updateRequest": "Запрос на обновление",
+      "acceptedBy": "Принял",
+      "acceptedAt": "Принято"
     },
     "status": {
       "NEW": "Новый",
@@ -636,6 +681,7 @@
     "title": "Проверки изменений тендера",
     "subtitle": "Проверяйте изменения полей и неоднозначные сопоставления из писем.",
     "type": "Тип",
+    "statusLabel": "Статус",
     "correlation": "Сопоставление",
     "created": "Создано",
     "reviewTitle": "Запрос на проверку",
@@ -646,7 +692,13 @@
     "customValue": "Собственное значение",
     "reject": "Отклонить запрос",
     "apply": "Применить решения",
-    "status": { "PENDING": "Ожидает", "APPLIED": "Применено", "REJECTED": "Отклонено" },
+    "supersededNotice": "Этот запрос доступен только для чтения, поскольку его заменил запуск разбора {{runUuid}}.",
+    "status": {
+      "PENDING": "Ожидает",
+      "APPLIED": "Применено",
+      "REJECTED": "Отклонено",
+      "SUPERSEDED": "Заменено"
+    },
     "correlationResult": {
       "NO_MATCH": "Без совпадения",
       "EXACT_MATCH": "Точное совпадение",
@@ -690,6 +742,11 @@
     "duration": "Длительность",
     "attachments": "Вложения обработано / пропущено",
     "retry": "Повторить с текущими настройками",
+    "reviewChanges": "Проверить предложенные изменения",
+    "retryResult": {
+      "changes": "Повторный разбор обнаружил отличия и создал запрос на проверку.",
+      "noDifferences": "Повторный разбор совпал с тендером без отличий в полях."
+    },
     "status": {
       "PROCESSING": "Обработка",
       "COMPLETED": "Завершено",
@@ -711,6 +768,11 @@
       "OTHER_CORRESPONDENCE": "Другая переписка",
       "NOT_A_BID": "Не тендер"
     },
-    "notifications": { "retried": "Разбор повторен", "error": "Не удалось повторить разбор" }
+    "notifications": {
+      "retried": "Разбор повторен",
+      "retriedWithChanges": "Разбор повторен; предложенные изменения готовы к проверке",
+      "retriedNoChanges": "Разбор повторен; отличий в тендере не найдено",
+      "error": "Не удалось повторить разбор"
+    }
   }
 }
