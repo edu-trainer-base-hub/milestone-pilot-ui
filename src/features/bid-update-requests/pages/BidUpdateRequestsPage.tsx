@@ -245,13 +245,18 @@ export function BidUpdateRequestsPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {(["ACCEPT_PROPOSED", "KEEP_CURRENT", "USE_CUSTOM"] as ChangeResolution[]).map((value) => (
-                            <SelectItem key={value} value={value}>
-                              {t(`bidUpdates.resolution.${value}`)}
-                            </SelectItem>
-                          ))}
+                          {(["ACCEPT_PROPOSED", "KEEP_CURRENT", "USE_CUSTOM"] as ChangeResolution[])
+                            .filter((value) => value !== "ACCEPT_PROPOSED" || change.acceptProposedAllowed)
+                            .map((value) => (
+                              <SelectItem key={value} value={value}>
+                                {t(`bidUpdates.resolution.${value}`)}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
+                      {!change.acceptProposedAllowed && (
+                        <p className="text-sm text-muted-foreground">{t("bidUpdates.directAcceptUnavailable")}</p>
+                      )}
                       {choices[change.uuid]?.resolution === "USE_CUSTOM" && (
                         <div className="space-y-1">
                           <Label>{t("bidUpdates.customValue")}</Label>

@@ -8,6 +8,7 @@ export interface BidUpdateChange {
   fieldName: string;
   currentValue: unknown;
   proposedValue: unknown;
+  acceptProposedAllowed: boolean;
   confidence: number | null;
   conflictType: string;
   resolution: ChangeResolution | null;

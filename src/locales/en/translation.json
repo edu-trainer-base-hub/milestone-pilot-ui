@@ -694,6 +694,7 @@
     "current": "Current value",
     "proposed": "Proposed value",
     "customValue": "Custom value",
+    "directAcceptUnavailable": "This parsed value cannot be applied directly. Keep the current value or enter a valid custom value.",
     "reject": "Reject request",
     "apply": "Apply resolutions",
     "supersededNotice": "This request is read-only because parsing run {{runUuid}} replaced it.",

@@ -30,6 +30,7 @@ const supersededRequest: BidUpdateRequest = {
       fieldName: "projectName",
       currentValue: "Existing project",
       proposedValue: "Old proposal",
+      acceptProposedAllowed: true,
       confidence: 0.9,
       conflictType: "DIFFERING_VALUE",
       resolution: null,
@@ -70,5 +71,49 @@ describe("BidUpdateRequestsPage", () => {
     expect(screen.queryByRole("button", { name: "Apply resolutions" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Reject request" })).not.toBeInTheDocument();
     expect(screen.getAllByRole("combobox")).toHaveLength(1);
+  });
+
+  it("requires keep-current or a custom value when the proposal cannot be applied", async () => {
+    const ambiguousRequest: BidUpdateRequest = {
+      ...supersededRequest,
+      uuid: "request-pending",
+      version: 0,
+      status: "PENDING",
+      supersededByParsingRunUuid: null,
+      changes: [
+        {
+          ...supersededRequest.changes[0],
+          uuid: "change-time",
+          fieldName: "bidDueAt",
+          proposedValue: "2026-09-01T15:00:00",
+          acceptProposedAllowed: false,
+          conflictType: "AMBIGUOUS_TIME",
+        },
+      ],
+    };
+    vi.mocked(getBidUpdateRequests).mockResolvedValue({
+      items: [ambiguousRequest],
+      page: 0,
+      size: 100,
+      totalElements: 1,
+    });
+    vi.mocked(getBidUpdateRequest).mockResolvedValue(ambiguousRequest);
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={["/tenant/bid-update-requests?requestUuid=request-pending"]}>
+          <BidUpdateRequestsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(
+      await screen.findByText(
+        "This parsed value cannot be applied directly. Keep the current value or enter a valid custom value."
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText("Keep current")).toBeInTheDocument();
+    expect(screen.queryByText("Accept proposed")).not.toBeInTheDocument();
   });
 });
