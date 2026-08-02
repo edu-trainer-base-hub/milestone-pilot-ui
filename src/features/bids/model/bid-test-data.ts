@@ -58,6 +58,7 @@ export function makeBid(overrides: Partial<Bid> = {}): Bid {
         acceptedByUserUuid: null,
         manuallyOverridden: false,
         acceptedAt: "2026-07-01T09:00:00Z",
+        acceptedBy: null,
       },
     ],
     ...overrides,

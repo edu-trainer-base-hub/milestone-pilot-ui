@@ -6,6 +6,8 @@ import { BidUpdateRequestsPage } from "./BidUpdateRequestsPage";
 import { getBidUpdateRequest, getBidUpdateRequests } from "../api/bidUpdateRequests";
 import type { BidUpdateRequest } from "../model/types";
 
+const actor = { type: "USER" as const, userUuid: "user-1", displayName: "Taylor Manager", email: "taylor@example.com" };
+
 vi.mock("../api/bidUpdateRequests");
 
 const supersededRequest: BidUpdateRequest = {
@@ -23,6 +25,9 @@ const supersededRequest: BidUpdateRequest = {
   resolvedAt: null,
   createdAt: "2026-07-28T10:00:00Z",
   updatedAt: "2026-07-28T11:00:00Z",
+  createdBy: actor,
+  assignedReviewer: null,
+  resolvedBy: null,
   changes: [
     {
       uuid: "change-1",
@@ -37,6 +42,7 @@ const supersededRequest: BidUpdateRequest = {
       customValue: null,
       sourceExcerpt: "Bid invitation",
       resolvedAt: null,
+      resolvedBy: null,
     },
   ],
 };
@@ -46,7 +52,7 @@ beforeEach(() => {
   vi.mocked(getBidUpdateRequests).mockResolvedValue({
     items: [supersededRequest],
     page: 0,
-    size: 100,
+    size: 20,
     totalElements: 1,
   });
   vi.mocked(getBidUpdateRequest).mockResolvedValue(supersededRequest);
@@ -66,7 +72,7 @@ describe("BidUpdateRequestsPage", () => {
     expect(
       await screen.findByText("This request is read-only because parsing run run-new replaced it.")
     ).toBeInTheDocument();
-    await waitFor(() => expect(getBidUpdateRequests).toHaveBeenCalledWith("SUPERSEDED", undefined, 0, 100));
+    await waitFor(() => expect(getBidUpdateRequests).toHaveBeenCalledWith("SUPERSEDED", undefined, 0, 20));
     expect(screen.getAllByText("Superseded").length).toBeGreaterThan(0);
     expect(screen.queryByRole("button", { name: "Apply resolutions" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Reject request" })).not.toBeInTheDocument();
@@ -94,7 +100,7 @@ describe("BidUpdateRequestsPage", () => {
     vi.mocked(getBidUpdateRequests).mockResolvedValue({
       items: [ambiguousRequest],
       page: 0,
-      size: 100,
+      size: 20,
       totalElements: 1,
     });
     vi.mocked(getBidUpdateRequest).mockResolvedValue(ambiguousRequest);

@@ -1,3 +1,5 @@
+import type { BidActor } from "./types";
+
 export interface BidParsingRun {
   uuid: string;
   sourceEmailUuid: string;
@@ -20,10 +22,26 @@ export interface BidParsingRun {
   durationMs: number | null;
   createdAt: string;
   completedAt: string | null;
+  requestedBy: BidActor;
+}
+
+export interface BidParsingRunSummary {
+  uuid: string;
+  sourceEmailUuid: string;
+  retryOfRunUuid: string | null;
+  executionStatus: string;
+  parsingOutcome: string | null;
+  messageType: string | null;
+  aiProvider: string | null;
+  aiModel: string | null;
+  inputTruncated: boolean;
+  createdAt: string;
+  completedAt: string | null;
+  requestedBy: BidActor;
 }
 
 export interface BidParsingRunPage {
-  items: BidParsingRun[];
+  items: BidParsingRunSummary[];
   page: number;
   size: number;
   totalElements: number;

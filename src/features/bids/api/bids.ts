@@ -1,13 +1,17 @@
 import { get, patch, post } from "@/services/ApiService";
 import type {
   Bid,
-  BidActivity,
+  BidActivityFilters,
+  BidActivityPage,
   BidAudit,
+  BidAuditFilters,
+  BidAuditPage,
   BidDashboard,
   BidFilters,
   BidPage,
   BidStatus,
   BidSourceEmail,
+  BidSourceEmailPage,
   CreateBidInput,
   UpdateBidInput,
 } from "../model/types";
@@ -29,8 +33,13 @@ export const updateBid = (uuid: string, input: UpdateBidInput): Promise<Bid> =>
   patch<Bid>(`${BASE_URL}/${uuid}`, input);
 export const transitionBid = (uuid: string, version: number, status: BidStatus): Promise<Bid> =>
   post<Bid>(`${BASE_URL}/${uuid}/transitions`, { version, status });
-export const getBidTimeline = (uuid: string): Promise<BidActivity[]> =>
-  get<BidActivity[]>(`${BASE_URL}/${uuid}/timeline`);
-export const getBidAudit = (uuid: string): Promise<BidAudit[]> => get<BidAudit[]>(`${BASE_URL}/${uuid}/audit`);
-export const getBidSourceEmails = (uuid: string): Promise<BidSourceEmail[]> =>
-  get<BidSourceEmail[]>(`${BASE_URL}/${uuid}/source-emails`);
+export const getBidTimeline = (uuid: string, filters: BidActivityFilters = {}): Promise<BidActivityPage> =>
+  get<BidActivityPage>(`${BASE_URL}/${uuid}/timeline`, { params: filters });
+export const getBidAudit = (uuid: string, filters: BidAuditFilters = {}): Promise<BidAuditPage> =>
+  get<BidAuditPage>(`${BASE_URL}/${uuid}/audit`, { params: filters });
+export const getBidAuditDetail = (uuid: string, auditId: number): Promise<BidAudit> =>
+  get<BidAudit>(`${BASE_URL}/${uuid}/audit/${auditId}`);
+export const getBidSourceEmails = (uuid: string, page = 0, size = 20): Promise<BidSourceEmailPage> =>
+  get<BidSourceEmailPage>(`${BASE_URL}/${uuid}/source-emails`, { params: { page, size } });
+export const getBidSourceEmail = (uuid: string, sourceEmailUuid: string): Promise<BidSourceEmail> =>
+  get<BidSourceEmail>(`${BASE_URL}/${uuid}/source-emails/${sourceEmailUuid}`);

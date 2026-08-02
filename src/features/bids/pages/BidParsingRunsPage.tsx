@@ -8,20 +8,38 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { notifier } from "@/services/NotificationService";
+import { Authority, useAuth } from "@/contexts/AuthContext";
+import { BidActorLabel } from "../components/BidActorLabel";
+import { BidHistoryPagination } from "../components/BidHistoryPagination";
 import { getBidParsingRun, getBidParsingRuns, retryBidParsingRun } from "../api/bidParsing";
 import type { BidEmailProcessingResult } from "../model/parsing-types";
 
 export function BidParsingRunsPage() {
+  return <BidParsingRunsPanel />;
+}
+
+interface BidParsingRunsPanelProps {
+  bidUuid?: string;
+  embedded?: boolean;
+}
+
+export function BidParsingRunsPanel({ bidUuid: lockedBidUuid, embedded = false }: BidParsingRunsPanelProps) {
   const { t } = useTranslation();
+  const { principal } = useAuth();
   const [params, setParams] = useSearchParams();
   const queryClient = useQueryClient();
   const [selectedUuid, setSelectedUuid] = useState<string | null>(params.get("runUuid"));
   const [retryResult, setRetryResult] = useState<BidEmailProcessingResult | null>(null);
   const executionStatus = params.get("executionStatus") ?? undefined;
-  const bidUuid = params.get("bidUuid") ?? undefined;
+  const outcome = params.get("outcome") ?? undefined;
+  const bidUuid = lockedBidUuid ?? params.get("bidUuid") ?? undefined;
+  const pageParam = embedded ? "parsingPage" : "page";
+  const page = Math.max(0, Number(params.get(pageParam) ?? "0") || 0);
+  const size = 20;
+  const canRetry = Boolean(principal?.authorities?.includes(Authority.TENANT_BIDS_PROCESS_EMAIL));
   const runsQuery = useQuery({
-    queryKey: ["bid-parsing-runs", executionStatus, bidUuid],
-    queryFn: () => getBidParsingRuns(0, 100, { executionStatus, bidUuid }),
+    queryKey: ["bid-parsing-runs", executionStatus, outcome, bidUuid, page],
+    queryFn: () => getBidParsingRuns(page, size, { executionStatus, outcome, bidUuid }),
   });
   const detailQuery = useQuery({
     queryKey: ["bid-parsing-run", selectedUuid],
@@ -56,10 +74,16 @@ export function BidParsingRunsPage() {
     onError: () => notifier.error(t("bidParsing.notifications.error")),
   });
 
-  const setFilter = (value: string) => {
+  const setFilter = (key: "executionStatus" | "outcome", value: string) => {
     const next = new URLSearchParams(params);
-    if (value === "ALL") next.delete("executionStatus");
-    else next.set("executionStatus", value);
+    if (value === "ALL") next.delete(key);
+    else next.set(key, value);
+    next.delete(pageParam);
+    setParams(next);
+  };
+  const setPage = (nextPage: number) => {
+    const next = new URLSearchParams(params);
+    next.set(pageParam, String(nextPage));
     setParams(next);
   };
   const select = (uuid: string) => {
@@ -71,28 +95,48 @@ export function BidParsingRunsPage() {
   };
 
   return (
-    <div className="space-y-6 p-6">
-      <div>
-        <h1 className="text-3xl font-bold">{t("bidParsing.title")}</h1>
-        <p className="text-muted-foreground">{t("bidParsing.subtitle")}</p>
-      </div>
-      <div className="flex gap-3">
-        <Select value={executionStatus ?? "ALL"} onValueChange={setFilter}>
+    <div className={embedded ? "space-y-6" : "space-y-6 p-6"}>
+      {!embedded && (
+        <div>
+          <h1 className="text-3xl font-bold">{t("bidParsing.title")}</h1>
+          <p className="text-muted-foreground">{t("bidParsing.subtitle")}</p>
+        </div>
+      )}
+      <div className="flex flex-wrap gap-3">
+        <Select value={executionStatus ?? "ALL"} onValueChange={(value) => setFilter("executionStatus", value)}>
           <SelectTrigger className="w-64">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">{t("bidParsing.allStatuses")}</SelectItem>
-            {["COMPLETED", "NOT_A_BID", "PROVIDER_FAILED", "SCHEMA_VALIDATION_FAILED", "VALIDATION_FAILED"].map(
-              (status) => (
-                <SelectItem key={status} value={status}>
-                  {t(`bidParsing.status.${status}`)}
-                </SelectItem>
-              )
-            )}
+            {[
+              "PROCESSING",
+              "COMPLETED",
+              "NOT_A_BID",
+              "PROVIDER_FAILED",
+              "SCHEMA_VALIDATION_FAILED",
+              "VALIDATION_FAILED",
+            ].map((status) => (
+              <SelectItem key={status} value={status}>
+                {t(`bidParsing.status.${status}`)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        {bidUuid && (
+        <Select value={outcome ?? "ALL"} onValueChange={(value) => setFilter("outcome", value)}>
+          <SelectTrigger className="w-56">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">{t("bidParsing.allOutcomes")}</SelectItem>
+            {["BID_IDENTIFIED", "NOT_A_BID", "FAILED"].map((value) => (
+              <SelectItem key={value} value={value}>
+                {t(`bidParsing.outcome.${value}`, value)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {bidUuid && !embedded && (
           <Button variant="outline" asChild>
             <Link to={`/tenant/bids/${bidUuid}`}>{t("bids.backToBid")}</Link>
           </Button>
@@ -106,22 +150,41 @@ export function BidParsingRunsPage() {
                 <TableHead>{t("bidParsing.statusLabel")}</TableHead>
                 <TableHead>{t("bidParsing.type")}</TableHead>
                 <TableHead>{t("bidParsing.model")}</TableHead>
+                <TableHead>{t("bidParsing.requestedBy", "Requested by")}</TableHead>
                 <TableHead>{t("bidParsing.created")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {runsQuery.data?.items.map((run) => (
-                <TableRow key={run.uuid} className="cursor-pointer" onClick={() => select(run.uuid)}>
+                <TableRow
+                  key={run.uuid}
+                  className="cursor-pointer"
+                  data-state={selectedUuid === run.uuid ? "selected" : undefined}
+                  onClick={() => select(run.uuid)}
+                >
                   <TableCell>
                     <Badge variant="outline">{t(`bidParsing.status.${run.executionStatus}`)}</Badge>
                   </TableCell>
                   <TableCell>{run.messageType ? t(`bidParsing.messageType.${run.messageType}`) : "—"}</TableCell>
                   <TableCell>{run.aiModel ?? "—"}</TableCell>
+                  <TableCell>
+                    <BidActorLabel actor={run.requestedBy} />
+                  </TableCell>
                   <TableCell>{new Date(run.createdAt).toLocaleString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          {runsQuery.data && (
+            <div className="p-3">
+              <BidHistoryPagination
+                page={runsQuery.data.page}
+                size={runsQuery.data.size}
+                totalElements={runsQuery.data.totalElements}
+                onPageChange={setPage}
+              />
+            </div>
+          )}
         </div>
         <Card>
           <CardHeader>
@@ -133,6 +196,10 @@ export function BidParsingRunsPage() {
                 <div className="flex flex-wrap gap-2">
                   <Badge>{t(`bidParsing.status.${detailQuery.data.executionStatus}`)}</Badge>
                   {detailQuery.data.inputTruncated && <Badge variant="outline">{t("bidParsing.truncated")}</Badge>}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {t("bidParsing.requestedBy", "Requested by")}:{" "}
+                  <BidActorLabel actor={detailQuery.data.requestedBy} compact />
                 </div>
                 <dl className="grid grid-cols-2 gap-3 text-sm">
                   <div>
@@ -187,7 +254,7 @@ export function BidParsingRunsPage() {
                 <pre className="max-h-[520px] overflow-auto rounded bg-muted p-3 text-xs">
                   {JSON.stringify(detailQuery.data.normalizedResult, null, 2)}
                 </pre>
-                {detailQuery.data.executionStatus !== "PROCESSING" && (
+                {canRetry && detailQuery.data.executionStatus !== "PROCESSING" && (
                   <Button
                     variant="outline"
                     disabled={retryMutation.isPending}

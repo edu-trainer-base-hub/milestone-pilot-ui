@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { TenantUserResponse } from "@/features/tenant-users/model/types";
 import type { Bid, BidFieldSource } from "../model/types";
+import { BidActorLabel } from "./BidActorLabel";
 
 interface BidDetailsViewProps {
   bid: Bid;
@@ -299,14 +300,17 @@ function ProvenanceBadge({ source }: { source: BidFieldSource }) {
         <ProvenanceLine label={t("bids.provenance.sourceEmail")} value={source.sourceEmailUuid} />
         <ProvenanceLine label={t("bids.provenance.parsingRun")} value={source.parsingRunUuid} />
         <ProvenanceLine label={t("bids.provenance.updateRequest")} value={source.updateRequestUuid} />
-        <ProvenanceLine label={t("bids.provenance.acceptedBy")} value={source.acceptedByUserUuid} />
+        <ProvenanceLine
+          label={t("bids.provenance.acceptedBy")}
+          value={source.acceptedBy ? <BidActorLabel actor={source.acceptedBy} compact /> : source.acceptedByUserUuid}
+        />
         <ProvenanceLine label={t("bids.provenance.acceptedAt")} value={formatDateTime(source.acceptedAt)} />
       </TooltipContent>
     </Tooltip>
   );
 }
 
-function ProvenanceLine({ label, value }: { label: string; value: string | null }) {
+function ProvenanceLine({ label, value }: { label: string; value: ReactNode }) {
   return value ? (
     <div>
       {label}: {value}

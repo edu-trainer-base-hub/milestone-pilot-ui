@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { notifier } from "@/services/NotificationService";
+import { BidActorLabel } from "@/features/bids/components/BidActorLabel";
+import { BidHistoryPagination } from "@/features/bids/components/BidHistoryPagination";
 import {
   applyBidUpdateRequest,
   getBidUpdateRequest,
@@ -26,17 +28,29 @@ interface ChangeChoice {
 }
 
 export function BidUpdateRequestsPage() {
+  return <BidUpdateRequestsPanel />;
+}
+
+interface BidUpdateRequestsPanelProps {
+  bidUuid?: string;
+  embedded?: boolean;
+}
+
+export function BidUpdateRequestsPanel({ bidUuid: lockedBidUuid, embedded = false }: BidUpdateRequestsPanelProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [params, setParams] = useSearchParams();
   const status = (params.get("status") as UpdateRequestStatus | null) ?? "PENDING";
-  const bidUuid = params.get("bidUuid") ?? undefined;
+  const bidUuid = lockedBidUuid ?? params.get("bidUuid") ?? undefined;
   const selectedUuid = params.get("requestUuid");
+  const pageParam = embedded ? "reviewPage" : "page";
+  const page = Math.max(0, Number(params.get(pageParam) ?? "0") || 0);
+  const size = 20;
   const [choices, setChoices] = useState<Record<string, ChangeChoice>>({});
 
   const listQuery = useQuery({
-    queryKey: ["bid-update-requests", status, bidUuid],
-    queryFn: () => getBidUpdateRequests(status, bidUuid, 0, 100),
+    queryKey: ["bid-update-requests", status, bidUuid, page],
+    queryFn: () => getBidUpdateRequests(status, bidUuid, page, size),
   });
   const detailQuery = useQuery({
     queryKey: ["bid-update-request", selectedUuid],
@@ -108,10 +122,11 @@ export function BidUpdateRequestsPage() {
     onError: refetchOnConflict,
   });
 
-  const setQueryParam = (key: string, value?: string) => {
+  const setQueryParam = (key: string, value?: string, resetPage = false) => {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value);
     else next.delete(key);
+    if (resetPage) next.delete(pageParam);
     setParams(next);
   };
   const unresolved = useMemo(() => request?.changes.filter((change) => !change.resolution) ?? [], [request]);
@@ -120,13 +135,15 @@ export function BidUpdateRequestsPage() {
   );
 
   return (
-    <div className="space-y-6 p-6">
-      <div>
-        <h1 className="text-3xl font-bold">{t("bidUpdates.title")}</h1>
-        <p className="text-muted-foreground">{t("bidUpdates.subtitle")}</p>
-      </div>
+    <div className={embedded ? "space-y-6" : "space-y-6 p-6"}>
+      {!embedded && (
+        <div>
+          <h1 className="text-3xl font-bold">{t("bidUpdates.title")}</h1>
+          <p className="text-muted-foreground">{t("bidUpdates.subtitle")}</p>
+        </div>
+      )}
       <div className="flex gap-3">
-        <Select value={status} onValueChange={(value) => setQueryParam("status", value)}>
+        <Select value={status} onValueChange={(value) => setQueryParam("status", value, true)}>
           <SelectTrigger className="w-48">
             <SelectValue />
           </SelectTrigger>
@@ -138,7 +155,7 @@ export function BidUpdateRequestsPage() {
             ))}
           </SelectContent>
         </Select>
-        {bidUuid && (
+        {bidUuid && !embedded && (
           <Button variant="outline" asChild>
             <Link to={`/tenant/bids/${bidUuid}`}>{t("bids.backToBid")}</Link>
           </Button>
@@ -153,6 +170,7 @@ export function BidUpdateRequestsPage() {
                 <TableHead>{t("bidUpdates.type")}</TableHead>
                 <TableHead>{t("bidUpdates.statusLabel")}</TableHead>
                 <TableHead>{t("bidUpdates.correlation")}</TableHead>
+                <TableHead>{t("bidUpdates.requestedBy", "Requested by")}</TableHead>
                 <TableHead>{t("bidUpdates.created")}</TableHead>
               </TableRow>
             </TableHeader>
@@ -161,6 +179,7 @@ export function BidUpdateRequestsPage() {
                 <TableRow
                   key={item.uuid}
                   className="cursor-pointer"
+                  data-state={selectedUuid === item.uuid ? "selected" : undefined}
                   onClick={() => setQueryParam("requestUuid", item.uuid)}
                 >
                   <TableCell>
@@ -170,11 +189,24 @@ export function BidUpdateRequestsPage() {
                     <Badge variant="outline">{t(`bidUpdates.status.${item.status}`)}</Badge>
                   </TableCell>
                   <TableCell>{t(`bidUpdates.correlationResult.${item.correlationResult}`)}</TableCell>
+                  <TableCell>
+                    <BidActorLabel actor={item.createdBy} />
+                  </TableCell>
                   <TableCell>{new Date(item.createdAt).toLocaleString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          {listQuery.data && (
+            <div className="p-3">
+              <BidHistoryPagination
+                page={listQuery.data.page}
+                size={listQuery.data.size}
+                totalElements={listQuery.data.totalElements}
+                onPageChange={(nextPage) => setQueryParam(pageParam, String(nextPage))}
+              />
+            </div>
+          )}
         </div>
 
         <Card>
@@ -182,7 +214,19 @@ export function BidUpdateRequestsPage() {
             <CardTitle>{request ? t("bidUpdates.reviewTitle") : t("bidUpdates.select")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            {request && <Badge variant="outline">{t(`bidUpdates.status.${request.status}`)}</Badge>}
+            {request && (
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge variant="outline">{t(`bidUpdates.status.${request.status}`)}</Badge>
+                <span className="text-sm text-muted-foreground">
+                  {t("bidUpdates.requestedBy", "Requested by")}: <BidActorLabel actor={request.createdBy} compact />
+                </span>
+                {request.resolvedBy && (
+                  <span className="text-sm text-muted-foreground">
+                    {t("bidUpdates.resolvedBy", "Resolved by")}: <BidActorLabel actor={request.resolvedBy} compact />
+                  </span>
+                )}
+              </div>
+            )}
             {request?.status === "SUPERSEDED" && (
               <div className="rounded border p-3 text-sm text-muted-foreground">
                 {t("bidUpdates.supersededNotice", {

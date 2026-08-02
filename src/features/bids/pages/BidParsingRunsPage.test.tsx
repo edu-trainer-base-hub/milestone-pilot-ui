@@ -7,6 +7,10 @@ import { getBidParsingRun, getBidParsingRuns, retryBidParsingRun } from "../api/
 import type { BidEmailProcessingResult, BidParsingRun } from "../model/parsing-types";
 
 vi.mock("../api/bidParsing");
+vi.mock("@/contexts/AuthContext", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/contexts/AuthContext")>()),
+  useAuth: () => ({ principal: { authorities: ["TENANT_BIDS_PROCESS_EMAIL"] } }),
+}));
 
 const oldRun = run("run-old", "2026-07-28T10:00:00Z");
 const newRun = run("run-new", "2026-07-28T11:00:00Z");
@@ -27,7 +31,7 @@ beforeEach(() => {
   vi.mocked(getBidParsingRuns).mockResolvedValue({
     items: [newRun, oldRun],
     page: 0,
-    size: 100,
+    size: 20,
     totalElements: 2,
   });
   vi.mocked(getBidParsingRun).mockImplementation((uuid) => Promise.resolve(uuid === newRun.uuid ? newRun : oldRun));
@@ -81,6 +85,12 @@ function run(uuid: string, createdAt: string): BidParsingRun {
     durationMs: 100,
     createdAt,
     completedAt: createdAt,
+    requestedBy: {
+      type: "USER",
+      userUuid: "user-1",
+      displayName: "Taylor Manager",
+      email: "taylor@example.com",
+    },
   };
 }
 

@@ -19,6 +19,13 @@ export type BidPriority = (typeof BidPriority)[keyof typeof BidPriority];
 
 export type BidReviewStatus = "NONE" | "REVIEW_REQUIRED" | "IN_REVIEW";
 
+export interface BidActor {
+  type: "USER" | "SYSTEM" | "UNKNOWN";
+  userUuid: string | null;
+  displayName: string | null;
+  email: string | null;
+}
+
 export interface BidFieldSource {
   fieldName: string;
   sourceType: "EMAIL_PARSE" | "MANAGER_EDIT" | "REVIEW_ACCEPTED";
@@ -28,6 +35,7 @@ export interface BidFieldSource {
   acceptedByUserUuid: string | null;
   manuallyOverridden: boolean;
   acceptedAt: string;
+  acceptedBy: BidActor | null;
 }
 
 export interface Bid {
@@ -198,9 +206,28 @@ export interface BidActivity {
   activityType: string;
   summary: string;
   details: Record<string, unknown>;
+  sourceEmailUuid: string | null;
+  parsingRunUuid: string | null;
+  updateRequestUuid: string | null;
   actorType: string;
   actorUserUuid: string | null;
   occurredAt: string;
+  actor: BidActor;
+}
+
+export interface BidActivityPage {
+  items: BidActivity[];
+  page: number;
+  size: number;
+  totalElements: number;
+}
+
+export interface BidActivityFilters {
+  activityType?: string;
+  occurredFrom?: string;
+  occurredTo?: string;
+  page?: number;
+  size?: number;
 }
 
 export interface BidAudit {
@@ -213,7 +240,40 @@ export interface BidAudit {
   applicationActorType: string;
   applicationActorUuid: string | null;
   databaseUser: string;
+  transactionId: number | null;
   changedAt: string;
+  actor: BidActor;
+}
+
+export interface BidAuditSummary {
+  id: number;
+  sourceTable: string;
+  rowId: number;
+  rowUuid: string | null;
+  operation: string;
+  changedFields: string[];
+  databaseUser: string;
+  transactionId: number | null;
+  changedAt: string;
+  actor: BidActor;
+}
+
+export interface BidAuditPage {
+  items: BidAuditSummary[];
+  page: number;
+  size: number;
+  totalElements: number;
+}
+
+export interface BidAuditFilters {
+  sourceTable?: string;
+  operation?: string;
+  actorType?: BidActor["type"];
+  actorUserUuid?: string;
+  changedFrom?: string;
+  changedTo?: string;
+  page?: number;
+  size?: number;
 }
 
 export interface BidSourceAttachment {
@@ -242,4 +302,23 @@ export interface BidSourceEmail {
   bodyContentTruncated: boolean;
   processingOutcome: string;
   attachments: BidSourceAttachment[];
+  createdBy: BidActor;
+}
+
+export interface BidSourceEmailSummary {
+  uuid: string;
+  sender: string | null;
+  subject: string | null;
+  receivedAt: string | null;
+  bodyContentTruncated: boolean;
+  processingOutcome: string;
+  attachmentCount: number;
+  createdBy: BidActor;
+}
+
+export interface BidSourceEmailPage {
+  items: BidSourceEmailSummary[];
+  page: number;
+  size: number;
+  totalElements: number;
 }
