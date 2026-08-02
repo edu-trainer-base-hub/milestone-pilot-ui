@@ -113,6 +113,7 @@ export function BidParsingRunsPanel({ bidUuid: lockedBidUuid, embedded = false }
               "PROCESSING",
               "COMPLETED",
               "NOT_A_BID",
+              "SOURCE_RETRIEVAL_FAILED",
               "PROVIDER_FAILED",
               "SCHEMA_VALIDATION_FAILED",
               "VALIDATION_FAILED",

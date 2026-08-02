@@ -821,6 +821,7 @@
       "PROCESSING": "Processing",
       "COMPLETED": "Completed",
       "NOT_A_BID": "Not a bid",
+      "SOURCE_RETRIEVAL_FAILED": "Email retrieval failed",
       "PROVIDER_FAILED": "Provider failed",
       "SCHEMA_VALIDATION_FAILED": "Schema validation failed",
       "VALIDATION_FAILED": "Validation failed"

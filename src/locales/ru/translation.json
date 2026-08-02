@@ -814,6 +814,7 @@
       "PROCESSING": "Обработка",
       "COMPLETED": "Завершено",
       "NOT_A_BID": "Не тендер",
+      "SOURCE_RETRIEVAL_FAILED": "Не удалось получить письмо",
       "PROVIDER_FAILED": "Ошибка провайдера",
       "SCHEMA_VALIDATION_FAILED": "Ошибка схемы",
       "VALIDATION_FAILED": "Ошибка проверки"
