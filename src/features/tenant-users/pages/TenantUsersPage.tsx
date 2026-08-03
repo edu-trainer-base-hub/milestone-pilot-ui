@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -35,10 +35,18 @@ export const TenantUsersPage: React.FC = () => {
   const canRead = canReadTenantUsers(authorities);
   const creatableRoles = getCreatableTenantRoles(authorities);
   const editableRoles = getEditableTenantRoles(authorities);
-  const roleOptions: UserRoleOption[] = creatableRoles.map((role) => ({
-    value: role,
-    label: formatRoleLabel(role),
-  }));
+  // Stable identity: a fresh array every render cascades into TenantUserDialog's
+  // reset effect and wipes user input whenever this page re-renders (e.g. when
+  // the users query resolves while the dialog is open)
+  const roleOptions: UserRoleOption[] = useMemo(
+    () =>
+      getCreatableTenantRoles(authorities).map((role) => ({
+        value: role,
+        label: formatRoleLabel(role),
+      })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [principal]
+  );
   const canCreateUsers = creatableRoles.length > 0;
 
   const {
