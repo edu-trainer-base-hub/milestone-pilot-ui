@@ -25,6 +25,19 @@ import { BidHistoryPagination } from "./BidHistoryPagination";
 const sourceTables = ["bids", "bid_update_requests", "bid_update_request_changes", "bid_field_sources"];
 const operations = ["INSERT", "UPDATE", "DELETE"];
 const actorTypes: BidActor["type"][] = ["USER", "SYSTEM", "UNKNOWN"];
+const fieldScopedAuditTables = new Set(["bid_update_request_changes", "bid_field_sources"]);
+const technicalAuditFields = new Set([
+  "id",
+  "uuid",
+  "bid_id",
+  "version",
+  "created_at",
+  "updated_at",
+  "created_by_actor_type",
+  "created_by_user_uuid",
+  "updated_by_actor_type",
+  "updated_by_user_uuid",
+]);
 
 export function BidAuditPanel({ bidUuid }: { bidUuid: string }) {
   const { t } = useTranslation();
@@ -57,6 +70,9 @@ export function BidAuditPanel({ bidUuid }: { bidUuid: string }) {
     queryFn: () => getBidAuditDetail(bidUuid, selectedId as number),
     enabled: selectedId != null,
   });
+  const detailRelatedFieldName = detailQuery.data
+    ? relatedFieldName(detailQuery.data.sourceTable, detailQuery.data.oldRow, detailQuery.data.newRow)
+    : null;
 
   const setParam = (key: string, value: string | undefined, resetPage = true) => {
     const next = new URLSearchParams(params);
@@ -177,11 +193,20 @@ export function BidAuditPanel({ bidUuid }: { bidUuid: string }) {
                         <Badge variant="outline">
                           {t(`bids.audit.operations.${audit.operation}`, audit.operation)}
                         </Badge>
-                        <span className="font-medium">{entityLabel(audit.sourceTable, t)}</span>
+                        <span className="font-medium">
+                          {audit.relatedFieldName
+                            ? fieldLabel(audit.relatedFieldName, t)
+                            : entityLabel(audit.sourceTable, t)}
+                        </span>
                       </div>
-                      <div className="mt-1 text-xs text-muted-foreground">
-                        {t("bids.audit.fieldCount", { count: audit.changedFields.length })}
-                      </div>
+                      {audit.relatedFieldName && (
+                        <div className="mt-1 text-xs text-muted-foreground">{entityLabel(audit.sourceTable, t)}</div>
+                      )}
+                      {!audit.relatedFieldName && audit.operation === "UPDATE" && (
+                        <div className="mt-1 text-xs text-muted-foreground">
+                          {changedFieldsSummary(audit.changedFields, t)}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <BidActorLabel actor={audit.actor} />
@@ -215,7 +240,14 @@ export function BidAuditPanel({ bidUuid }: { bidUuid: string }) {
               <>
                 <div className="flex flex-wrap items-center gap-2 text-sm">
                   <Badge>{t(`bids.audit.operations.${detailQuery.data.operation}`, detailQuery.data.operation)}</Badge>
-                  <span>{entityLabel(detailQuery.data.sourceTable, t)}</span>
+                  <span className={detailRelatedFieldName ? "font-medium" : undefined}>
+                    {detailRelatedFieldName
+                      ? fieldLabel(detailRelatedFieldName, t)
+                      : entityLabel(detailQuery.data.sourceTable, t)}
+                  </span>
+                  {detailRelatedFieldName && (
+                    <span className="text-muted-foreground">· {entityLabel(detailQuery.data.sourceTable, t)}</span>
+                  )}
                   <span className="text-muted-foreground">
                     · {new Date(detailQuery.data.changedAt).toLocaleString()}
                   </span>
@@ -303,6 +335,26 @@ function fieldLabel(field: string, t: ReturnType<typeof useTranslation>["t"]): s
 
 function entityLabel(sourceTable: string, t: ReturnType<typeof useTranslation>["t"]): string {
   return t(`bids.audit.entities.${sourceTable}`, humanize(sourceTable));
+}
+
+function changedFieldsSummary(fields: string[], t: ReturnType<typeof useTranslation>["t"]): string {
+  const businessFields = fields.filter((field) => !technicalAuditFields.has(field));
+  const displayFields = businessFields.length > 0 ? businessFields : fields;
+  const visibleFields = displayFields.slice(0, 3).map((field) => fieldLabel(field, t));
+  const remaining = displayFields.length - visibleFields.length;
+  return remaining > 0
+    ? `${visibleFields.join(", ")} ${t("bids.audit.moreFields", { count: remaining })}`
+    : visibleFields.join(", ");
+}
+
+function relatedFieldName(
+  sourceTable: string,
+  oldRow: Record<string, unknown> | null,
+  newRow: Record<string, unknown> | null
+): string | null {
+  if (!fieldScopedAuditTables.has(sourceTable)) return null;
+  const fieldName = newRow?.field_name ?? oldRow?.field_name;
+  return typeof fieldName === "string" && fieldName.length > 0 ? fieldName : null;
 }
 
 function humanize(value: string): string {

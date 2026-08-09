@@ -579,6 +579,7 @@
       "fieldCount_one": "Изменено {{count}} поле",
       "fieldCount_few": "Изменено {{count}} поля",
       "fieldCount_many": "Изменено {{count}} полей",
+      "moreFields": "+ещё {{count}}",
       "detail": "Детали изменения",
       "select": "Выберите событие аудита",
       "raw": "Показать исходные данные",

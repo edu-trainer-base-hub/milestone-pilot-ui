@@ -252,6 +252,7 @@ export interface BidAuditSummary {
   rowUuid: string | null;
   operation: string;
   changedFields: string[];
+  relatedFieldName: string | null;
   databaseUser: string;
   transactionId: number | null;
   changedAt: string;

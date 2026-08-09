@@ -582,6 +582,7 @@
       "changedAt": "Changed at",
       "fieldCount_one": "{{count}} changed field",
       "fieldCount_other": "{{count}} changed fields",
+      "moreFields": "+{{count}} more",
       "detail": "Change details",
       "select": "Select an audit event",
       "raw": "View raw data",
