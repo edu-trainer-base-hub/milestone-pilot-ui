@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { notifier } from "@/services/NotificationService";
+import { extractErrorCode } from "@/services/ApiService";
 import { Authority, useAuth } from "@/contexts/AuthContext";
 import { TimestampDetails } from "../components/TimestampDetails";
 import { BidActorLabel } from "../components/BidActorLabel";
@@ -85,7 +86,14 @@ export function BidParsingRunsPanel({ bidUuid: lockedBidUuid, embedded = false }
       void queryClient.invalidateQueries({ queryKey: ["bid-parsing-runs"] });
       void queryClient.invalidateQueries({ queryKey: ["bid-parsing-run", result.parsingRunUuid] });
     },
-    onError: () => notifier.error(t("bidParsing.notifications.error")),
+    onError: (error) =>
+      notifier.error(
+        t(
+          extractErrorCode(error) === "BID_REVIEW_PENDING"
+            ? "bidParsing.notifications.reviewPending"
+            : "bidParsing.notifications.error"
+        )
+      ),
   });
 
   const setFilter = (key: "executionStatus" | "outcome", value: string) => {

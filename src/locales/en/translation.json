@@ -939,7 +939,8 @@
       "retried": "Parsing retried",
       "retriedWithChanges": "Parsing retried; proposed changes are ready for review",
       "retriedNoChanges": "Parsing retried; no bid differences found",
-      "error": "Failed to retry parsing"
+      "error": "Failed to retry parsing",
+      "reviewPending": "A review is pending for this email. Resolve or reject it in Bid update reviews before retrying."
     }
   },
   "bidTimestamps": {
