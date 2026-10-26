@@ -15,5 +15,7 @@ export const applyBidUpdateRequest = (uuid: string, input: ApplyUpdateInput): Pr
   post<BidUpdateRequest>(`${BASE_URL}/${uuid}/apply`, input);
 export const rejectBidUpdateRequest = (uuid: string, version: number): Promise<BidUpdateRequest> =>
   post<BidUpdateRequest>(`${BASE_URL}/${uuid}/reject`, { version });
+export const createBidFromCorrelation = (uuid: string, version: number): Promise<BidUpdateRequest> =>
+  post<BidUpdateRequest>(`${BASE_URL}/${uuid}/create-bid`, { version });
 export const resolveBidCorrelation = (uuid: string, version: number, bidUuid: string): Promise<BidUpdateRequest> =>
   post<BidUpdateRequest>(`${BASE_URL}/${uuid}/resolve-correlation`, { version, bidUuid });

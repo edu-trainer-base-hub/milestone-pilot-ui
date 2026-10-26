@@ -22,6 +22,7 @@ import {
   getBidUpdateRequest,
   getBidUpdateRequests,
   rejectBidUpdateRequest,
+  createBidFromCorrelation,
   resolveBidCorrelation,
 } from "../api/bidUpdateRequests";
 import type { BidUpdateChange, BidUpdateRequest, ChangeResolution, UpdateRequestStatus } from "../model/types";
@@ -124,6 +125,14 @@ export function BidUpdateRequestsPanel({ bidUuid: lockedBidUuid, embedded = fals
     mutationFn: () => rejectBidUpdateRequest((request as NonNullable<typeof request>).uuid, request?.version ?? 0),
     onSuccess: () => {
       notifier.success(t("bidUpdates.notifications.rejected"));
+      refresh();
+    },
+    onError: refetchOnConflict,
+  });
+  const createBidMutation = useMutation({
+    mutationFn: () => createBidFromCorrelation((request as NonNullable<typeof request>).uuid, request?.version ?? 0),
+    onSuccess: () => {
+      notifier.success(t("bidUpdates.notifications.bidCreated"));
       refresh();
     },
     onError: refetchOnConflict,
@@ -279,6 +288,27 @@ export function BidUpdateRequestsPanel({ bidUuid: lockedBidUuid, embedded = fals
                     {candidate}
                   </Button>
                 ))}
+                {request.status === "PENDING" && (
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      disabled={rejectMutation.isPending || createBidMutation.isPending}
+                      onClick={() => {
+                        if (window.confirm(t("bidUpdates.dismissConfirm"))) rejectMutation.mutate();
+                      }}
+                    >
+                      {t("bidUpdates.dismiss")}
+                    </Button>
+                    <Button
+                      disabled={createBidMutation.isPending || correlationMutation.isPending}
+                      onClick={() => {
+                        if (window.confirm(t("bidUpdates.createNewBidConfirm"))) createBidMutation.mutate();
+                      }}
+                    >
+                      {t("bidUpdates.createNewBid")}
+                    </Button>
+                  </div>
+                )}
                 <pre className="overflow-auto rounded bg-muted p-3 text-xs">
                   {JSON.stringify(request.correlationExplanation, null, 2)}
                 </pre>

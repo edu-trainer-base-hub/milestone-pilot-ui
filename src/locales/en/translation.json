@@ -511,6 +511,7 @@
         "REVIEW_REQUESTED": "Update review created",
         "SAFE_UPDATES_APPLIED": "Safe updates applied",
         "AMBIGUOUS_MATCH": "Bid match requires review",
+        "DISMISSED": "Dismissed",
         "FAILED": "Processing failed"
       },
       "notifications": {
@@ -522,6 +523,7 @@
         "REVIEW_REQUESTED": "Review request created",
         "SAFE_UPDATES_APPLIED": "Safe updates applied",
         "AMBIGUOUS_MATCH": "Correlation review required",
+        "DISMISSED": "Dismissed",
         "FAILED": "Bid processing failed",
         "error": "Failed to process the bid email"
       }
@@ -837,6 +839,10 @@
     "reviewTitle": "Review request",
     "select": "Select a review request",
     "chooseCandidate": "Choose the bid that this email belongs to.",
+    "createNewBid": "Create new bid (none of these)",
+    "createNewBidConfirm": "Create a new bid from this email? None of the candidate bids will be changed.",
+    "dismiss": "Dismiss email",
+    "dismissConfirm": "Dismiss this email? It will not be matched or turned into a bid again.",
     "current": "Current value",
     "staleBadge": "Changed since the review was created",
     "valueAtCreation": "Value when the review was created",
@@ -881,7 +887,9 @@
       "error": "Failed to update the review request",
       "applied": "Review applied",
       "rejected": "Review rejected",
-      "correlationResolved": "Correlation resolved"
+      "correlationResolved": "Correlation resolved",
+      "bidCreated": "Bid created from email",
+      "dismissed": "Email dismissed"
     }
   },
   "bidParsing": {

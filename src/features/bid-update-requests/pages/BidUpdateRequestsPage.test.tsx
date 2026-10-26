@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { BidUpdateRequestsPage } from "./BidUpdateRequestsPage";
 import {
   applyBidUpdateRequest,
+  createBidFromCorrelation,
   getBidUpdateRequest,
   getBidUpdateRequests,
   rejectBidUpdateRequest,
@@ -25,6 +26,7 @@ const supersededRequest: BidUpdateRequest = {
   requestType: "FIELD_CHANGES",
   status: "SUPERSEDED",
   correlationResult: "EXACT_MATCH",
+  correlationResolution: null,
   candidateBidUuids: ["bid-1"],
   correlationExplanation: {},
   resolvedAt: null,
@@ -185,6 +187,35 @@ describe("BidUpdateRequestsPage", () => {
       </QueryClientProvider>
     );
     fireEvent.click(await screen.findByRole("button", { name: "Reject request" }));
+    await waitFor(() => expect(rejectBidUpdateRequest).toHaveBeenCalledWith("request-old", 2));
+  });
+
+  it("lets the reviewer create a new bid or dismiss when no candidate fits", async () => {
+    const pending: BidUpdateRequest = {
+      ...supersededRequest,
+      requestType: "CORRELATION",
+      status: "PENDING",
+      supersededByParsingRunUuid: null,
+      bidUuid: null,
+      correlationResult: "AMBIGUOUS_MATCH",
+      candidateBidUuids: ["bid-a", "bid-b"],
+      changes: [],
+    };
+    vi.mocked(getBidUpdateRequest).mockResolvedValue(pending);
+    vi.mocked(createBidFromCorrelation).mockResolvedValue({ ...pending, status: "APPLIED" });
+    vi.mocked(rejectBidUpdateRequest).mockResolvedValue({ ...pending, status: "REJECTED" });
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={["/tenant/bid-update-requests?requestUuid=request-old"]}>
+          <BidUpdateRequestsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "Create new bid (none of these)" }));
+    await waitFor(() => expect(createBidFromCorrelation).toHaveBeenCalledWith("request-old", 2));
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss email" }));
     await waitFor(() => expect(rejectBidUpdateRequest).toHaveBeenCalledWith("request-old", 2));
   });
 

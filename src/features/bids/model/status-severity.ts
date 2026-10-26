@@ -20,6 +20,7 @@ const severities: Record<BidSignalKind, Record<string, BidSignalSeverity>> = {
     SAFE_UPDATES_APPLIED: "success",
     REVIEW_REQUESTED: "warning",
     AMBIGUOUS_MATCH: "warning",
+    DISMISSED: "info",
     FAILED: "destructive",
   },
   attachment: {

@@ -35,6 +35,7 @@ export interface BidUpdateRequest {
   requestType: "FIELD_CHANGES" | "CORRELATION";
   status: UpdateRequestStatus;
   correlationResult: CorrelationResult;
+  correlationResolution: "CANDIDATE" | "NEW_BID" | "DISMISSED" | null;
   candidateBidUuids: string[];
   correlationExplanation: Record<string, unknown>;
   resolvedAt: string | null;
