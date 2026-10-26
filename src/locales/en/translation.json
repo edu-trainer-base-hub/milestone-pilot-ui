@@ -838,6 +838,8 @@
     "select": "Select a review request",
     "chooseCandidate": "Choose the bid that this email belongs to.",
     "current": "Current value",
+    "staleBadge": "Changed since the review was created",
+    "valueAtCreation": "Value when the review was created",
     "proposed": "Proposed value",
     "customValue": "Custom value",
     "directAcceptUnavailable": "This parsed value cannot be applied directly. Keep the current value or enter a valid custom value.",
@@ -875,7 +877,7 @@
       "INFERRED_TIME": "Timestamp assumptions"
     },
     "notifications": {
-      "stale": "The request changed. Latest data has been loaded.",
+      "stale": "The bid changed since you opened this review. Latest data has been loaded; review the changes and apply again.",
       "error": "Failed to update the review request",
       "applied": "Review applied",
       "rejected": "Review rejected",

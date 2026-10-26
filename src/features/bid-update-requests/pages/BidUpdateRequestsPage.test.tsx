@@ -234,4 +234,86 @@ describe("BidUpdateRequestsPage", () => {
     expect(screen.getAllByText("Pending").filter((element) => element.matches('[data-slot="badge"]'))).toHaveLength(2);
     expect(screen.getByText("Ambiguous time zone")).toHaveClass("bg-yellow-100");
   });
+
+  it("shows the live value of a stale change, sends it with apply, and reloads on conflict", async () => {
+    const stale: BidUpdateRequest = {
+      ...supersededRequest,
+      status: "PENDING",
+      supersededByParsingRunUuid: null,
+      changes: [
+        { ...supersededRequest.changes[0], currentValue: "Old name", liveCurrentValue: "Manager edit", stale: true },
+      ],
+    };
+    vi.mocked(getBidUpdateRequest).mockResolvedValue(stale);
+    vi.mocked(applyBidUpdateRequest).mockRejectedValue(
+      Object.assign(new Error("conflict"), { isAxiosError: true, response: { status: 409 } })
+    );
+    render(
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+        <MemoryRouter initialEntries={["/tenant/bid-update-requests?requestUuid=request-old"]}>
+          <BidUpdateRequestsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText(/Manager edit/)).toBeInTheDocument();
+    expect(screen.getByText("Changed since the review was created")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Apply resolutions" }));
+    await waitFor(() =>
+      expect(applyBidUpdateRequest).toHaveBeenCalledWith("request-old", {
+        version: 2,
+        changes: [
+          {
+            changeUuid: "change-1",
+            resolution: "KEEP_CURRENT",
+            customValue: null,
+            expectedCurrentValue: "Manager edit",
+          },
+        ],
+      })
+    );
+    await waitFor(() => expect(getBidUpdateRequest).toHaveBeenCalledTimes(2));
+  });
+
+  it("keeps the saved current value in a resolved review whose live value is null", async () => {
+    vi.mocked(getBidUpdateRequest).mockResolvedValue({
+      ...supersededRequest,
+      status: "APPLIED",
+      changes: [
+        { ...supersededRequest.changes[0], resolution: "ACCEPT_PROPOSED", liveCurrentValue: null, stale: false },
+      ],
+    });
+    render(
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+        <MemoryRouter initialEntries={["/tenant/bid-update-requests?requestUuid=request-old"]}>
+          <BidUpdateRequestsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText(/Existing project/)).toBeInTheDocument();
+  });
+
+  it("sends an explicit null as the expected value when the live field was cleared", async () => {
+    const pending: BidUpdateRequest = {
+      ...supersededRequest,
+      status: "PENDING",
+      supersededByParsingRunUuid: null,
+      changes: [{ ...supersededRequest.changes[0], liveCurrentValue: null, stale: true }],
+    };
+    vi.mocked(getBidUpdateRequest).mockResolvedValue(pending);
+    vi.mocked(applyBidUpdateRequest).mockResolvedValue({ ...pending, status: "APPLIED" });
+    render(
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+        <MemoryRouter initialEntries={["/tenant/bid-update-requests?requestUuid=request-old"]}>
+          <BidUpdateRequestsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Apply resolutions" }));
+    await waitFor(() => expect(applyBidUpdateRequest).toHaveBeenCalled());
+    const sent = vi.mocked(applyBidUpdateRequest).mock.calls[0][1].changes[0];
+    expect(sent).toHaveProperty("expectedCurrentValue", null);
+  });
 });

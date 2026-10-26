@@ -14,6 +14,8 @@ export interface BidUpdateChange {
   acceptProposedAllowed: boolean;
   timestampNormalization?: TimestampNormalization | null;
   provisionallyApplied?: boolean;
+  liveCurrentValue?: unknown;
+  stale?: boolean;
   confidence: number | null;
   conflictType: string;
   resolution: ChangeResolution | null;
@@ -73,5 +75,6 @@ export interface ApplyUpdateInput {
     changeUuid: string;
     resolution: ChangeResolution;
     customValue: unknown;
+    expectedCurrentValue?: unknown;
   }[];
 }

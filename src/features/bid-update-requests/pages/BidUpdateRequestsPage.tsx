@@ -24,7 +24,7 @@ import {
   rejectBidUpdateRequest,
   resolveBidCorrelation,
 } from "../api/bidUpdateRequests";
-import type { ChangeResolution, UpdateRequestStatus } from "../model/types";
+import type { BidUpdateChange, BidUpdateRequest, ChangeResolution, UpdateRequestStatus } from "../model/types";
 
 interface ChangeChoice {
   resolution: ChangeResolution;
@@ -65,13 +65,13 @@ export function BidUpdateRequestsPanel({ bidUuid: lockedBidUuid, embedded = fals
 
   useEffect(() => {
     if (!request) return;
-    setChoices(
+    setChoices((previous) =>
       Object.fromEntries(
         request.changes
           .filter((change) => !change.resolution)
           .map((change) => [
             change.uuid,
-            {
+            previous[change.uuid] ?? {
               resolution: (change.provisionallyApplied ? "ACCEPT_PROPOSED" : "KEEP_CURRENT") as ChangeResolution,
               customValue: "",
             },
@@ -111,6 +111,7 @@ export function BidUpdateRequestsPanel({ bidUuid: lockedBidUuid, embedded = fals
               choices[change.uuid]?.resolution === "USE_CUSTOM"
                 ? parseCustom(choices[change.uuid]?.customValue ?? "")
                 : null,
+            ...(hasLiveValue(request as BidUpdateRequest, change) && { expectedCurrentValue: change.liveCurrentValue }),
           })),
       }),
     onSuccess: () => {
@@ -298,9 +299,23 @@ export function BidUpdateRequestsPanel({ bidUuid: lockedBidUuid, embedded = fals
                     </div>
                   </div>
                   <div className="grid gap-3 md:grid-cols-2">
-                    <ValueBox label={t("bidUpdates.current")} value={change.currentValue} />
+                    <ValueBox
+                      label={t("bidUpdates.current")}
+                      value={hasLiveValue(request, change) ? change.liveCurrentValue : change.currentValue}
+                    />
                     <ValueBox label={t("bidUpdates.proposed")} value={change.proposedValue} />
                   </div>
+                  {change.stale && (
+                    <Alert variant="warning">
+                      <AlertTriangle aria-hidden="true" />
+                      <AlertDescription>
+                        <span className="font-medium">{t("bidUpdates.staleBadge")}</span>
+                        <span className="ml-2 text-muted-foreground">
+                          {t("bidUpdates.valueAtCreation")}: {JSON.stringify(change.currentValue) ?? "—"}
+                        </span>
+                      </AlertDescription>
+                    </Alert>
+                  )}
                   {change.timestampNormalization && (
                     <TimestampDetails
                       normalization={change.timestampNormalization}
@@ -399,6 +414,11 @@ export function BidUpdateRequestsPanel({ bidUuid: lockedBidUuid, embedded = fals
       </div>
     </div>
   );
+}
+
+// The API sends liveCurrentValue: null both for an empty field and when there is no live value to compare.
+function hasLiveValue(request: BidUpdateRequest, change: BidUpdateChange) {
+  return request.status === "PENDING" && !change.resolution && !change.provisionallyApplied;
 }
 
 function ValueBox({ label, value }: { label: string; value: unknown }) {
